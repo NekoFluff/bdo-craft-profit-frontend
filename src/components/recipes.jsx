@@ -2,29 +2,57 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom"; 
 import MaterialTable from "material-table"; // https://material-table.com/#/
 import tableIcons from '../helpers/tableIcons';
+import axios from 'axios'
 
 class Recipes extends Component {
-  state = {};
-  render() {
+  state = {
+    tables: null,
+  };
+
+  async componentDidMount() {
+    try {
+      const promise = await axios.get(
+        "http://localhost:5000/api/recipes?item=Acacia%20Plywood"
+      );
+      const { data: recipe } = promise;
+      console.log("Recipe:", recipe);
+      this.parseRecipe(recipe);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  parseRecipe(recipe) {
+    let tables = {};
+    tables[recipe.Name] = recipe.Recipe;
+
+    for (let ingredient of recipe.Ingredients) {
+      tables[ingredient.Name] = ingredient.Recipe;
+    }
+    this.setState({ tables });
+  }
+
+  renderMaterialTables() {
+    if (this.state.tables == null) {
+      return <h1>No data available</h1>
+    }
     return (
       <div>
-        <h1>Recipes</h1>
-
-        <MaterialTable
+        {
+          Object.keys(this.state.tables).map((key, index) => ( 
+            <MaterialTable
           icons={tableIcons}
           columns={[
-            { title: 'Adı', field: 'name' },
-            { title: 'Soyadı', field: 'surname' },
-            { title: 'Doğum Yılı', field: 'birthYear', type: 'numeric' },
-            { title: 'Doğum Yeri', field: 'birthCity', lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' } }
+            { title: "Name", field: "Item Name" },
+            { title: "Amount", field: "Amount" },
           ]}
-          data={[{ name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 }, { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 }]}
-          title="Demo Title"
+          data={this.state.tables[key] || []}
+          title={key}
           editable={{
-            isEditable: (rowData) => rowData.name === "Mehmet", // only name(a) rows would be editable
-            isEditHidden: (rowData) => rowData.name === "x",
-            isDeletable: (rowData) => rowData.name === "b", // only name(b) rows would be deletable,
-            isDeleteHidden: (rowData) => rowData.name === "y",
+            isEditable: (rowData) => rowData.Name === "Mehmet", // only Name(a) rows would be editable
+            isEditHidden: (rowData) => rowData.Name === "x",
+            isDeletable: (rowData) => rowData.Name === "b", // only Name(b) rows would be deletable,
+            isDeleteHidden: (rowData) => rowData.Name === "y",
             onRowAddCancelled: (rowData) => console.log("Row adding cancelled"),
             onRowUpdateCancelled: (rowData) =>
               console.log("Row editing cancelled"),
@@ -60,6 +88,19 @@ class Recipes extends Component {
               }),
           }}
         />
+          ))
+        }
+      </div>
+    )
+
+    
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Recipes</h1>
+        {this.renderMaterialTables()}
       </div>
     );
   }
