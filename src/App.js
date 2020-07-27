@@ -1,26 +1,31 @@
-import React from 'react';
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Counter from './components/counter';
+import axios from 'axios'
+import SearchBar from './components/searchbar';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {  }
+
+  async componentDidMount() {
+    try {
+      const promise = await axios.get('http://localhost:5000/api/recipes?item=Acacia%20Plywood');
+      const {data: recipes} = promise;
+      console.log(recipes)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  render() { 
+    return (
+      <main className="container">
+        <SearchBar></SearchBar>
+        <Counter></Counter>
+      </main>
+    );
+  }
 }
 
 export default App;
