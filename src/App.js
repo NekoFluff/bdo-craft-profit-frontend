@@ -4,6 +4,7 @@ import './App.css';
 import Counter from './components/counter';
 import axios from 'axios'
 import SearchBar from './components/searchbar';
+import Recipes from './components/recipes';
 
 class App extends Component {
   state = {  }
@@ -23,6 +24,7 @@ class App extends Component {
       <main className="container">
         <SearchBar></SearchBar>
         <Counter></Counter>
+        <Recipes/>
       </main>
     );
   }
