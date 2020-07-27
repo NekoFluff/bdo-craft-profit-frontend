@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 // import { Button } from 'react-bootstrap'
+import SkyLight from 'react-skylight' // http://marcio.github.io/react-skylight/
+
 import {
   AwesomeButton,
   AwesomeButtonProgress,
@@ -11,10 +13,24 @@ class Counter extends Component {
     count: 0
   }
 
+  showModal = () => {
+    this.simpleDialog.show();
+  }
+
+  hideModal = () => {
+    this.simpleDialog.hide();
+  }
+
+  callback = (event) => {
+    console.log(event)
+  }
+
   handleIncrement = () => {
     this.setState({count: this.state.count+1})
     console.log(this.state.count)
+    this.showModal()
   }
+  
   render() { 
     return ( 
       <React.Fragment>
@@ -31,6 +47,12 @@ class Counter extends Component {
         >
           Share
         </AwesomeButtonSocial>
+        <SkyLight hideOnOverlayClicked ref={ref => this.simpleDialog = ref}>
+          <h2>Sample dialogue</h2>
+          <p>Count: {this.state.count}</p>
+          <AwesomeButton onPress={this.hideModal}>Close</AwesomeButton>
+        </SkyLight>
+
       </React.Fragment>
      );
   }
