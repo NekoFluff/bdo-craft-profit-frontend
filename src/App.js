@@ -4,6 +4,7 @@ import './App.css';
 import Counter from './components/counter';
 import SearchBar from './components/searchbar';
 import Recipes from './components/recipes';
+import GridSample from './components/grid';
 
 class App extends Component {
   state = { 
@@ -24,6 +25,7 @@ class App extends Component {
         
         {/* <Counter></Counter> */}
         <Recipes product={this.state.product}/>
+        <GridSample></GridSample>
       </main>
     );
   }
