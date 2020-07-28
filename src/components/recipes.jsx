@@ -9,16 +9,21 @@ class Recipes extends Component {
     tables: null,
   };
 
-  async componentDidMount() {
-    try {
-      const promise = await axios.get(
-        "http://localhost:5000/api/recipes?item=Acacia%20Plywood"
-      );
-      const { data: recipe } = promise;
-      console.log("Recipe:", recipe);
-      this.parseRecipe(recipe);
-    } catch (e) {
-      console.log(e);
+  async componentDidUpdate(nextProps) {
+    const { product } = this.props;
+
+    // Only update if the props changed
+    if (nextProps.product != product) {
+      try {
+        const promise = await axios.get(
+          "http://localhost:5000/api/recipes?item=" + this.props.product
+        );
+        const { data: recipe } = promise;
+        console.log("Recipe:", recipe);
+        this.parseRecipe(recipe);
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 
@@ -41,6 +46,7 @@ class Recipes extends Component {
         {
           Object.keys(this.state.tables).map((key, index) => ( 
             <MaterialTable
+            key={index}
           icons={tableIcons}
           columns={[
             { title: "Name", field: "Item Name" },

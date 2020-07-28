@@ -6,14 +6,24 @@ import SearchBar from './components/searchbar';
 import Recipes from './components/recipes';
 
 class App extends Component {
-  state = {  }
+  state = { 
+    product: "Acacia Plywood"
+  }
+
+  onSearch = (event, data) => {
+    console.log("ON SEARCH", data)
+    this.setState({product: data.suggestionValue})
+  }
 
   render() { 
     return (
       <main className="container">
-        <SearchBar></SearchBar>
-        <Counter></Counter>
-        <Recipes/>
+        <h1 className="p-3" align="center"> Craft Profit </h1>
+        {/* <div className="d-flex">I'm a flexbox container!</div> */}
+        <div className="p-3" align="center"><SearchBar onSearch={this.onSearch}/></div>
+        
+        {/* <Counter></Counter> */}
+        <Recipes product={this.state.product}/>
       </main>
     );
   }
