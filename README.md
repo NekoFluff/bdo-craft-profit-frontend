@@ -1,5 +1,19 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## TODO
+- Most searched items (material table) 
+- Most profit per second items (Precalculate and store in database)
+- Highest profit margins (Precalcualte and store in database)
+- Provide the above three + search bar on the main page
+- Add other modules...
+- Pull components from personal website...
+- Take a css course to pretty up content
+- Finish MongoDB courses
+- Implement code to auto update market prices at set intervals (store old data in a separate collection)
+- Add graphs to display history of prices! (and history of PPH/Profit Margins!)
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:
