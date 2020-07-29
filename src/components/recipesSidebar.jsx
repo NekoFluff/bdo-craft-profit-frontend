@@ -1,9 +1,9 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
 import { withRouter } from "react-router";
-import "../pages/style/Dashboard.css";
+import "../css/Dashboard.css";
 
-const Side = (props) => {
+const sidebar = (props) => {
   return (
     <>
       <Nav
@@ -30,5 +30,5 @@ const Side = (props) => {
     </>
   );
 };
-const Sidebar = withRouter(Side);
-export default Sidebar;
+const RecipesSidebar = withRouter(sidebar);
+export default RecipesSidebar;
