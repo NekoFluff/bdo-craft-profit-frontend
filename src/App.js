@@ -5,7 +5,6 @@ import GridSample from "./components/grid";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import RecipesPage from "./pages/recipesPage";
 import HomePage from "./pages/homePage";
-import Dashboard from "./components/dashboard";
 import HamburgerMenu from "./components/menu";
 
 class App extends Component {
@@ -20,29 +19,11 @@ class App extends Component {
               Craft Profit{" "}
             </h1>
             <div>
-              {/* <nav style={{ backgroundColor: "red" }}>
-                <ul>
-                  <li>
-                    <Link to="/">Home Page</Link>
-                  </li>
-                  <li>
-                    <Link to="/recipes">Recipes Page</Link>
-                  </li>
-                  <li>
-                    <Link to="/dashboard">Dashboard Test</Link>
-                  </li>
-                </ul>
-              </nav> */}
 
               {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
               <Switch>
-                <Route path="/recipes">
-                  <RecipesPage></RecipesPage>
-                </Route>
-                <Route path="/dashboard">
-                  <Dashboard></Dashboard>
-                </Route>
+                <Route path="/recipes/:item" component={RecipesPage}/>
                 <Route path="/">
                   <HomePage></HomePage>
                 </Route>

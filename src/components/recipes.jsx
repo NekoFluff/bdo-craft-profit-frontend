@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import MaterialTable from "material-table"; // https://material-table.com/#/
+import MaterialTable, { MTableToolbar } from "material-table"; // https://material-table.com/#/
 import tableIcons from "../helpers/tableIcons";
 import axios from "axios";
 import '../css/RecipeTables.css'
-
-
+import { Chip } from "@material-ui/core";
 class Recipes extends Component {
   state = {
     tables: null,
@@ -13,7 +12,6 @@ class Recipes extends Component {
 
   async componentDidUpdate(nextProps) {
     const { product } = this.props;
-
     // Only update if the props changed
     if (nextProps.product != product) {
       try {
@@ -21,7 +19,6 @@ class Recipes extends Component {
           "http://localhost:5000/api/recipes?item=" + this.props.product
         );
         const { data: recipe } = promise;
-        console.log("Recipe:", recipe);
         this.parseRecipe(recipe);
       } catch (e) {
         console.log(e);
@@ -41,14 +38,13 @@ class Recipes extends Component {
 
   renderMaterialTables() {
     if (this.state.tables == null) {
-      return <h1>No data available</h1>;
+      return <h2 style={{"text-align": "center"}}>Use the search bar to select a recipe</h2>;
     }
     return (
       <div>
         {Object.keys(this.state.tables).map((key, index) => (
           <div className="m-4" key={index}>
           <MaterialTable
-            className="materialTable"
             key={index}
             icons={tableIcons}
             columns={[
@@ -66,6 +62,17 @@ class Recipes extends Component {
               body: {
                 emptyDataSourceMessage: "You must gather/purchase this ingredient"
               }
+            }}
+            components={{
+              Toolbar: props => (
+                <div>
+                  <MTableToolbar {...props}/>
+                  <div style={{padding: '0px 20px 20px 20px', backgroundColor: "rgb(230, 230, 230)"}}>
+                    <Chip label="Craft" color="primary" style={{marginRight: 5}}/>
+                    <Chip label="Purchase" color="secondary" style={{marginRight: 5}}/>
+                  </div>
+                </div>
+              ),
             }}
             // editable={{
             //   isEditable: (rowData) => rowData.Name === "Mehmet", // only Name(a) rows would be editable
@@ -117,7 +124,6 @@ class Recipes extends Component {
   render() {
     return (
       <div>
-        <h1>Recipes</h1>
         {this.renderMaterialTables()}
       </div>
     );

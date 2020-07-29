@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import SearchBar from "../components/searchbar";
 import MostSearchedItemsTable from "./../components/mostSearchedItemsTable";
+import { withRouter } from 'react-router';
 
 class HomePage extends Component {
   state = {
@@ -9,6 +10,7 @@ class HomePage extends Component {
 
   onSearch = (event, data) => {
     this.setState({ product: data.suggestionValue });
+    this.props.history.push('/recipes/' + data.suggestionValue)
   };
 
   render() {
@@ -23,4 +25,4 @@ class HomePage extends Component {
   }
 }
 
-export default HomePage;
+export default withRouter(HomePage);

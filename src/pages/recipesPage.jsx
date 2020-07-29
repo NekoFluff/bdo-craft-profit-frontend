@@ -4,14 +4,27 @@ import Recipes from "../components/recipes";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import "../css/Dashboard.css";
 import RecipesSidebar from '../components/recipesSidebar';
+
 class RecipesPage extends Component {
   state = {
     product: "",
   };
 
+  componentDidMount() {
+    this.setState({ product: this.props.match.params.item });
+  }
+
+  componentDidUpdate(prevProps) {
+    const newItem = this.props.match.params.item;
+    if (this.props.location.pathname != prevProps.location.pathname && this.state.product != newItem) {
+      const oldItem = prevProps.match.params.item;
+      this.setState({ product: newItem });
+    }
+  }
+
   onSearch = (event, data) => {
-    console.log("ON SEARCH", data);
     this.setState({ product: data.suggestionValue });
+    this.props.history.push('/recipes/' + data.suggestionValue)
   };
 
   render() {

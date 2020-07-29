@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
 import tableIcons from "./../helpers/tableIcons";
-
+import { Link } from 'react-router-dom';
 class MostSearchedItemsTable extends Component {
   state = {
     data: [],
@@ -41,18 +41,19 @@ class MostSearchedItemsTable extends Component {
       <MaterialTable
         icons={tableIcons}
         columns={[
-          { title: "Name", field: "Name" },
+          { title: "Name 2", field: "Name", render: (rowData) => (<Link to={{ pathname: `/recipes/${rowData.Name}` }}>{rowData.Name}</Link>) },
           { title: "Count", field: "Count" },
+          
         ]}
         data={(query) =>
           new Promise(async (resolve, reject) => {
-            console.log("Query", query);
             const data = await this.fetchData(query.pageSize, query.page);
+            // console.log("Query", query.page, parseInt(data.page));
 
             // prepare your data and then call resolve like this:
             resolve({
               data: data.searchHistory, // your data array
-              page: data.page, // current page number
+              page: parseInt(data.page), // current page number
               totalCount: data.totalCount, // total row number
             });
           })
