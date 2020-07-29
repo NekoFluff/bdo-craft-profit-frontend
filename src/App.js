@@ -6,14 +6,15 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import RecipesPage from "./pages/recipesPage";
 import HomePage from "./pages/homePage";
 import HamburgerMenu from "./components/menu";
-
+import Headroom from "react-headroom"
 class App extends Component {
   render() {
     return (
       <div id="outer-container">
         <Router>
+
           <HamburgerMenu></HamburgerMenu>
-          <main className="container-fluid" id="page-wrap">
+          <main className="container-fluid" id="page-wrap" >
             <h1 className="p-3" align="center">
               {" "}
               Craft Profit{" "}
