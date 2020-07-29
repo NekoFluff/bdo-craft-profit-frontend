@@ -93,7 +93,7 @@ class SearchBar extends React.Component {
       
       <Autosuggest
         // theme={AutosuggestTheme}
-        className="d-flex p-2 justify-content-center"
+        // className="d-flex p-2 justify-content-center"
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}

@@ -1,31 +1,45 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Counter from './components/counter';
-import SearchBar from './components/searchbar';
-import Recipes from './components/recipes';
-import GridSample from './components/grid';
+import React, { Component } from "react";
+import "./App.css";
+import GridSample from "./components/grid";
+
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import RecipesPage from "./pages/recipesPage";
+import HomePage from "./pages/homePage";
+import { Container } from "react-bootstrap";
 
 class App extends Component {
-  state = { 
-    product: "Acacia Plywood"
-  }
-
-  onSearch = (event, data) => {
-    console.log("ON SEARCH", data)
-    this.setState({product: data.suggestionValue})
-  }
-
-  render() { 
+  render() {
     return (
-      <main className="container">
-        <h1 className="p-3" align="center"> Craft Profit </h1>
-        {/* <div className="d-flex">I'm a flexbox container!</div> */}
-        <div className="p-3" align="center"><SearchBar onSearch={this.onSearch}/></div>
-        
-        {/* <Counter></Counter> */}
-        <Recipes product={this.state.product}/>
-        <GridSample></GridSample>
+      <main className="container-fluid">
+        <Router>
+          <h1 className="p-3" align="center">
+            {" "}
+            Craft Profit{" "}
+          </h1>
+          <div>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/">Home Page</Link>
+                </li>
+                <li>
+                  <Link to="/recipes">Recipes Page</Link>
+                </li>
+              </ul>
+            </nav>
+
+            {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+            <Switch>
+              <Route path="/recipes">
+                <RecipesPage></RecipesPage>
+              </Route>
+              <Route path="/">
+                <HomePage></HomePage>
+              </Route>
+            </Switch>
+          </div>
+        </Router>
       </main>
     );
   }
