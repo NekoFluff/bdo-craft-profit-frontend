@@ -13,7 +13,18 @@ import {
 
 const sidebar = (props) => {
   return (
-    <>
+    /**
+     * Input Types: 
+     * One of the two are necessary:
+     * - How many you want to make
+     * - How much silver you have
+     * 
+     * Switch between the three different types of calculations.
+     * For now only enable PPH (price per hour) calculations. 
+     * Disable the other two possible buttons on the switch
+     * 
+     * Applied Buffs
+     */
       <Form>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
@@ -45,7 +56,6 @@ const sidebar = (props) => {
           <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
         </InputGroup.Append>
       </InputGroup>
-    </>
   );
 };
 const RecipesSidebar = withRouter(sidebar);
