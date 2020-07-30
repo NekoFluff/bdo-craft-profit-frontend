@@ -184,11 +184,9 @@ sample = {
 }
 
 
-class ItemHierarchyManager {
+class PPHOptimizer {
 
   constructor(recipe) {
-    this.optimalActions = {}
-
     // Sort ingredients
     recipe.Ingredients = recipe.Ingredients.sort(function(a,b) {return b['Market Data']['Market Price']-a['Market Data']['Market Price']})
     
@@ -203,9 +201,11 @@ class ItemHierarchyManager {
         this.items[i.Name].addRecipe(i)
     }
 
-    // console.log('Hierarchy View of Recipe:', JSON.stringify(this.items, null, 4))
     this.calculateOptimalActions(this.items[recipe.Name])
-    
+  }
+  
+  printOptimalActions() {
+    // console.log('Hierarchy View of Recipe:', JSON.stringify(this.items, null, 4))
     console.log(JSON.stringify(this.optimalActions, null, 4))
   }
 
@@ -223,6 +223,8 @@ class ItemHierarchyManager {
    }
 
   calculateOptimalActions(item) {
+    this.optimalActions = {}
+
     // If the calculations were already performed, just return those.
     if (this.optimalActions[item.Name] != null) return this.optimalActions[item.Name]
 
@@ -355,4 +357,4 @@ class Item {
 
 }
 
-new ItemHierarchyManager(sample)
+export default PPHOptimizer
