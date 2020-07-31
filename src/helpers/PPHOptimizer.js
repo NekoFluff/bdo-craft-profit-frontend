@@ -186,7 +186,32 @@ sample = {
 
 class PPHOptimizer {
 
-  constructor(recipe) {
+  constructor(recipe = null) {
+    this.bestRecipeActions = null
+    this.setRootRecipe(recipe)
+  }
+
+  testRecipes(recipes) {
+    
+    for (const recipeIdx in recipes) {
+      this.setRootRecipe(recipes[recipeIdx])
+
+      if (this.bestRecipeActions == null) {
+        this.bestRecipeActions = [] 
+        this.bestRecipeActions.push({recipeIdx, recipe: recipes[recipeIdx], optimalActions: this.optimalActions})
+      } else {
+
+        this.bestRecipeActions.push({recipeIdx, recipe: recipes[recipeIdx], optimalActions: this.optimalActions})
+      }
+    }
+
+    return this.bestRecipeActions
+  }
+
+  setRootRecipe(recipe) {
+    this.optimalActions = {}
+    if (recipe == null) { return; }
+
     // Sort ingredients
     recipe.Ingredients = recipe.Ingredients.sort(function(a,b) {return b['Market Data']['Market Price']-a['Market Data']['Market Price']})
     
@@ -223,7 +248,6 @@ class PPHOptimizer {
    }
 
   calculateOptimalActions(item) {
-    this.optimalActions = {}
 
     // If the calculations were already performed, just return those.
     if (this.optimalActions[item.Name] != null) return this.optimalActions[item.Name]

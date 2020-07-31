@@ -68,11 +68,16 @@ class ShoppingCart {
   constructor(optimizer) {
     this.cart = []
     this.optimizer = optimizer
-
   }
 
   clearCart() {
-    cart = []
+    this.cart = []
+  }
+
+  setRootRecipe(item, quantity = 1, action="Craft") {
+    this.optimizer.setRootRecipe(item)
+
+    return this.addItem(item.Name, quantity, action)
   }
 
   /**
@@ -81,10 +86,14 @@ class ShoppingCart {
    * @param {int} quantity The number 
    * @param {string} action Either Craft or Buy. Craft by default
    */
-  setQuantityForItem(itemName, quantity = 1, action="Craft") {
+  addItem(itemName, quantity = 1, action="Craft") {
     // Retrieve the recipe from the optimalActions variable in the optimizer
     // const actionObject = sample[itemName][action]
-    const actionObject = this.optimizer.optimalActions[itemName][action]
+    let actionObject = this.optimizer.optimalActions[itemName][action]
+    if (actionObject == null && action == "Craft") {
+      action = "Buy"
+      actionObject = this.optimizer.optimalActions[itemName][action]
+    }
     const recipe = actionObject.recipe
 
 
@@ -96,6 +105,7 @@ class ShoppingCart {
     this.cart.push({
       name: itemName,
       action: action,
+      recipe: recipe != null ? recipe['Ingredients'] : null, 
       expectedCount: action == "Craft" ? recipe['Quantity Produced'] * craftCount : craftCount, // Store the total amount that is expected to be crafted
       runningIndiviaulCost: actionObject.monetaryCost,
       runningIndiviaulTime: actionObject.time,
@@ -107,7 +117,7 @@ class ShoppingCart {
     if (action == "Craft") {
       for (let ingredient of recipe['Ingredients']) {
         const ingredientQuantity = ingredient['Amount'] * craftCount
-        this.setQuantityForItem(ingredient['Item Name'], ingredientQuantity, ingredient['Action'])
+        this.addItem(ingredient['Item Name'], ingredientQuantity, ingredient['Action'])
       }
     }
 
@@ -122,5 +132,5 @@ class ShoppingCart {
 export default ShoppingCart
 
 // const sc = new ShoppingCart(null)
-// sc.setQuantityForItem('Acacia Plywood', 100)
+// sc.addItem('Acacia Plywood', 100)
 // sc.printShoppingCart()
