@@ -74,10 +74,17 @@ class ShoppingCart {
     this.cart = []
   }
 
-  setRootRecipe(item, quantity = 1, action="Craft") {
-    this.optimizer.setRootRecipe(item)
+  setRootItem(item, quantity = 1, action="Craft") {
+    this.clearCart()
+    this.optimizer.setRootItem(item)
 
     return this.addItem(item.Name, quantity, action)
+  }
+
+  calculateCostsWithActionSet(actionSet, item, quantity = 1, action="Craft") {
+    this.clearCart()
+
+    return this.addItem(item.Name, quantity, action, actionSet.optimalActions)
   }
 
   /**
@@ -86,13 +93,13 @@ class ShoppingCart {
    * @param {int} quantity The number 
    * @param {string} action Either Craft or Buy. Craft by default
    */
-  addItem(itemName, quantity = 1, action="Craft") {
+  addItem(itemName, quantity = 1, action="Craft", optimalActions = this.optimizer.optimalActions) {
     // Retrieve the recipe from the optimalActions variable in the optimizer
     // const actionObject = sample[itemName][action]
-    let actionObject = this.optimizer.optimalActions[itemName][action]
+    let actionObject = optimalActions[itemName][action]
     if (actionObject == null && action == "Craft") {
       action = "Buy"
-      actionObject = this.optimizer.optimalActions[itemName][action]
+      actionObject = optimalActions[itemName][action]
     }
     const recipe = actionObject.recipe
 

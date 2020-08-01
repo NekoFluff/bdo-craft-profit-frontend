@@ -186,47 +186,48 @@ sample = {
 
 class PPHOptimizer {
 
-  constructor(recipe = null) {
+  constructor(rootItem = null, items = null) {
     this.bestRecipeActions = null
-    this.setRootRecipe(recipe)
+    this.setRootItem(rootItem, items)
   }
 
-  testRecipes(recipes) {
-    
-    for (const recipeIdx in recipes) {
-      this.setRootRecipe(recipes[recipeIdx])
+  /**
+   * Find the most optimal actions
+   * @param {string} rootItemName Name of the main product being produced
+   * @param {object} items {key: item name, value: Item Object found in recipesDashboard.jsx}
+   */
+  findOptimalActionSets(rootItemName, items) {
+    const rootItem = items[rootItemName]
+
+    for (const recipeIdx in rootItem.recipes) {
+      this.setRootItem(rootItemName, items)
 
       if (this.bestRecipeActions == null) {
         this.bestRecipeActions = [] 
-        this.bestRecipeActions.push({recipeIdx, recipe: recipes[recipeIdx], optimalActions: this.optimalActions})
+        this.bestRecipeActions.push({recipeIdx, recipe: rootItem.recipes[recipeIdx], optimalActions: this.optimalActions})
       } else {
 
-        this.bestRecipeActions.push({recipeIdx, recipe: recipes[recipeIdx], optimalActions: this.optimalActions})
+        this.bestRecipeActions.push({recipeIdx, recipe: rootItem.recipes[recipeIdx], optimalActions: this.optimalActions})
       }
     }
 
     return this.bestRecipeActions
   }
 
-  setRootRecipe(recipe) {
+  setRootItem(rootItemName, items) {
     this.optimalActions = {}
-    if (recipe == null) { return; }
-
-    // Sort ingredients
-    recipe.Ingredients = recipe.Ingredients.sort(function(a,b) {return b['Market Data']['Market Price']-a['Market Data']['Market Price']})
+    if (rootItemName == null || items == null) { return; }
     
-    // Create Items
-    this.items = {}
-    this.items[recipe.Name] = new Item(recipe)
+    // Sort ingredients
+    // items[rootItemName].Ingredients = recipe.Ingredients.sort(function(a,b) {return b['Market Data']['Market Price']-a['Market Data']['Market Price']})
+    
+    this.items = items
+    this.optimalActions = this.calculateOptimalActions(this.items[rootItemName])
+  }
 
-    for (let i of recipe.Ingredients) {
-      if (this.items[i.Name] == null)
-        this.items[i.Name] = new Item(i)
-      else
-        this.items[i.Name].addRecipe(i)
-    }
-
-    this.calculateOptimalActions(this.items[recipe.Name])
+  updateOptimalActionSet(optimalActionSet, recipe, action) {
+    // UPDATEEEEE AAAA
+    // return this.calculateOptimalActions(recipe, optimalActionSet.optimalActions)
   }
   
   printOptimalActions() {
@@ -247,28 +248,29 @@ class PPHOptimizer {
       yield* this.sequenceGenerator(n, arr, i+1)
    }
 
-  calculateOptimalActions(item) {
+  calculateOptimalActions(item, optimalActions = {}) {
 
     // If the calculations were already performed, just return those.
-    if (this.optimalActions[item.Name] != null) return this.optimalActions[item.Name]
+    if (optimalActions[item.name] != null) return optimalActions
 
     // What is the cost to buy this item?
     const itemMarketPrice = item.getMarketPrice()
-    if (this.optimalActions[item.Name] == null) {
-      this.optimalActions[item.Name] = {}
-      this.optimalActions[item.Name]['Buy'] = new Action(itemMarketPrice, 0, null, null, "Buy")
+    if (optimalActions[item.name] == null) {
+      optimalActions[item.name] = {}
+      optimalActions[item.name]['Buy'] = new Action(itemMarketPrice, 0, null, null, "Buy", null)
     }
 
     let possibleCraftOptions = []
     // For every possible recipe that can be crafted...
-    for (let possibleRecipe of item.recipes) {
 
+    for (const [recipe_id, possibleRecipe] of Object.entries(item.recipes)) {
+      const recipeIngredients = possibleRecipe.ingredients
       // Skip to next recipe if there is no crafting option
-      if (possibleRecipe['Ingredients'] == null) continue;
+      if (recipeIngredients == null) continue;
 
       // Generate all possible sequences of 'Buy' or 'Craft' for the list of ingredients
       let arr = []
-      for (let i = 0; i < possibleRecipe["Ingredients"].length; i++) { arr.push("Buy") }
+      for (let i = 0; i < recipeIngredients.length; i++) { arr.push("Buy") }
       const gen = this.sequenceGenerator(arr.length, arr, 0) // Sample sequence: ['Buy', 'Sell', 'Buy']
       let generatorResult = gen.next()
       while (generatorResult.done == false) {
@@ -280,10 +282,10 @@ class PPHOptimizer {
         for (let i = 0; i < sequence.length; i++) {
           // Buy or craft the ingredient?
           const buyOrCraft = sequence[i]
-          const ingredient = possibleRecipe["Ingredients"][i] // The string
+          const ingredient = recipeIngredients[i] // The string
           const ingredientItem = this.items[ingredient['Item Name']] // The object
-          const action = this.calculateOptimalActions(ingredientItem)[buyOrCraft]
-          
+          const result = this.calculateOptimalActions(ingredientItem, optimalActions)
+          const action = result[ingredient['Item Name']][buyOrCraft]
           // The provided sequence is impossible. (Cannot craft the ingredient!)
           if (action == null) {
             sequenceImpossible = true;
@@ -302,12 +304,15 @@ class PPHOptimizer {
           
         }
         
+        
         if (!sequenceImpossible) { // The sequence was valid!
-          possibleCraftOptions.push(new Action(totalCost / possibleRecipe['Quantity Produced'], 
-                                               (totalTime + possibleRecipe['Time to Produce']) / possibleRecipe['Quantity Produced'], 
+          possibleCraftOptions.push(new Action(totalCost / possibleRecipe.quantityProduced, 
+                                               (totalTime + possibleRecipe.timeToProduce) / possibleRecipe.quantityProduced, 
                                                possibleRecipe, 
                                                [...sequence], 
-                                               "Craft"))
+                                               "Craft",
+                                               recipe_id
+                                               ))
 
         }
 
@@ -331,22 +336,25 @@ class PPHOptimizer {
         bestAction = action
       }
     }
+    
+    optimalActions[item.name]['Craft'] = bestAction
 
-    this.optimalActions[item.Name]['Craft'] = bestAction
-
-    return this.optimalActions[item.Name]
+    return optimalActions
   }
 }
 
 class Action {
-  constructor(monetaryCost = 0, time = 0, recipe = null, sequence = null, action = "Buy") {
+  constructor(monetaryCost = 0, time = 0, recipe = null, sequence = null, action = "Buy", recipe_id = null) {
     this.action = action
     this.monetaryCost = monetaryCost
     this.time = time
     this.recipe = recipe
+    if (this.recipe != null)
+      this.recipe.craftOrBuy = action
+    this.recipe_id = recipe_id
 
     for (let idx in sequence) {
-      this.recipe['Ingredients'][idx]['Action'] = sequence[idx]
+      this.recipe.ingredients[idx]['Action'] = sequence[idx]
     }
   }
 
@@ -354,31 +362,9 @@ class Action {
     const TAX_PERCENTAGE = 0.65;
 
     // Measure the profit for each action
+    // console.log('Calculate Profit | ', this.monetaryCost, this.time)
     return ((sellPrice * TAX_PERCENTAGE) - this.monetaryCost) / this.time
   }
-}
-
-class Item {
-
-  constructor(item) {
-    this.recipes = []
-    this.addRecipe(item)
-    this.marketData = item['Market Data']
-    this.Name = item['Name']
-  }
-
-  addRecipe(item) {
-    this.recipes.push({
-      "Quantity Produced": item['Quantity Produced'],
-      "Time to Produce": item["Time to Produce"],
-      "Ingredients": item["Recipe"]
-    })
-  }
-
-  getMarketPrice() {
-    return this.marketData['Market Price']
-  }
-
 }
 
 export default PPHOptimizer
