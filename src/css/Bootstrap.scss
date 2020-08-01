@@ -1,0 +1,36 @@
+/* change the colors */
+$primary: #3f51b5;
+$secondary: rgb(245, 20, 100);
+// $danger: #dd0000;
+// $success: lime;
+// $warning: orange;
+// $info: aqua;
+
+// $body-bg: #f3f3f0;
+
+@import "bootstrap";
+
+body {
+    padding-top: 90px;
+}
+
+section {
+    min-height: 90vh;
+}
+
+/* ------- customize primary buttons -------- */   
+// .btn-primary {
+//     @include button-variant($primary, darken($primary, 7.5%), lighten($primary, 3%), lighten($primary,5%), lighten($primary, 10%), darken($primary,30%));
+// }
+
+// .btn-outline-primary {
+//     @include button-outline-variant($primary, #222222, lighten($primary,5%), $primary);
+// }
+
+// .btn-secondary {
+//     @include button-variant($secondary, darken($secondary, 7.5%), lighten($secondary, 3%), lighten($secondary,5%), lighten($secondary, 10%), darken($secondary,30%));
+// }
+
+// .btn-outline-secondary {
+//     @include button-outline-variant($secondary, #222222, lighten($secondary,5%), $secondary);
+// }

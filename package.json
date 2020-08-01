@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.0",
     "font-awesome": "^4.7.0",
     "material-table": "^1.67.1",
+    "node-sass": "^4.14.1",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.2",
@@ -22,6 +23,7 @@
     "react-headroom": "^3.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-scroll": "^1.8.0",
     "react-skylight": "^0.5.1",
     "react-stickynode": "^3.0.3"
   },

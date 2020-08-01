@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './css/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.css'
+import './css/Bootstrap.scss'
+// import 'bootstrap/dist/css/bootstrap.css'
 import 'react-awesome-button/dist/themes/theme-c137.css';
 // import "react-awesome-button/dist/styles.css";
 import "font-awesome/css/font-awesome.css";

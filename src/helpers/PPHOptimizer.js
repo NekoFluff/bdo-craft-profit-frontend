@@ -199,16 +199,14 @@ class PPHOptimizer {
   findOptimalActionSets(rootItemName, items) {
     const rootItem = items[rootItemName]
 
-    for (const recipeIdx in rootItem.recipes) {
+    for (const [recipeId, recipe] of Object.entries(rootItem.recipes)) {
+      console.log('recipeId and recipe', recipeId, recipe);
       this.setRootItem(rootItemName, items)
 
       if (this.bestRecipeActions == null) {
-        this.bestRecipeActions = [] 
-        this.bestRecipeActions.push({recipeIdx, recipe: rootItem.recipes[recipeIdx], optimalActions: this.optimalActions})
-      } else {
-
-        this.bestRecipeActions.push({recipeIdx, recipe: rootItem.recipes[recipeIdx], optimalActions: this.optimalActions})
+        this.bestRecipeActions = {} 
       }
+      this.bestRecipeActions[recipeId] = {recipe: recipe, optimalActions: this.optimalActions}
     }
 
     return this.bestRecipeActions

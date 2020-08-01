@@ -1,0 +1,30 @@
+.MuiToolbar-root {
+  /* background-color: #00ffff; */
+  padding-top: 15px !important;
+  margin-bottom: 0px !important;
+  min-height: 10px !important;
+}
+
+.scrollLink {
+  color: hotpink;
+}
+
+.scrollLink:hover {
+  color: green;
+  cursor: pointer;
+}
+
+.recipeChip {
+  font-size: 0.8125rem !important;
+  font-family: Arial, Helvetica, sans-serif !important; 
+}
+
+.buyOrCraftChip {
+  /* border-radius: 3px !important; */
+  /* margin-right: 5px !important; */
+}
+
+Button.buyOrCraftButton {
+  font-size: 0.8125rem;
+  font-family: Arial, Helvetica, sans-serif !important; 
+}
