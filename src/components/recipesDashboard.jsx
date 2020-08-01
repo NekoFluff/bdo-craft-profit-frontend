@@ -35,12 +35,9 @@ class Item {
    * @param {string} activeRecipeId // One of the recipes to craft this item
    */
   addUse = (actionTaken, parentName, parentRecipeId, activeRecipeId) => {
-    
-    
     for (const {parentUsedAlready} of this.usedInRecipes) {
       if (parentUsedAlready == parentRecipeId) return;
     }
-
 
     this.usedInRecipes.push({
       actionTaken, 
@@ -123,8 +120,7 @@ class RecipesDashboard extends Component {
       );
       this.originalRecipesData = recipes
       this.sortRecipes(recipes);
-      this.parseRecipes(recipes)
-      this.setState({items: this.items});
+      this.setState({items: this.parseRecipes(recipes)});
       console.log('Final Items', this.state.items)
     } catch (e) {
       console.log(e);
@@ -161,7 +157,7 @@ class RecipesDashboard extends Component {
 
     // // Get optimal actions
     this.allOptimalActionSets = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, items);
-    this.items = items
+    this.setState({items: items})
     
     this.resetToOptimal(items)
     return items
@@ -184,16 +180,16 @@ class RecipesDashboard extends Component {
 
   /**
    * Callback function for RecipesTable.onRecipeClick
-   * Updates the 'this.items' object in this component's state, which updates the RecipesTable(s)
+   * Updates the 'this.state.items' object in this component's state, which updates the RecipesTable(s)
    * @param {string} itemName The name of the item
    * @param {string} recipeId The id of the recipe selected
    */
   selectRecipe = (itemName, recipeId) => {
     // let items = {}
+    console.log('this.state.items', this.state.items)
     // Object.assign(items, this.state.items)
-    let items = this.items
+    let items = this.state.items
 
-    this.test(items)
     this.startRecursiveReset(items[itemName], items)
     items[itemName].selectRecipe(recipeId)
 
@@ -238,11 +234,6 @@ class RecipesDashboard extends Component {
     this.setState({items})
     
   }
-
-  test(items) {
-    console.log('Before Reset 2', items['Acacia Plywood'].activeRecipeId, items['Ash Plank'].activeRecipeId, items)
-  }
-
 
   /**
    * 
@@ -291,7 +282,7 @@ class RecipesDashboard extends Component {
     
   }
 
-  resetToOptimal(items = this.items) {
+  resetToOptimal(items = this.state.items) {
     // TODO: Move to separate method?
     // Get optimal action for each recipe of the root product
     const bestRecipeActions = this.allOptimalActionSets
@@ -319,9 +310,9 @@ class RecipesDashboard extends Component {
  * @param {object} optimalActions The set of actions determined by the user
  * @param {string} currentItem Name of the item
  * @param {string} actionTaken 'Buy' or 'Craft'
- * @param {object} items  this.items
+ * @param {object} items  this.state.items
  */
-  cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.items}, parent = {}) {
+  cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.state.items}, parent = {}) {
     const {parentRecipeId, parentName} = parent
     console.log('Optimal Actions', optimalActions)
     console.log('Active Item:', currentItem)
