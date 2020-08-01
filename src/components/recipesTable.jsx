@@ -103,19 +103,16 @@ class RecipesTable extends Component {
   }
 
   render() {
-    const { productName, item, onRecipeClick, onCraftOrBuyClick } = this.props;
+    const { productName, item } = this.props;
     const allRecipes = item.recipes;
     const selectedRecipeId = item.activeRecipeId;
     const selectedRecipe =
       selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
 
-    console.log("selected recipe", selectedRecipe);
-
     return (
       <>
         {item.usedInRecipes.map(
           ({ actionTaken: craftOrBuy, parentRecipeId, parentName }, index) => {
-            console.log("parentRecipeId", parentRecipeId);
             return (
               <Element name={item.name} className="m-4">
                 <MaterialTable
@@ -158,7 +155,6 @@ class RecipesTable extends Component {
                   }}
                   components={{
                     Toolbar: (props) => {
-                      console.log("props", props);
                       return (
                         <div
                           id="toolbar"

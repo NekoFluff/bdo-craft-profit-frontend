@@ -110,6 +110,7 @@ class ShoppingCart {
     // Retrieve the recipe from the optimalActions variable in the optimizer
     // const actionObject = sample[itemName][action]
     console.log('ShoppingCart.js | optimalActions', optimalActions)
+    console.log('ShoppingCart.js | item name', itemName)
     let actionObject = optimalActions[itemName][action]
     if (actionObject == null && action == "Craft") {
       action = "Buy"

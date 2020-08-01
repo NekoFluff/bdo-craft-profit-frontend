@@ -34,7 +34,14 @@ class Item {
    * @param {string} parentRecipeId // What recipe is this item used in?
    * @param {string} activeRecipeId // One of the recipes to craft this item
    */
-  addUse(actionTaken, parentName, parentRecipeId, activeRecipeId) {
+  addUse = (actionTaken, parentName, parentRecipeId, activeRecipeId) => {
+    
+    
+    for (const {parentUsedAlready} of this.usedInRecipes) {
+      if (parentUsedAlready == parentRecipeId) return;
+    }
+
+
     this.usedInRecipes.push({
       actionTaken, 
       parentName,
@@ -43,11 +50,11 @@ class Item {
     this.activeRecipeId = activeRecipeId
   }
 
-  selectRecipe(recipeId) {
+  selectRecipe = (recipeId) => {
     this.activeRecipeId = recipeId
   }
 
-  resetUses() {
+  resetUses = () => {
     this.usedInRecipes = []
     this.activeRecipeId = null
   }
@@ -116,7 +123,8 @@ class RecipesDashboard extends Component {
       );
       this.originalRecipesData = recipes
       this.sortRecipes(recipes);
-      this.parseRecipes(recipes);
+      this.parseRecipes(recipes)
+      this.setState({items: this.items});
       console.log('Final Items', this.state.items)
     } catch (e) {
       console.log(e);
@@ -153,9 +161,9 @@ class RecipesDashboard extends Component {
 
     // // Get optimal actions
     this.allOptimalActionSets = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, items);
+    this.items = items
     
-    this.setState({items})
-    this.resetToOptimal()
+    this.resetToOptimal(items)
     return items
   }
 
@@ -180,8 +188,14 @@ class RecipesDashboard extends Component {
    * @param {string} itemName The name of the item
    * @param {string} recipeId The id of the recipe selected
    */
-  selectRecipe(itemName, recipeId) {
-    let items = {...this.state.items}
+  selectRecipe = (itemName, recipeId) => {
+    // let items = {}
+    // Object.assign(items, this.state.items)
+    let items = this.items
+
+    this.test(items)
+    this.startRecursiveReset(items[itemName], items)
+    items[itemName].selectRecipe(recipeId)
 
     // If the root recipe was selected, change out the current action set
     if (itemName == this.props.product) {
@@ -191,11 +205,7 @@ class RecipesDashboard extends Component {
       this.currentActionSet = this.allOptimalActionSets[recipeId]
       console.log('recipesDashboard.jsx | Current action set:', this.currentActionSet)
 
-      // Calculate costs
-      // const {recipeIdx: rootRecipeIdx} = this.currentActionSet
-      console.log('recpiesDashboard.jsx | Items and itemName', items, itemName)
-      const shoppingCartData = this.shoppingCart.calculateCostsWithActionSet(this.currentActionSet, items[itemName], 5);
-      console.log('Shopping Cart Data', shoppingCartData);
+
     } else {
       // Select Recipe
       // this.currentActionSet.optimalActions[itemName]...['Craft'].recipe /// update recipe
@@ -206,25 +216,33 @@ class RecipesDashboard extends Component {
       // console.log('Shopping Cart Data 2', shoppingCartData);
     }
 
-    items[itemName].selectRecipe(recipeId)
-    this.startRecursiveReset(items[itemName], items)
-    console.log('After reset', items)
-
     // Update active recipes
     const optimalActions = this.currentActionSet.optimalActions[itemName]
-    let action = optimalActions['Craft']['monetaryCost'] < optimalActions['Buy']['monetaryCost'] ? 'Craft' : 'Buy'
-    console.log('Optimal actions', optimalActions)
+    // let action = optimalActions['Craft']['monetaryCost'] < optimalActions['Buy']['monetaryCost'] ? 'Craft' : 'Buy'
+    // console.log('Before cascade', JSON.stringify(items, null, 4))
     items = this.cascadeActiveRecipeWithOptimalActions(
       this.currentActionSet.optimalActions, 
       itemName,
-      action,
+      'Craft',
       items
     );
-    console.log('After cascade', items)
-      
+    // console.log('After cascade', JSON.stringify(items, null, 4))
+
+  // Calculate costs
+  // const {recipeIdx: rootRecipeIdx} = this.currentActionSet
+  // console.log('recpiesDashboard.jsx | Items and itemName', items, itemName)
+  // const shoppingCartData = this.shoppingCart.calculateCostsWithActionSet(this.currentActionSet, items[itemName], 5);
+  // console.log('Shopping Cart Data', shoppingCartData);
+
+
     this.setState({items})
     
   }
+
+  test(items) {
+    console.log('Before Reset 2', items['Acacia Plywood'].activeRecipeId, items['Ash Plank'].activeRecipeId, items)
+  }
+
 
   /**
    * 
@@ -232,12 +250,14 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   startRecursiveReset(item, items) {
+
     const recipeId = item.activeRecipeId
+    console.log('Outer | Reset active recipe', item.activeRecipeId)
+
     if (recipeId == null) return;
-    for (const ingredient of item.recipes[recipeId].ingredients) {
-      
+    for (let ingredient of item.recipes[recipeId].ingredients) {
       const ingredientName = ingredient['Item Name']
-      console.log(ingredientName)
+      console.log('Outer | Reset Ingredient', ingredientName)
       this.recursivelyResetItemUses(items[ingredientName], items)
     }
   }
@@ -248,22 +268,30 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   recursivelyResetItemUses(item, items) {
-    item.resetUses()
+    // item = {...item}
     const recipeId = item.activeRecipeId
+    console.log('Product', item.name)
+    console.log('Inner Reset active recipe', item.activeRecipeId)
+
     if (recipeId != null) {
-      for (const ingredient of item.recipes[recipeId].ingredients) {
+      for (let ingredient of item.recipes[recipeId].ingredients) {
         const ingredientName = ingredient['Item Name']
-        console.log(ingredientName)
+        console.log('Reset ingredient', ingredient)
         this.recursivelyResetItemUses(items[ingredientName], items)
       }
     }
+    console.log('Item Reset Before', items[item.name].activeRecipeId, item.name, item.name == 'Ash Plank')
+    item.resetUses()
+    console.log('Item Reset After', items[item.name].activeRecipeId)
+    items[item.name] = item
+
   }
 
   selectCraftOrBuy(itemName, craftOrBuy) {
     
   }
 
-  resetToOptimal(items = this.state.items) {
+  resetToOptimal(items = this.items) {
     // TODO: Move to separate method?
     // Get optimal action for each recipe of the root product
     const bestRecipeActions = this.allOptimalActionSets
@@ -291,16 +319,16 @@ class RecipesDashboard extends Component {
  * @param {object} optimalActions The set of actions determined by the user
  * @param {string} currentItem Name of the item
  * @param {string} actionTaken 'Buy' or 'Craft'
- * @param {object} items  this.state.items
+ * @param {object} items  this.items
  */
-  cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.state.items}, parent = {}) {
+  cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.items}, parent = {}) {
     const {parentRecipeId, parentName} = parent
-
+    console.log('Optimal Actions', optimalActions)
+    console.log('Active Item:', currentItem)
+    console.log('Action Taken:', actionTaken)
     const action = optimalActions[currentItem][actionTaken];
-    console.log('action', action)
     if (action == null) return items; // Base case. Return when there is no valid action
 
-    console.log('aaa parent recipeId', parentRecipeId)
     items[currentItem].addUse(actionTaken, parentName, parentRecipeId, action.recipe_id) // e.g. Item.addUse('Craft', parentRecipeId, action's recipe Id which may be null if Buying)
     if (actionTaken == "Buy") return items;
 
@@ -340,7 +368,12 @@ class RecipesDashboard extends Component {
           return (
             <>
               {item.usedInRecipes.length > 0 || item.activeRecipeId != null ? (
-                <RecipesTable productName={productName} item={item} onRecipeClick={()=>console.log("On Recipe Click")} onCraftOrBuyClick={()=>console.log("On Craft or Buy Click")}></RecipesTable>
+                <RecipesTable
+                  productName={productName}
+                  item={item}
+                  onRecipeClick={this.selectRecipe}
+                  onCraftOrBuyClick={() => console.log("On Craft or Buy Click")}
+                ></RecipesTable>
               ) : null}
             </>
           );

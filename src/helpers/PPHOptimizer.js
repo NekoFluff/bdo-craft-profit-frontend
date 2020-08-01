@@ -200,8 +200,7 @@ class PPHOptimizer {
     const rootItem = items[rootItemName]
 
     for (const [recipeId, recipe] of Object.entries(rootItem.recipes)) {
-      console.log('recipeId and recipe', recipeId, recipe);
-      this.setRootItem(rootItemName, items)
+      this.setRootItem(rootItemName, items, recipeId)
 
       if (this.bestRecipeActions == null) {
         this.bestRecipeActions = {} 
@@ -212,7 +211,7 @@ class PPHOptimizer {
     return this.bestRecipeActions
   }
 
-  setRootItem(rootItemName, items) {
+  setRootItem(rootItemName, items, startingRecipeId) {
     this.optimalActions = {}
     if (rootItemName == null || items == null) { return; }
     
@@ -220,12 +219,7 @@ class PPHOptimizer {
     // items[rootItemName].Ingredients = recipe.Ingredients.sort(function(a,b) {return b['Market Data']['Market Price']-a['Market Data']['Market Price']})
     
     this.items = items
-    this.optimalActions = this.calculateOptimalActions(this.items[rootItemName])
-  }
-
-  updateOptimalActionSet(optimalActionSet, recipe, action) {
-    // UPDATEEEEE AAAA
-    // return this.calculateOptimalActions(recipe, optimalActionSet.optimalActions)
+    this.optimalActions = this.calculateOptimalActions(this.items[rootItemName], startingRecipeId)
   }
   
   printOptimalActions() {
@@ -246,7 +240,13 @@ class PPHOptimizer {
       yield* this.sequenceGenerator(n, arr, i+1)
    }
 
-  calculateOptimalActions(item, optimalActions = {}) {
+   /**
+    * 
+    * @param {object} item 
+    * @param {object} optimalActions 
+    * @param {string} recipeRestriction Must choose this recipe
+    */
+  calculateOptimalActions(item, recipeRestriction = null, optimalActions = {}) {
 
     // If the calculations were already performed, just return those.
     if (optimalActions[item.name] != null) return optimalActions
@@ -262,6 +262,8 @@ class PPHOptimizer {
     // For every possible recipe that can be crafted...
 
     for (const [recipe_id, possibleRecipe] of Object.entries(item.recipes)) {
+      if (recipeRestriction != null && recipe_id != recipeRestriction) continue;
+
       const recipeIngredients = possibleRecipe.ingredients
       // Skip to next recipe if there is no crafting option
       if (recipeIngredients == null) continue;
@@ -282,7 +284,7 @@ class PPHOptimizer {
           const buyOrCraft = sequence[i]
           const ingredient = recipeIngredients[i] // The string
           const ingredientItem = this.items[ingredient['Item Name']] // The object
-          const result = this.calculateOptimalActions(ingredientItem, optimalActions)
+          const result = this.calculateOptimalActions(ingredientItem, null, optimalActions)
           const action = result[ingredient['Item Name']][buyOrCraft]
           // The provided sequence is impossible. (Cannot craft the ingredient!)
           if (action == null) {
