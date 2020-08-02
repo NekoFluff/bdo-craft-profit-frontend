@@ -80,9 +80,9 @@ class ShoppingCart {
    * @param {integer} quantity 
    * @param {string} action 
    */
-  setRootItem(item, quantity = 1, action="Craft") {
+  calcualteCosts(item, quantity = 1, action="Craft") {
     this.clearCart()
-    this.optimizer.setRootItem(item)
+    this.optimizer.startCalculatingOptimalActions(item)
 
     return this.addItem(item.Name, quantity, action)
   }

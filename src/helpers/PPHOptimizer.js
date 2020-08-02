@@ -188,7 +188,7 @@ class PPHOptimizer {
 
   constructor(rootItem = null, items = null) {
     this.bestRecipeActions = null
-    this.setRootItem(rootItem, items)
+    this.startCalculatingOptimalActions(rootItem, items)
   }
 
   /**
@@ -200,7 +200,7 @@ class PPHOptimizer {
     const rootItem = items[rootItemName]
 
     for (const [recipeId, recipe] of Object.entries(rootItem.recipes)) {
-      this.setRootItem(rootItemName, items, recipeId)
+      this.startCalculatingOptimalActions(rootItemName, items, recipeId)
 
       if (this.bestRecipeActions == null) {
         this.bestRecipeActions = {} 
@@ -211,13 +211,9 @@ class PPHOptimizer {
     return this.bestRecipeActions
   }
 
-  setRootItem(rootItemName, items, startingRecipeId) {
+  startCalculatingOptimalActions(rootItemName, items, startingRecipeId) {
     this.optimalActions = {}
     if (rootItemName == null || items == null) { return; }
-    
-    // Sort ingredients
-    // items[rootItemName].Ingredients = recipe.Ingredients.sort(function(a,b) {return b['Market Data']['Market Price']-a['Market Data']['Market Price']})
-    
     this.items = items
     this.optimalActions = this.calculateOptimalActions(this.items[rootItemName], startingRecipeId)
     return this.optimalActions
@@ -244,8 +240,8 @@ class PPHOptimizer {
    /**
     * 
     * @param {object} item 
-    * @param {object} optimalActions 
     * @param {string} recipeRestriction Must choose this recipe
+    * @param {object} optimalActions 
     */
   calculateOptimalActions(item, recipeRestriction = null, optimalActions = {}) {
 

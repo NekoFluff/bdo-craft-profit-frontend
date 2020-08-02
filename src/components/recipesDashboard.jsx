@@ -131,6 +131,10 @@ class RecipesDashboard extends Component {
     }
   }
 
+  /**
+   * @deprecated No longer need to sort the recipes object
+   * @param {object} recipes 
+   */
   sortRecipes(recipes) {
     for (let recipe of recipes) {
       // Sort ingredients
@@ -199,7 +203,7 @@ class RecipesDashboard extends Component {
       // console.log('recipesDashboard.jsx | All optimal action sets:', this.allOptimalActionSets)
       optimalActions = this.allOptimalActionSets[recipeId].optimalActions
     } else { // Otherwise recalculate the best actions using the user's new decision on which recipe to craft
-      optimalActions = this.shoppingCart.optimizer.setRootItem(itemName, items, recipeId)
+      optimalActions = this.shoppingCart.optimizer.startCalculatingOptimalActions(itemName, items, recipeId)
     }
     
     // Step 3: Using the new optimal actions calculated, update the items object so that the corresponding tables are displayed
