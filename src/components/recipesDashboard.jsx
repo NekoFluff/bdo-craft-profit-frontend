@@ -13,7 +13,7 @@ class Item {
    * @param {object} initialItemData e.g {Action: string, Ingredients: [], Market Data: {}, Name: string, Quantity Produced: float, Recipe: [], Time to Produce: float}
    */
   constructor(initialItemData) {
-    console.log("Initial Item Data", initialItemData)
+    // console.log("Initial Item Data", initialItemData)
     this.name = initialItemData['Name']
     this.marketData = initialItemData['Market Data']
     this.recipes = {}

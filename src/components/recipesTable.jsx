@@ -51,6 +51,8 @@ class RecipesTable extends Component {
     return (
       <div id="toolbar-container-recipes">
         {Object.keys(allRecipes).map((recipe_id, index) => {
+          console.log('All Recipes', allRecipes)
+          if (allRecipes[recipe_id].craftOrBuy == 'Buy') return (null)
           const isSelected = selectedRecipeId == recipe_id;
           return (
             <Chip
