@@ -82,7 +82,6 @@ class RecipesDashboard extends Component {
 
   componentDidMount() {
     this.allOptimalActionSets = null
-    this.currentActionSet = null
     this.shoppingCart = new ShoppingCart(new PPHOptimizer());
 
     Events.scrollEvent.register('begin', function(to, element) {
@@ -159,7 +158,7 @@ class RecipesDashboard extends Component {
     this.allOptimalActionSets = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, items);
     this.setState({items: items})
     
-    this.resetToOptimal(items)
+    this.resetToOptimal()
     return items
   }
 
@@ -185,54 +184,38 @@ class RecipesDashboard extends Component {
    * @param {string} recipeId The id of the recipe selected
    */
   selectRecipe = (itemName, recipeId) => {
-    // let items = {}
-    console.log('this.state.items', this.state.items)
-    // Object.assign(items, this.state.items)
     let items = this.state.items
 
+    // Step 1: Reset items that were dependent on the previous recipe
     this.startRecursiveReset(items[itemName], items)
     items[itemName].selectRecipe(recipeId)
 
-    // If the root recipe was selected, change out the current action set
-    if (itemName == this.props.product) {
-      // Select Recipe
-      console.log('recipesDashboard.jsx | recipeId:', recipeId)
-      console.log('recipesDashboard.jsx | All optimal action sets:', this.allOptimalActionSets)
-      this.currentActionSet = this.allOptimalActionSets[recipeId]
-      console.log('recipesDashboard.jsx | Current action set:', this.currentActionSet)
-
-
-    } else {
-      // Select Recipe
-      // this.currentActionSet.optimalActions[itemName]...['Craft'].recipe /// update recipe
-
-      // Calculate costs
-      // const {recipeIdx: rootRecipeIdx} = this.currentActionSet
-      // const shoppingCartData = this.shoppingCart.calculateCostsWithActionSet(this.currentActionSet, this.originalRecipesData[rootRecipeIdx], 5);
-      // console.log('Shopping Cart Data 2', shoppingCartData);
+    // Step 2: Find the best way to make money using the new decision
+    let optimalActions;
+    if (itemName == this.props.product) { // If the root recipe was selected, then we already pre-calcualted all that information.
+      // console.log('recipesDashboard.jsx | All optimal action sets:', this.allOptimalActionSets)
+      optimalActions = this.allOptimalActionSets[recipeId].optimalActions
+    } else { // Otherwise recalculate the best actions using the user's new decision on which recipe to craft
+      optimalActions = this.shoppingCart.optimizer.setRootItem(itemName, items, recipeId)
     }
-
-    // Update active recipes
-    const optimalActions = this.currentActionSet.optimalActions[itemName]
-    // let action = optimalActions['Craft']['monetaryCost'] < optimalActions['Buy']['monetaryCost'] ? 'Craft' : 'Buy'
-    // console.log('Before cascade', JSON.stringify(items, null, 4))
+    
+    // Step 3: Using the new optimal actions calculated, update the items object so that the corresponding tables are displayed
     items = this.cascadeActiveRecipeWithOptimalActions(
-      this.currentActionSet.optimalActions, 
+      optimalActions, 
       itemName,
       'Craft',
       items
     );
-    // console.log('After cascade', JSON.stringify(items, null, 4))
 
-  // Calculate costs
-  // const {recipeIdx: rootRecipeIdx} = this.currentActionSet
-  // console.log('recpiesDashboard.jsx | Items and itemName', items, itemName)
-  // const shoppingCartData = this.shoppingCart.calculateCostsWithActionSet(this.currentActionSet, items[itemName], 5);
-  // console.log('Shopping Cart Data', shoppingCartData);
+    // // Step 4: Calcualte the costs associated with the desired action tree. (TODO: Move to separate function?)
+    // Calculate costs
+    // const {recipeIdx: rootRecipeIdx} = currentActionSet
+    // console.log('recpiesDashboard.jsx | Items and itemName', items, itemName)
+    // const shoppingCartData = this.shoppingCart.calculateCostsWithActionSet(currentActionSet, items[itemName], 5);
+    // console.log('Shopping Cart Data', shoppingCartData);
 
-
+    // Step 5: Finally update the state to see the changes
     this.setState({items})
-    
   }
 
   /**
@@ -241,14 +224,11 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   startRecursiveReset(item, items) {
-
     const recipeId = item.activeRecipeId
-    console.log('Outer | Reset active recipe', item.activeRecipeId)
 
     if (recipeId == null) return;
     for (let ingredient of item.recipes[recipeId].ingredients) {
       const ingredientName = ingredient['Item Name']
-      console.log('Outer | Reset Ingredient', ingredientName)
       this.recursivelyResetItemUses(items[ingredientName], items)
     }
   }
@@ -261,19 +241,14 @@ class RecipesDashboard extends Component {
   recursivelyResetItemUses(item, items) {
     // item = {...item}
     const recipeId = item.activeRecipeId
-    console.log('Product', item.name)
-    console.log('Inner Reset active recipe', item.activeRecipeId)
 
     if (recipeId != null) {
       for (let ingredient of item.recipes[recipeId].ingredients) {
         const ingredientName = ingredient['Item Name']
-        console.log('Reset ingredient', ingredient)
         this.recursivelyResetItemUses(items[ingredientName], items)
       }
     }
-    console.log('Item Reset Before', items[item.name].activeRecipeId, item.name, item.name == 'Ash Plank')
     item.resetUses()
-    console.log('Item Reset After', items[item.name].activeRecipeId)
     items[item.name] = item
 
   }

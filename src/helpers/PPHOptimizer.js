@@ -220,6 +220,7 @@ class PPHOptimizer {
     
     this.items = items
     this.optimalActions = this.calculateOptimalActions(this.items[rootItemName], startingRecipeId)
+    return this.optimalActions
   }
   
   printOptimalActions() {
