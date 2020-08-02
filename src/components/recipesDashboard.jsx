@@ -8,13 +8,18 @@ import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, 
 
 
 class Item {
+  /**
+   * Create a new Item object
+   * @param {object} initialItemData e.g {Action: string, Ingredients: [], Market Data: {}, Name: string, Quantity Produced: float, Recipe: [], Time to Produce: float}
+   */
   constructor(initialItemData) {
-    // console.log("Initial Item Data", initialItemData)
+    console.log("Initial Item Data", initialItemData)
     this.name = initialItemData['Name']
     this.marketData = initialItemData['Market Data']
     this.recipes = {}
     this.usedInRecipes = []
     this.activeRecipeId = null
+    this.depth = initialItemData['depth'] || -1
     this.addRecipe(initialItemData['_id'], initialItemData['Name'], initialItemData['Recipe'], initialItemData['Quantity Produced'], initialItemData['Time to Produce'])
   }
 
@@ -119,8 +124,8 @@ class RecipesDashboard extends Component {
       );
       this.originalRecipesData = recipes
       this.sortRecipes(recipes);
-      this.setState({items: this.parseRecipes(recipes)});
-      console.log('Final Items', this.state.items)
+      this.parseRecipes(recipes);
+      console.log('Final Items', this.items)
     } catch (e) {
       console.log(e);
     }
@@ -142,24 +147,22 @@ class RecipesDashboard extends Component {
    * @param {arr} recipes  
    */
   parseRecipes(recipes) {
-    let items = {};
+    this.items = {}
     console.log("recipes.jsx | Orignal Recipes Data: ", recipes)
 
     // Parse Recipe and prep for the display in table format
     for (const recipe of recipes) {
-      this.addItem(items, recipe);
+      this.addItem(this.items, recipe);
 
       for (let ingredient of recipe.Ingredients) {
-        this.addItem(items, ingredient);
+        this.addItem(this.items, ingredient);
       }
     }
 
-    // // Get optimal actions
-    this.allOptimalActionSets = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, items);
-    this.setState({items: items})
-    
+    // Get optimal actions
+    this.allOptimalActionSets = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, this.items);    
     this.resetToOptimal()
-    return items
+    return this.items
   }
 
   /**
@@ -179,12 +182,12 @@ class RecipesDashboard extends Component {
 
   /**
    * Callback function for RecipesTable.onRecipeClick
-   * Updates the 'this.state.items' object in this component's state, which updates the RecipesTable(s)
+   * Updates the 'this.items' object in this component's state, which updates the RecipesTable(s)
    * @param {string} itemName The name of the item
    * @param {string} recipeId The id of the recipe selected
    */
   selectRecipe = (itemName, recipeId) => {
-    let items = this.state.items
+    const items = this.items
 
     // Step 1: Reset items that were dependent on the previous recipe
     this.startRecursiveReset(items[itemName], items)
@@ -200,7 +203,7 @@ class RecipesDashboard extends Component {
     }
     
     // Step 3: Using the new optimal actions calculated, update the items object so that the corresponding tables are displayed
-    items = this.cascadeActiveRecipeWithOptimalActions(
+    this.cascadeActiveRecipeWithOptimalActions(
       optimalActions, 
       itemName,
       'Craft',
@@ -215,7 +218,7 @@ class RecipesDashboard extends Component {
     // console.log('Shopping Cart Data', shoppingCartData);
 
     // Step 5: Finally update the state to see the changes
-    this.setState({items})
+    this.updateTables()
   }
 
   /**
@@ -257,7 +260,7 @@ class RecipesDashboard extends Component {
     
   }
 
-  resetToOptimal(items = this.state.items) {
+  resetToOptimal() {
     // TODO: Move to separate method?
     // Get optimal action for each recipe of the root product
     const bestRecipeActions = this.allOptimalActionSets
@@ -270,7 +273,7 @@ class RecipesDashboard extends Component {
 
       const oldCraftAction = bestActionSet.optimalActions[product]['Craft']
       const newCraftAction = actionSet.optimalActions[product]['Craft']
-      const marketPrice = items[product].getMarketPrice()
+      const marketPrice = this.items[product].getMarketPrice()
       if (oldCraftAction.calculateProfit(marketPrice) < newCraftAction.calculateProfit(marketPrice))
         bestActionSet = actionSet
     }
@@ -281,13 +284,13 @@ class RecipesDashboard extends Component {
 
   
   /**
- * Selects the RecipeTables that should be active by modifying the 'this.state.items' object
+ * Selects the RecipeTables that should be active by modifying the 'this.items' object
  * @param {object} optimalActions The set of actions determined by the user
  * @param {string} currentItem Name of the item
  * @param {string} actionTaken 'Buy' or 'Craft'
- * @param {object} items  this.state.items
+ * @param {object} items  this.items
  */
-  cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.state.items}, parent = {}) {
+  cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.items}, parent = {}) {
     const {parentRecipeId, parentName} = parent
     console.log('Optimal Actions', optimalActions)
     console.log('Active Item:', currentItem)
@@ -318,33 +321,40 @@ class RecipesDashboard extends Component {
     return items
   }
 
+  updateTables() {
+    console.log(this.items)
+    let recipeTables = Object.values(this.items)
+    recipeTables.filter(function(item) {
+      return item.usedInRecipes.length > 0 || item.activeRecipeId != null
+    })
+    recipeTables.sort(function(a,b) {
+      return a.depth - b.depth
+    })
+
+    this.setState({recipeTables})
+  }
+
   renderTables() {
-    if (this.state.items == null) {
+    if (this.state.recipeTables == null) {
       return (
         <h2 style={{ "text-align": "center" }}>
           Use the search bar to select a recipe
         </h2>
       );
     }
+
     return (
       <div>
-        {Object.keys(this.state.items).map((productName, index) => {
-          const item = this.state.items[productName]
-          
+        {this.state.recipeTables.map((item) => {
           return (
-            <>
-              {item.usedInRecipes.length > 0 || item.activeRecipeId != null ? (
-                <RecipesTable
-                  productName={productName}
-                  item={item}
-                  onRecipeClick={this.selectRecipe}
-                  onCraftOrBuyClick={() => console.log("On Craft or Buy Click")}
-                ></RecipesTable>
-              ) : null}
-            </>
+            <RecipesTable
+              productName={item.name}
+              item={item}
+              onRecipeClick={this.selectRecipe}
+              onCraftOrBuyClick={() => console.log("On Craft or Buy Click")}
+            ></RecipesTable>
           );
         })}
-
       </div>
     );
   }
