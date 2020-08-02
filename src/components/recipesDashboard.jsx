@@ -86,7 +86,6 @@ class RecipesDashboard extends Component {
   };
 
   componentDidMount() {
-    this.allOptimalActionSets = null
     this.shoppingCart = new ShoppingCart(new PPHOptimizer());
 
     Events.scrollEvent.register('begin', function(to, element) {
@@ -164,7 +163,6 @@ class RecipesDashboard extends Component {
     }
 
     // Get optimal actions
-    this.allOptimalActionSets = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, this.items);    
     this.resetToOptimal()
     return this.items
   }
@@ -196,21 +194,16 @@ class RecipesDashboard extends Component {
     // Step 1: Reset items that were dependent on the previous recipe
     this.startRecursiveReset(items[itemName], items)
     items[itemName].selectRecipe(recipeId)
+    console.log('recipesDashboard.jsx | items after recursive reset', items)
 
     // Step 2: Find the best way to make money using the new decision
-    let optimalActions;
-    if (itemName == this.props.product) { // If the root recipe was selected, then we already pre-calcualted all that information.
-      // console.log('recipesDashboard.jsx | All optimal action sets:', this.allOptimalActionSets)
-      optimalActions = this.allOptimalActionSets[recipeId].optimalActions
-    } else { // Otherwise recalculate the best actions using the user's new decision on which recipe to craft
-      optimalActions = this.shoppingCart.optimizer.startCalculatingOptimalActions(itemName, items, recipeId)
-    }
-    
+    let optimalActions = this.shoppingCart.optimizer.startCalculatingOptimalActions(itemName, items, recipeId)
+    let chosenAction = recipeId == null ? 'Buy' : 'Craft'
     // Step 3: Using the new optimal actions calculated, update the items object so that the corresponding tables are displayed
     this.cascadeActiveRecipeWithOptimalActions(
       optimalActions, 
       itemName,
-      'Craft',
+      chosenAction,
       items
     );
 
@@ -231,10 +224,12 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   startRecursiveReset(item, items) {
+    console.log('recipesDashboard.jsx | Starting recursive reset:', item)
     const recipeId = item.activeRecipeId
-
+    
     if (recipeId == null) return;
     for (let ingredient of item.recipes[recipeId].ingredients) {
+      console.log('recipesDashboard.jsx | Ingredient reset:', ingredient['Item Name'])
       const ingredientName = ingredient['Item Name']
       this.recursivelyResetItemUses(items[ingredientName], items)
     }
@@ -252,6 +247,8 @@ class RecipesDashboard extends Component {
     if (recipeId != null) {
       for (let ingredient of item.recipes[recipeId].ingredients) {
         const ingredientName = ingredient['Item Name']
+        console.log('recipesDashboard.jsx | Ingredient reset:', ingredient['Item Name'])
+
         this.recursivelyResetItemUses(items[ingredientName], items)
       }
     }
@@ -267,7 +264,7 @@ class RecipesDashboard extends Component {
   resetToOptimal() {
     // TODO: Move to separate method?
     // Get optimal action for each recipe of the root product
-    const bestRecipeActions = this.allOptimalActionSets
+    const bestRecipeActions = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, this.items);    
     const {product} = this.props
     // Choose most optimal recipe and the optimal actions for profit
     let bestActionSet = null
@@ -355,7 +352,7 @@ class RecipesDashboard extends Component {
               productName={item.name}
               item={item}
               onRecipeClick={this.selectRecipe}
-              onCraftOrBuyClick={() => console.log("On Craft or Buy Click")}
+              onBuyClick={(itemName) => this.selectRecipe(itemName, null)}
             ></RecipesTable>
           );
         })}
