@@ -197,6 +197,7 @@ class PPHOptimizer {
    * @param {object} items {key: item name, value: Item Object found in recipesDashboard.jsx}
    */
   findOptimalActionSets(rootItemName, items) {
+    this.bestRecipeActions = {}
     const rootItem = items[rootItemName]
 
     for (const [recipeId, recipe] of Object.entries(rootItem.recipes)) {
@@ -252,7 +253,7 @@ class PPHOptimizer {
     const itemMarketPrice = item.getMarketPrice()
     if (optimalActions[item.name] == null) {
       optimalActions[item.name] = {}
-      optimalActions[item.name]['Buy'] = new Action(itemMarketPrice, 0, null, null, "Buy", null)
+      optimalActions[item.name]['Buy'] = new Action(itemMarketPrice, 0, null, null, null)
     }
 
     let possibleCraftOptions = []
@@ -296,19 +297,20 @@ class PPHOptimizer {
           } else {
             // Some items used to produce this ingredent may have been bought while others were crafted
             totalTime += ingredient['Amount'] * action.time 
+            // console.log('PPHOptimizer.jsx | ', item.name, ingredient['Item Name'], totalCost, action.monetaryCost, ingredient['Amount'], totalCost + action.monetaryCost * ingredient['Amount'])
             totalCost += ingredient['Amount'] * action.monetaryCost 
           } 
           
         }
         
         
+        console.log('PPHOptimizer.jsx | ', item.name, generatorResult.value, totalCost / possibleRecipe.quantityProduced, possibleRecipe)
         if (!sequenceImpossible) { // The sequence was valid!
           possibleCraftOptions.push(new Action(totalCost / possibleRecipe.quantityProduced, 
                                                (totalTime + possibleRecipe.timeToProduce) / possibleRecipe.quantityProduced, 
-                                               possibleRecipe, 
-                                               [...sequence], 
-                                               "Craft",
-                                               recipe_id
+                                               possibleRecipe,
+                                               recipe_id,
+                                               [...sequence]
                                                ))
 
         }
@@ -316,50 +318,53 @@ class PPHOptimizer {
         // Pick next sequence to test...
         generatorResult = gen.next()
       }
+
+      
     }
 
     // Finally choose the best possible crafting action
+    console.log('POSSIBLE ACTIONS', possibleCraftOptions)
     let bestAction = null;
     let bestProfitValue = null;
     for (const action of possibleCraftOptions) {
       if (bestAction == null) {
         bestAction = action;
         bestProfitValue = action.calculateProfit(itemMarketPrice)
+        console.log('ACTION:', bestProfitValue, bestAction)
         continue;
       }
-
+      
       const profit = action.calculateProfit(itemMarketPrice)
+      console.log('ACTION:', profit, action)
       if (profit > bestProfitValue) {
         bestAction = action
       }
     }
-    
+
+    // console.log('PPHOptimizer.jsx | Action!!!', item.name, bestAction)
     optimalActions[item.name]['Craft'] = bestAction
+    
+    
+
 
     return optimalActions
   }
 }
 
 class Action {
-  constructor(monetaryCost = 0, time = 0, recipe = null, sequence = null, action = "Buy", recipe_id = null) {
-    this.action = action
+  constructor(monetaryCost = 0, time = 0, recipe = null, recipe_id = null, actionSequence = null) {
     this.monetaryCost = monetaryCost
     this.time = time
     this.recipe = recipe
-    if (this.recipe != null)
-      this.recipe.craftOrBuy = action
     this.recipe_id = recipe_id
-
-    for (let idx in sequence) {
-      this.recipe.ingredients[idx]['Action'] = sequence[idx]
-    }
+    this.actionSequence = actionSequence
   }
 
   calculateProfit(sellPrice) {
     const TAX_PERCENTAGE = 0.65;
 
     // Measure the profit for each action
-    // console.log('Calculate Profit | ', this.monetaryCost, this.time)
+    console.log('Calculate Profit | ACTION: SELL PRICE ', sellPrice, this.monetaryCost, this.time)
     return ((sellPrice * TAX_PERCENTAGE) - this.monetaryCost) / this.time
   }
 }

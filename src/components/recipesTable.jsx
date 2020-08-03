@@ -12,20 +12,80 @@ import {
   scrollSpy,
   scroller,
 } from "react-scroll";
-import { ButtonGroup, Button } from "react-bootstrap";
+import { ButtonGroup, Button, Badge } from "react-bootstrap";
 
 class RecipesTable extends Component {
   state = {};
 
+  renderBadges() {
+    const { shoppingCartData, marketData, valuePack } = this.props.item;
+    const marketPrice = this.props.item.getMarketPrice()
+    let {
+      expectedCount: count,
+      individualPrice,
+      cumulativeTimeSpent
+    } = shoppingCartData;
+
+    individualPrice = parseInt(individualPrice)
+    
+    let sellingPrice = marketPrice * 0.65
+    if (valuePack) sellingPrice = 1.3 * sellingPrice
+    const profit = (sellingPrice) - (individualPrice)
+    const profitPerSecond = Math.floor(profit / cumulativeTimeSpent)
+
+    return (
+      <div
+        style={{
+          paddingLeft: "20px",
+          paddingTop: "0px",
+          paddingBottom: "20px",
+        }}
+      >
+        <Badge variant="danger">
+          {`Market Price: ${marketPrice} silver`}
+        </Badge>
+        
+        {/* Profit */}
+        <div></div>
+        <Badge variant="success">{`Total Profit: ${Math.floor(profit * count)} silver`}</Badge>
+        <div></div>
+        <Badge variant="success">{`Profit per item: ${Math.floor(profit)} silver`}</Badge>
+        <div></div>
+        <Badge variant="success">{`Profit per sec: ${profitPerSecond} silver/second`}</Badge>
+
+        {/* Silver spent */}
+        <div></div>
+        <Badge variant="warning">
+          {`${individualPrice * count} silver spent to get these materials`}
+        </Badge>
+        <div></div>
+        <Badge variant="warning">{`${individualPrice} silver per item.`}</Badge>
+
+        {/* Time spent */}
+        <div></div>
+        <Badge variant="info">{`${(cumulativeTimeSpent * count).toFixed(2)} total seconds`}</Badge>
+        <div></div>
+        <Badge variant="info">{`${(cumulativeTimeSpent).toFixed(2)} seconds per item`}</Badge>
+
+      </div>
+    );
+  }
+
   /**
    * Renders the chips right below the title
    * @param {[Recipe]} allRecipes An array of Recipe objects
-   * @param {string} selectedRecipeId The selected recipe. If null, the action is 'Buy' 
+   * @param {string} selectedRecipeId The selected recipe. If null, the action is 'Buy'
    * @param {} productName The name of the product being bought/crafted
    */
   renderChips(allRecipes, selectedRecipeId, productName) {
     return (
-      <div id="toolbar-container-recipes">
+      <div
+        id="toolbar-container"
+        style={{
+          padding: "10px 0px 10px 20px",
+        }}
+      >
+        {/* <Chip clickable={false} style={{borderRadius: "3px"}} label={'Buy or Craft?:'}></Chip> */}
         <Chip
           className="recipeChip"
           clickable
@@ -38,7 +98,7 @@ class RecipesTable extends Component {
           }}
         />
         {Object.keys(allRecipes).map((recipe_id, index) => {
-          if (allRecipes[recipe_id].craftOrBuy == 'Buy') return (null)
+          if (allRecipes[recipe_id].quantityProduced == null) return (null)
           const isSelected = selectedRecipeId == recipe_id;
           return (
             <Chip
@@ -58,13 +118,43 @@ class RecipesTable extends Component {
     );
   }
 
+  renderParentLink(parentName) {
+    if (parentName == null) return null;
+    return (
+      <div
+        id="toolbar-subtitle"
+        style={{ fontSize: "0.8em", paddingLeft: "25px" }}
+      >
+        {"for "}
+        <Link
+          activeClass="active"
+          className="scrollLink text-primary"
+          to={parentName}
+          spy={true}
+          smooth={true}
+          duration={500}
+        >
+          {parentName}
+        </Link>
+      </div>
+    );
+  }
+
   render() {
-    const { productName, item } = this.props;
-    const allRecipes = item.recipes;
-    const selectedRecipeId = item.activeRecipeId;
+    const { productName, item} = this.props;
+    const { shoppingCartData, recipes: allRecipes, activeRecipeId: selectedRecipeId } = item
     const selectedRecipe =
       selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
-    console.log("RENDERING ITEM", item)
+    let rowData = []
+    
+    if (selectedRecipe != null)
+      rowData = [...selectedRecipe.ingredients]
+      
+    for (let ingredient of rowData) {
+      ingredient['Total Needed'] = ingredient['Amount'] * shoppingCartData.craftCount
+    }
+
+    // console.log("recipesTable.jsx | RENDERING ITEM", item)
     return (
       <>
         {item.usedInRecipes.map(
@@ -76,7 +166,7 @@ class RecipesTable extends Component {
                   icons={tableIcons}
                   columns={[
                     {
-                      title: "Name",
+                      title: `Name`,
                       field: "Item Name",
                       render: (rowData) => (
                         <Link
@@ -91,13 +181,14 @@ class RecipesTable extends Component {
                         </Link>
                       ),
                     },
-                    { title: "Amount", field: "Amount" },
+                    { title: "Amount per Craft", field: "Amount" },
+                    { title: "Total Needed", field: "Total Needed" },
                   ]}
                   data={
-                    selectedRecipe != null ? selectedRecipe.ingredients : []
+                    selectedRecipe != null ? rowData : []
                   } // TODO: Which recipe to choose?
                   // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
-                  title={productName}
+                  title={`${productName} (x${shoppingCartData.expectedCount})`}
                   options={{
                     search: false,
                     paging: false,
@@ -123,33 +214,13 @@ class RecipesTable extends Component {
                             style={{ "text-align": "center" }}
                           />
                           {/* <div {...props}>{props.title}</div> */}
-                          {parentName != null ? (
-                            <div
-                              id="toolbar-subtitle"
-                              style={{ fontSize: "0.8em", paddingLeft: "25px" }}
-                            >
-                              {"for "}
-                              <Link
-                                activeClass="active"
-                                className="scrollLink text-primary"
-                                to={parentName}
-                                spy={true}
-                                smooth={true}
-                                duration={500}
-                              >
-                                {parentName}
-                              </Link>
-                            </div>
-                          ) : null}
-
-                          <div
-                            id="toolbar-container"
-                            style={{
-                              padding: "10px 0px 20px 20px",
-                            }}
-                          >
-                            {this.renderChips(allRecipes, selectedRecipeId, productName)}
-                          </div>
+                          {this.renderParentLink(parentName)}
+                          {this.renderChips(
+                            allRecipes,
+                            selectedRecipeId,
+                            productName
+                          )}
+                          {this.renderBadges()}
                         </div>
                       );
                     },

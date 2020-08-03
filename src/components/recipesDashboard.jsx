@@ -29,7 +29,7 @@ class Item {
 
   addRecipe(_id, productName, recipe, quantityProduced, timeToProduce) {
     if (this.recipes[_id] == null)
-      this.recipes[_id] = new Recipe(productName, recipe, 'Buy', quantityProduced, timeToProduce)
+      this.recipes[_id] = new Recipe(productName, recipe, quantityProduced, timeToProduce)
     // this.printRecipes()
   }
 
@@ -39,7 +39,7 @@ class Item {
    * @param {string} parentRecipeId // What recipe is this item used in?
    * @param {string} activeRecipeId // One of the recipes to craft this item
    */
-  addUse = (actionTaken, parentName, parentRecipeId, activeRecipeId) => {
+  addUse(actionTaken, parentName, parentRecipeId, activeRecipeId) {
     for (const {parentUsedAlready} of this.usedInRecipes) {
       if (parentUsedAlready == parentRecipeId) return;
     }
@@ -52,7 +52,7 @@ class Item {
     this.activeRecipeId = activeRecipeId
   }
 
-  selectRecipe = (recipeId) => {
+  selectRecipe(recipeId) {
     this.activeRecipeId = recipeId
   }
 
@@ -67,9 +67,8 @@ class Item {
 }
 
 class Recipe {
-  constructor(productName, ingredients, craftOrBuy = "Buy", quantityProduced = null, timeToProduce = null) {
+  constructor(productName, ingredients, quantityProduced = null, timeToProduce = null) {
     this.productName = productName
-    this.craftOrBuy = craftOrBuy 
     this.ingredients = ingredients
     this.quantityProduced = quantityProduced
     this.timeToProduce = timeToProduce
@@ -107,6 +106,7 @@ class RecipesDashboard extends Component {
   async componentDidUpdate(nextProps) {
     const { product: productName } = this.props;
     // Only update if the props changed
+    console.log('New product name:', productName)
     if (nextProps.product != productName) {
       await this.getData(productName)
     }
@@ -163,6 +163,7 @@ class RecipesDashboard extends Component {
     }
 
     // Get optimal actions
+    console.log('This items', this.items)
     this.resetToOptimal()
     return this.items
   }
@@ -194,10 +195,11 @@ class RecipesDashboard extends Component {
     // Step 1: Reset items that were dependent on the previous recipe
     this.startRecursiveReset(items[itemName], items)
     items[itemName].selectRecipe(recipeId)
-    console.log('recipesDashboard.jsx | items after recursive reset', items)
-
+    // console.log('recipesDashboard.jsx | items after recursive reset', items)
+    
     // Step 2: Find the best way to make money using the new decision
     let optimalActions = this.shoppingCart.optimizer.startCalculatingOptimalActions(itemName, items, recipeId)
+    console.log('recipesDashboard.jsx | optimalActions', optimalActions)
     let chosenAction = recipeId == null ? 'Buy' : 'Craft'
     // Step 3: Using the new optimal actions calculated, update the items object so that the corresponding tables are displayed
     this.cascadeActiveRecipeWithOptimalActions(
@@ -207,12 +209,9 @@ class RecipesDashboard extends Component {
       items
     );
 
-    // // Step 4: Calcualte the costs associated with the desired action tree. (TODO: Move to separate function?)
-    // Calculate costs
-    // const {recipeIdx: rootRecipeIdx} = currentActionSet
-    // console.log('recpiesDashboard.jsx | Items and itemName', items, itemName)
-    // const shoppingCartData = this.shoppingCart.calculateCostsWithActionSet(currentActionSet, items[itemName], 5);
-    // console.log('Shopping Cart Data', shoppingCartData);
+    // Step 4: Calculate the costs associated with the desired action tree. (TODO: Move to separate function?)
+    console.log("THIS PROPS PRODUCT = ", this.props.product, this.items)
+    this.shoppingCart.calculateCosts(this.props.product, 5, items);
 
     // Step 5: Finally update the state to see the changes
     this.updateTables()
@@ -257,21 +256,20 @@ class RecipesDashboard extends Component {
 
   }
 
-  selectCraftOrBuy(itemName, craftOrBuy) {
-    
-  }
-
   resetToOptimal() {
-    // TODO: Move to separate method?
     // Get optimal action for each recipe of the root product
-    const bestRecipeActions = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, this.items);    
+    const bestRecipeActions = this.shoppingCart.optimizer.findOptimalActionSets(this.props.product, this.items);
     const {product} = this.props
+
     // Choose most optimal recipe and the optimal actions for profit
     let bestActionSet = null
     for (let actionSetIdx in bestRecipeActions) {
       const actionSet = bestRecipeActions[actionSetIdx]
       if (bestActionSet == null) { bestActionSet = actionSet; continue; } 
 
+      console.log('TEMP', bestActionSet.optimalActions)
+      console.log('TEMP', product)
+      console.log('TEMP', bestActionSet.optimalActions[product])
       const oldCraftAction = bestActionSet.optimalActions[product]['Craft']
       const newCraftAction = actionSet.optimalActions[product]['Craft']
       const marketPrice = this.items[product].getMarketPrice()
@@ -279,7 +277,7 @@ class RecipesDashboard extends Component {
         bestActionSet = actionSet
     }
 
-    console.log('Best Action Set', bestActionSet)
+    console.log('recipesDashboard.jsx | Best Action Set', bestActionSet)
     this.selectRecipe(product, bestActionSet['optimalActions'][product]['Craft'].recipe_id)
   }
 
@@ -293,7 +291,7 @@ class RecipesDashboard extends Component {
  */
   cascadeActiveRecipeWithOptimalActions(optimalActions, currentItem, actionTaken, items = {...this.items}, parent = {}) {
     const {parentRecipeId, parentName} = parent
-    console.log('Optimal Actions', optimalActions)
+    console.log('Optimal Actions', JSON.stringify(optimalActions, null, 4))
     console.log('Active Item:', currentItem)
     console.log('Action Taken:', actionTaken)
     const action = optimalActions[currentItem][actionTaken];
@@ -303,9 +301,11 @@ class RecipesDashboard extends Component {
     if (actionTaken == "Buy") return items;
 
     // Recursively update activeRecipes dictionary using more calls to cascadeActiveRecipeWithOptimalActions
-    for (const ingredient of action.recipe.ingredients) {
+    for (const ingredientIdx in action.recipe.ingredients) {
+      const ingredient = action.recipe.ingredients[ingredientIdx]
       const name = ingredient["Item Name"];
-      const ingredientAction = ingredient["Action"];
+      const ingredientAction = action.actionSequence[ingredientIdx];
+      console.log('TEMP', name, ingredientAction)
       const newParent = {
         parentRecipeId: action.recipe_id,
         parentName: currentItem
@@ -324,6 +324,10 @@ class RecipesDashboard extends Component {
 
   updateTables() {
     console.log(this.items)
+
+
+
+    // Convert this.items into array
     let recipeTables = Object.values(this.items)
     recipeTables.filter(function(item) {
       return item.usedInRecipes.length > 0 || item.activeRecipeId != null
