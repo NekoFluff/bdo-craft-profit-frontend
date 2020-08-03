@@ -62,6 +62,12 @@ Note: Beware of modifying this element as it can break the animations - you shou
   padding: 0.75em 0em;
 }
 
+.bm-item:hover {
+  display: inline-block;
+  color:#ffffff;
+  padding: 0.75em 0em;
+}
+
 /* Styling of overlay */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);

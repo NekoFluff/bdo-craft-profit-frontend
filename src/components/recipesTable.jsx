@@ -15,10 +15,10 @@ import {
 import { ButtonGroup, Button, Badge, Accordion, Card } from "react-bootstrap";
 
 class RecipesTable extends Component {
-  state = {  };
+  state = {};
 
   renderDetailsButton() {
-    return(
+    return (
       <Accordion>
         <Card>
           <Card.Header>
@@ -27,11 +27,7 @@ class RecipesTable extends Component {
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            <Card.Body>
-
-            {this.renderBadges()}
-
-            </Card.Body>
+            <Card.Body>{this.renderBadges()}</Card.Body>
           </Accordion.Collapse>
         </Card>
         {/* <Card>
@@ -45,24 +41,24 @@ class RecipesTable extends Component {
           </Accordion.Collapse>
         </Card> */}
       </Accordion>
-    )
+    );
   }
 
   renderBadges() {
     const { shoppingCartData, marketData, valuePack } = this.props.item;
-    const marketPrice = this.props.item.getMarketPrice()
+    const marketPrice = this.props.item.getMarketPrice();
     let {
       expectedCount: count,
       individualPrice,
-      cumulativeTimeSpent
+      cumulativeTimeSpent,
     } = shoppingCartData;
 
-    individualPrice = parseInt(individualPrice)
-    
-    let sellingPrice = marketPrice * 0.65
-    if (valuePack) sellingPrice = 1.3 * sellingPrice
-    const profit = (sellingPrice) - (individualPrice)
-    const profitPerSecond = Math.floor(profit / cumulativeTimeSpent)
+    individualPrice = parseInt(individualPrice);
+
+    let sellingPrice = marketPrice * 0.65;
+    if (valuePack) sellingPrice = 1.3 * sellingPrice;
+    const profit = sellingPrice - individualPrice;
+    const profitPerSecond = Math.floor(profit / cumulativeTimeSpent);
 
     return (
       <div
@@ -72,32 +68,49 @@ class RecipesTable extends Component {
           paddingBottom: "20px",
         }}
       >
-        <Badge variant="danger">
-          {`Market Price: ${marketPrice} silver`}
-        </Badge>
-        
+        <h4>
+          {" "}
+          <Badge variant="danger">
+            {`Market Price: ${marketPrice} silver`}
+          </Badge>
+        </h4>
+
         {/* Profit */}
-        <div></div>
-        <Badge variant="success">{`Total Profit: ${Math.floor(profit * count)} silver`}</Badge>
-        <div></div>
-        <Badge variant="success">{`Profit per item: ${Math.floor(profit)} silver`}</Badge>
-        <div></div>
-        <Badge variant="success">{`Profit per sec: ${profitPerSecond} silver/second`}</Badge>
+        <h4>
+          <Badge variant="success">{`Total Profit: ${Math.floor(
+            profit * count
+          )} silver`}</Badge>
+        </h4>
+        <h4>
+          <Badge variant="success">{`Profit per item: ${Math.floor(
+            profit
+          )} silver`}</Badge>
+        </h4>
+        <h4>
+          <Badge variant="success">{`Profit per sec: ${profitPerSecond} silver/second`}</Badge>
+        </h4>
 
         {/* Silver spent */}
-        <div></div>
-        <Badge variant="warning">
-          {`${individualPrice * count} silver spent to get these materials`}
-        </Badge>
-        <div></div>
-        <Badge variant="warning">{`${individualPrice} silver per item.`}</Badge>
+        <h4>
+          <Badge variant="warning">
+            {`${individualPrice * count} silver spent to get these materials`}
+          </Badge>
+        </h4>
+        <h4>
+          <Badge variant="warning">{`${individualPrice} silver per item.`}</Badge>
+        </h4>
 
         {/* Time spent */}
-        <div></div>
-        <Badge variant="info">{`${(cumulativeTimeSpent * count).toFixed(2)} total seconds`}</Badge>
-        <div></div>
-        <Badge variant="info">{`${(cumulativeTimeSpent).toFixed(2)} seconds per item`}</Badge>
-
+        <h4>
+          <Badge variant="info">{`${(cumulativeTimeSpent * count).toFixed(
+            2
+          )} total seconds crafting`}</Badge>
+        </h4>
+        <h4>
+          <Badge variant="info">{`${cumulativeTimeSpent.toFixed(
+            2
+          )} seconds per item`}</Badge>
+        </h4>
       </div>
     );
   }
@@ -129,7 +142,7 @@ class RecipesTable extends Component {
           }}
         />
         {Object.keys(allRecipes).map((recipe_id, index) => {
-          if (allRecipes[recipe_id].quantityProduced == null) return (null)
+          if (allRecipes[recipe_id].quantityProduced == null) return null;
           const isSelected = selectedRecipeId == recipe_id;
           return (
             <Chip
@@ -172,17 +185,21 @@ class RecipesTable extends Component {
   }
 
   render() {
-    const { productName, item} = this.props;
-    const { shoppingCartData, recipes: allRecipes, activeRecipeId: selectedRecipeId } = item
+    const { productName, item } = this.props;
+    const {
+      shoppingCartData,
+      recipes: allRecipes,
+      activeRecipeId: selectedRecipeId,
+    } = item;
     const selectedRecipe =
       selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
-    let rowData = []
-    
-    if (selectedRecipe != null)
-      rowData = [...selectedRecipe.ingredients]
-      
+    let rowData = [];
+
+    if (selectedRecipe != null) rowData = [...selectedRecipe.ingredients];
+
     for (let ingredient of rowData) {
-      ingredient['Total Needed'] = ingredient['Amount'] * shoppingCartData.craftCount
+      ingredient["Total Needed"] =
+        ingredient["Amount"] * shoppingCartData.craftCount;
     }
 
     // console.log("recipesTable.jsx | RENDERING ITEM", item)
@@ -215,9 +232,7 @@ class RecipesTable extends Component {
                     { title: "Amount per Craft", field: "Amount" },
                     { title: "Total Needed", field: "Total Needed" },
                   ]}
-                  data={
-                    selectedRecipe != null ? rowData : []
-                  } // TODO: Which recipe to choose?
+                  data={selectedRecipe != null ? rowData : []} // TODO: Which recipe to choose?
                   // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
                   title={`${productName} (x${shoppingCartData.expectedCount})`}
                   options={{
