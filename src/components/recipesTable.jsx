@@ -12,10 +12,41 @@ import {
   scrollSpy,
   scroller,
 } from "react-scroll";
-import { ButtonGroup, Button, Badge } from "react-bootstrap";
+import { ButtonGroup, Button, Badge, Accordion, Card } from "react-bootstrap";
 
 class RecipesTable extends Component {
-  state = {};
+  state = {  };
+
+  renderDetailsButton() {
+    return(
+      <Accordion>
+        <Card>
+          <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey="0">
+              Profit Details
+            </Accordion.Toggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+
+            {this.renderBadges()}
+
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+        {/* <Card>
+          <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey="1">
+              Click me!
+            </Accordion.Toggle>
+          </Card.Header>
+          <Accordion.Collapse eventKey="1">
+            <Card.Body>Hello! I'm another body</Card.Body>
+          </Accordion.Collapse>
+        </Card> */}
+      </Accordion>
+    )
+  }
 
   renderBadges() {
     const { shoppingCartData, marketData, valuePack } = this.props.item;
@@ -220,7 +251,7 @@ class RecipesTable extends Component {
                             selectedRecipeId,
                             productName
                           )}
-                          {this.renderBadges()}
+                          {this.renderDetailsButton()}
                         </div>
                       );
                     },
