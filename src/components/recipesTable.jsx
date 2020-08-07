@@ -98,7 +98,7 @@ class RecipesTable extends Component {
           </Badge>
         </h4>
         <h4>
-          <Badge variant="warning">{`${individualPrice} silver per item.`}</Badge>
+          <Badge variant="warning">{`${individualPrice} silver spent per item.`}</Badge>
         </h4>
 
         {/* Time spent */}
@@ -110,7 +110,7 @@ class RecipesTable extends Component {
         <h4>
           <Badge variant="info">{`${cumulativeTimeSpent.toFixed(
             2
-          )} seconds per item`}</Badge>
+          )} seconds spent to craft one of these items`}</Badge>
         </h4>
       </div>
     );
