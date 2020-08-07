@@ -17,10 +17,29 @@ import { withRouter } from "react-router";
 import "../css/Dashboard.css";
 import ProfitCalculator from "./../helpers/ShoppingCartProfitCalculator";
 import numberWithCommas from "../helpers/numberWithCommas";
-import secondsToHms from './../helpers/secondsToHms';
-
+import secondsToHms from "./../helpers/secondsToHms";
 
 class sidebar extends Component {
+  state = {
+    overrideMarketPrice: null,
+  };
+
+  componentWillReceiveProps(newProps) {
+    const { recipeTables } = newProps;
+    const { recipeTables: oldRecipeTables } = this.props;
+
+    if (recipeTables != null) {
+      const item = recipeTables[0];
+      if (
+        this.state.overrideMarketPrice == null ||
+        (oldRecipeTables != null &&
+          oldRecipeTables[0].name != recipeTables[0].name)
+      ) {
+        this.setState({ overrideMarketPrice: item.getMarketPrice() });
+      }
+    }
+  }
+
   onUpdateCraftCount = (e) => {
     const { onUpdateCraftCount: callback } = this.props;
 
@@ -45,6 +64,16 @@ class sidebar extends Component {
     e.preventDefault();
   };
 
+  handleMarketPriceChange = (e) => {
+    this.setState({ overrideMarketPrice: e.target.value });
+    console.log("MARKET PRICE CHANGE", e.target.value);
+    const { onMarketPriceChange: callback } = this.props;
+
+    if (callback != null) {
+      callback(parseInt(e.target.value));
+    }
+  };
+
   renderOutput = () => {
     const { recipeTables } = this.props;
     let craftCount = "N/A",
@@ -59,7 +88,8 @@ class sidebar extends Component {
     let marketPriceLastUpdated = "N/A";
     if (recipeTables != null) {
       const item = recipeTables[0];
-      marketPrice = item.marketData["Market Price"];
+      marketPrice = item.getMarketPrice();
+
       marketPriceLastUpdated = item.marketData["Last Updated"];
       craftCount = item.shoppingCartData[0].craftCount;
       cumulativeTimeSpent = item.shoppingCartData[0].cumulativeTimeSpent;
@@ -68,6 +98,13 @@ class sidebar extends Component {
       individualPrice = item.shoppingCartData[0].individualPrice;
       profitPerItem = ProfitCalculator.calculateProfit(
         marketPrice,
+        individualPrice
+      );
+      console.log(
+        "Total Profit | ",
+        marketPrice,
+        profitPerItem,
+        expectedCount,
         individualPrice
       );
       totalProfit = profitPerItem * expectedCount;
@@ -111,11 +148,8 @@ class sidebar extends Component {
               Total Crafting Time: {secondsToHms(totalTime)}
             </Form.Label>
           </OverlayTrigger>
-        </Form.Group>
-
-        {/* PPS */}
-
-        <Form.Group>
+          {/* PPS */}
+          <br></br>
           <OverlayTrigger
             trigger="hover"
             overlay={
@@ -124,10 +158,14 @@ class sidebar extends Component {
               </Tooltip>
             }
           >
-            <Form.Text className="text-muted">
-              Profit per second (PPS): {numberWithCommas((pps).toFixed(2))} silver/sec
-            </Form.Text>
+            <Form.Label className="text font-weight-bold">
+              Profit per second (PPS): {numberWithCommas(pps.toFixed(2))}{" "}
+              silver/sec
+            </Form.Label>
           </OverlayTrigger>
+        </Form.Group>
+
+        <Form.Group>
           {/* </Form.Group> */}
 
           {/* Profit per Item */}
@@ -141,9 +179,11 @@ class sidebar extends Component {
             }
           >
             <Form.Text className="text-muted">
-              Profit per item: {numberWithCommas((profitPerItem).toFixed(2))} silver
+              Profit per item: {numberWithCommas(profitPerItem.toFixed(2))}{" "}
+              silver
             </Form.Text>
           </OverlayTrigger>
+          <br></br>
           <OverlayTrigger
             trigger="hover"
             overlay={
@@ -152,9 +192,25 @@ class sidebar extends Component {
               </Tooltip>
             }
           >
-            <Form.Text className="text-muted">
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroupPrepend">
+                  Market Price
+                </InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="number"
+                placeholder={marketPrice}
+                aria-describedby="inputGroupPrepend"
+                name="marketPrice"
+                value={this.state.overrideMarketPrice}
+                onChange={this.handleMarketPriceChange}
+                // isInvalid={!!errors.username}
+              />
+            </InputGroup>
+            {/* <Form.Input className="text-muted">
               Market Price: {numberWithCommas(marketPrice)} silver
-            </Form.Text>
+            </Form.Input> */}
           </OverlayTrigger>
         </Form.Group>
       </Form>
@@ -164,7 +220,7 @@ class sidebar extends Component {
   renderShoppingCart = () => {
     let sample = ["Item 1", "Item 2"];
     console.log("RENDER SHOPPING CART", this.props.recipeTables);
-    var totalCost = 0
+    var totalCost = 0;
     return (
       <Form handleSubmit={this.handleSubmit}>
         <Form.Group>
@@ -181,7 +237,9 @@ class sidebar extends Component {
               </Tooltip>
             }
           >
-            <Form.Label className={"text font-italic"}>Shopping List:</Form.Label>
+            <Form.Label className={"text font-italic"}>
+              Shopping List:
+            </Form.Label>
           </OverlayTrigger>{" "}
         </Form.Group>
         <Form.Group>
@@ -191,7 +249,7 @@ class sidebar extends Component {
               if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
               return item.shoppingCartData.map((data) => {
                 const { expectedCount, individualPrice } = data;
-                totalCost += expectedCount * individualPrice
+                totalCost += expectedCount * individualPrice;
                 return (
                   <Form.Label className={"text"}>{`${
                     item.name
@@ -204,7 +262,9 @@ class sidebar extends Component {
         </Form.Group>
 
         <Form.Group>
-          <Form.Label className={"text"} className="font-weight-bold">{`Total: ${numberWithCommas(totalCost)} silver`} </Form.Label>
+          <Form.Label className={"text"} className="font-weight-bold">
+            {`Total: ${numberWithCommas(totalCost)} silver`}{" "}
+          </Form.Label>
         </Form.Group>
       </Form>
     );

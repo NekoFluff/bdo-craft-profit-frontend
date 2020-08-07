@@ -31,6 +31,7 @@ class Item {
     this.usedInRecipes = [];
     this.activeRecipeId = null;
     this.depth = initialItemData["depth"] || -1;
+    this.overrideMarketPrice = null
     this.addRecipe(
       initialItemData["_id"],
       initialItemData["Name"],
@@ -41,7 +42,7 @@ class Item {
   }
 
   getMarketPrice() {
-    return this.marketData["Market Price"];
+    return this.overrideMarketPrice || this.marketData["Market Price"];
   }
 
   addRecipe(_id, productName, recipe, quantityProduced, timeToProduce) {
@@ -416,7 +417,7 @@ class RecipesDashboard extends Component {
   }
 
   updateTables() {
-    console.log(this.items);
+    console.log('Update Tables | this.items: ', this.items);
 
     // Convert this.items into array
     let recipeTables = Object.values(this.items);
@@ -451,13 +452,10 @@ class RecipesDashboard extends Component {
               detailsShown={this.state.openProfitDetails[item.name]}
               onProfitDetailsButtonPressed={(itemName) => {
                 const temp = { ...this.state.openProfitDetails };
-                console.log(temp);
-                console.log(temp[itemName], itemName);
                 temp[itemName] =
                   temp[itemName] == null || temp[itemName] == false
                     ? true
                     : false;
-                console.log(temp);
                 this.setState({ openProfitDetails: temp });
               }}
             ></RecipesTable>
@@ -488,6 +486,10 @@ class RecipesDashboard extends Component {
               }}
               onUpdateValuePack={(valuePackEnabled) => {
                 ProfitCalculator.valuePackEnabled = valuePackEnabled
+                this.resetToOptimal()
+              }}
+              onMarketPriceChange={(newMarketPrice) => {
+                this.items[this.props.product]['overrideMarketPrice'] = newMarketPrice
                 this.resetToOptimal()
               }}
             ></RecipesSidebar>
