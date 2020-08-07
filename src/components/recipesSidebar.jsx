@@ -51,9 +51,9 @@ class sidebar extends Component {
       cumulativeTimeSpent = "N/A",
       expectedCount = "N/A",
       individualPrice = "N/A";
-    let profitPerItem = "N/A";
+    let profitPerItem = 0;
     let totalProfit = "N/A";
-    let pps = "N/A";
+    let pps = 0;
     let totalTime = "N/A";
     let marketPrice = "N/A";
     let marketPriceLastUpdated = "N/A";
@@ -91,7 +91,7 @@ class sidebar extends Component {
             }
           >
             <Form.Label className="text">
-              Total Profit: {numberWithCommas(totalProfit)} silver
+              Total Profit: {numberWithCommas(parseInt(totalProfit))} silver
             </Form.Label>
           </OverlayTrigger>
           {/* </Form.Group> */}
@@ -125,7 +125,7 @@ class sidebar extends Component {
             }
           >
             <Form.Text className="text-muted">
-              Profit per second (PPS): {numberWithCommas(pps)} silver/sec
+              Profit per second (PPS): {numberWithCommas((pps).toFixed(2))} silver/sec
             </Form.Text>
           </OverlayTrigger>
           {/* </Form.Group> */}
@@ -141,7 +141,7 @@ class sidebar extends Component {
             }
           >
             <Form.Text className="text-muted">
-              Profit per item: {numberWithCommas(profitPerItem)} silver
+              Profit per item: {numberWithCommas((profitPerItem).toFixed(2))} silver
             </Form.Text>
           </OverlayTrigger>
           <OverlayTrigger
