@@ -1,3 +1,5 @@
+import ProfitCalculator from './ShoppingCartProfitCalculator';
+
 let sample = {
   "_id": "5f1a1a47f99c32cda3f4e998",
   "Action": "Cooking",
@@ -351,21 +353,34 @@ class PPHOptimizer {
   }
 }
 
+
 class Action {
+  /**
+   * 
+   * @param {decimal} monetaryCost Cost of individual item
+   * @param {decimal} time Time spent per item
+   * @param {obj} recipe 
+   * @param {string} recipe_id 
+   * @param {[string]} actionSequence 
+   */
   constructor(monetaryCost = 0, time = 0, recipe = null, recipe_id = null, actionSequence = null) {
-    this.monetaryCost = monetaryCost
-    this.time = time
+    this.monetaryCost = monetaryCost 
+    this.time = time 
     this.recipe = recipe
     this.recipe_id = recipe_id
     this.actionSequence = actionSequence
   }
 
   calculateProfit(sellPrice) {
-    const TAX_PERCENTAGE = 0.65;
-
+    let mode = 'pps' //TODO: Switch based on mode of optimization selected
     // Measure the profit for each action
     console.log('Calculate Profit | ACTION: SELL PRICE ', sellPrice, this.monetaryCost, this.time)
-    return ((sellPrice * TAX_PERCENTAGE) - this.monetaryCost) / this.time
+    if (mode == 'pps')
+    return this.calculatePPS(sellPrice)
+  }
+
+  calculatePPS(sellPrice) {
+    return ProfitCalculator.calculateProfitPerSecond(sellPrice, this.monetaryCost, this.time)
   }
 }
 

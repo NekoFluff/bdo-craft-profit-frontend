@@ -1,7 +1,4 @@
-import React from "react";
-import { Nav } from "react-bootstrap";
-import { withRouter } from "react-router";
-import "../css/Dashboard.css";
+import React, { Component } from "react";
 import {
   InputGroup,
   FormControl,
@@ -9,56 +6,376 @@ import {
   Col,
   Row,
   Button,
+  Accordion,
+  Card,
+  ButtonGroup,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
+import { withRouter } from "react-router";
+import "../css/Dashboard.css";
+import ProfitCalculator from "./../helpers/ShoppingCartProfitCalculator";
+import numberWithCommas from "../helpers/numberWithCommas";
+import secondsToHms from './../helpers/secondsToHms';
 
-const sidebar = (props) => {
-  return (
-    /**
-     * Input Types:
-     * One of the two are necessary:
-     * - How many you want to make
-     * - How much silver you have
-     *
-     * Switch between the three different types of calculations.
-     * For now only enable PPH (price per hour) calculations.
-     * Disable the other two possible buttons on the switch
-     *
-     * Applied Buffs
-     */
-    <React.Fragment>
-      <Form>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
+
+class sidebar extends Component {
+  onUpdateCraftCount = (e) => {
+    const { onUpdateCraftCount: callback } = this.props;
+
+    if (callback != null) {
+      callback(e.target.value);
+    }
+  };
+
+  onUpdateValuePack = (e) => {
+    const { onUpdateValuePack: callback } = this.props;
+
+    if (callback != null) {
+      callback(e.target.checked);
+    }
+  };
+
+  onUpdateOptimizerChoice = (e) => {};
+
+  onUpdateBuffs = (e) => {};
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  renderOutput = () => {
+    const { recipeTables } = this.props;
+    let craftCount = "N/A",
+      cumulativeTimeSpent = "N/A",
+      expectedCount = "N/A",
+      individualPrice = "N/A";
+    let profitPerItem = "N/A";
+    let totalProfit = "N/A";
+    let pps = "N/A";
+    let totalTime = "N/A";
+    let marketPrice = "N/A";
+    let marketPriceLastUpdated = "N/A";
+    if (recipeTables != null) {
+      const item = recipeTables[0];
+      marketPrice = item.marketData["Market Price"];
+      marketPriceLastUpdated = item.marketData["Last Updated"];
+      craftCount = item.shoppingCartData[0].craftCount;
+      cumulativeTimeSpent = item.shoppingCartData[0].cumulativeTimeSpent;
+      expectedCount = item.shoppingCartData[0].expectedCount;
+      totalTime = cumulativeTimeSpent * expectedCount;
+      individualPrice = item.shoppingCartData[0].individualPrice;
+      profitPerItem = ProfitCalculator.calculateProfit(
+        marketPrice,
+        individualPrice
+      );
+      totalProfit = profitPerItem * expectedCount;
+      pps = ProfitCalculator.calculateProfitPerSecond(
+        marketPrice,
+        individualPrice,
+        cumulativeTimeSpent
+      );
+    }
+
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        {/* Total Profit */}
+        <Form.Group>
+          <OverlayTrigger
+            trigger="hover"
+            overlay={
+              <Tooltip trigger="hover" id="tooltip">
+                Profit = Silver spent - Silver earned from market
+              </Tooltip>
+            }
+          >
+            <Form.Label className="text">
+              Total Profit: {numberWithCommas(totalProfit)} silver
+            </Form.Label>
+          </OverlayTrigger>
+          {/* </Form.Group> */}
+          <br></br>
+
+          {/* Total Profit */}
+          {/* <Form.Group> */}
+          <OverlayTrigger
+            trigger="hover"
+            overlay={
+              <Tooltip trigger="hover" id="tooltip">
+                Total amount of time spent crafting everything
+              </Tooltip>
+            }
+          >
+            <Form.Label className="text">
+              Total Crafting Time: {secondsToHms(totalTime)}
+            </Form.Label>
+          </OverlayTrigger>
+        </Form.Group>
+
+        {/* PPS */}
+
+        <Form.Group>
+          <OverlayTrigger
+            trigger="hover"
+            overlay={
+              <Tooltip trigger="hover" id="tooltip">
+                Total profit / Time spent crafting
+              </Tooltip>
+            }
+          >
+            <Form.Text className="text-muted">
+              Profit per second (PPS): {numberWithCommas(pps)} silver/sec
+            </Form.Text>
+          </OverlayTrigger>
+          {/* </Form.Group> */}
+
+          {/* Profit per Item */}
+          {/* <Form.Group> */}
+          <OverlayTrigger
+            trigger="hover"
+            overlay={
+              <Tooltip trigger="hover" id="tooltip">
+                Total profit / # of items sold
+              </Tooltip>
+            }
+          >
+            <Form.Text className="text-muted">
+              Profit per item: {numberWithCommas(profitPerItem)} silver
+            </Form.Text>
+          </OverlayTrigger>
+          <OverlayTrigger
+            trigger="hover"
+            overlay={
+              <Tooltip trigger="hover" id="tooltip">
+                Last Updated: {marketPriceLastUpdated}
+              </Tooltip>
+            }
+          >
+            <Form.Text className="text-muted">
+              Market Price: {numberWithCommas(marketPrice)} silver
+            </Form.Text>
+          </OverlayTrigger>
+        </Form.Group>
+      </Form>
+    );
+  };
+
+  renderShoppingCart = () => {
+    let sample = ["Item 1", "Item 2"];
+    console.log("RENDER SHOPPING CART", this.props.recipeTables);
+    var totalCost = 0
+    return (
+      <Form handleSubmit={this.handleSubmit}>
+        <Form.Group>
+          <Button style={{ textAlign: "center" }}>
+            Download shopping list
+          </Button>
+        </Form.Group>
+        <Form.Group>
+          <OverlayTrigger
+            trigger="hover"
+            overlay={
+              <Tooltip trigger="hover" id="tooltip">
+                What the optimizer suggests you buy to craft the items.
+              </Tooltip>
+            }
+          >
+            <Form.Label className={"text font-italic"}>Shopping List:</Form.Label>
+          </OverlayTrigger>{" "}
+        </Form.Group>
+        <Form.Group>
+          {this.props.recipeTables != null &&
+            this.props.recipeTables.map((item) => {
+              if (item.activeRecipeId != null) return null; // Only generate form labels for items being bought
+              if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
+              return item.shoppingCartData.map((data) => {
+                const { expectedCount, individualPrice } = data;
+                totalCost += expectedCount * individualPrice
+                return (
+                  <Form.Label className={"text"}>{`${
+                    item.name
+                  } x ${numberWithCommas(expectedCount)} = ${numberWithCommas(
+                    expectedCount * individualPrice
+                  )} silver`}</Form.Label>
+                );
+              });
+            })}
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label className={"text"} className="font-weight-bold">{`Total: ${numberWithCommas(totalCost)} silver`} </Form.Label>
+        </Form.Group>
+      </Form>
+    );
+  };
+
+  renderInput = () => {
+    const { selectedOptimizer } = this.props;
+
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        {/* Craft COunt */}
+        <Form.Group controlId="formCraftCount">
+          <Form.Label>How many would you like to craft?</Form.Label>
+          <Form.Control
+            onChange={this.onUpdateCraftCount}
+            type="number"
+            placeholder="100 (default)"
+          />
           <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
+            Adjustments are instantly reflected in the dashboard.
           </Form.Text>
         </Form.Group>
 
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
-        </Form.Group>
+        {/* Value Pack Checkbox */}
         <Form.Group controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
+          <Form.Check
+            type="checkbox"
+            label="Value Pack Enabled"
+            onChange={this.onUpdateValuePack}
+          />
+          <Form.Text className="text-muted">
+            This checkbox re-runs the optimizer and reselects what items to
+            craft and what items to buy from the market.
+          </Form.Text>
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Recalculate
-        </Button>
-      </Form>
 
-      <InputGroup className="mb-3">
-        <FormControl
-          placeholder="Recipient's username"
-          aria-label="Recipient's username"
-          aria-describedby="basic-addon2"
-        />
-        <InputGroup.Append>
-          <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
-        </InputGroup.Append>
-      </InputGroup>
-    </React.Fragment>
-  );
-};
+        {/* Optimizer */}
+        <Form.Label>Choose an optimizer:</Form.Label>
+        <Form.Group>
+          <ButtonGroup aria-label="Basic example">
+            <OverlayTrigger
+              trigger="hover"
+              overlay={
+                <Tooltip trigger="hover" id="tooltip">
+                  Maximize the silver earned per second (a.k.a Profit Per
+                  Second)!
+                </Tooltip>
+              }
+            >
+              <Button variant="primary">PPS</Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              trigger="hover"
+              overlay={
+                <Tooltip trigger="hover" id="tooltip">
+                  (Not implemented) Maximize the total amount of profit (at the
+                  cost of time)!
+                </Tooltip>
+              }
+            >
+              <Button disabled variant="secondary">
+                Total Profit
+              </Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              trigger="hover"
+              overlay={
+                <Tooltip trigger="hover" id="tooltip">
+                  (Not implemented) Maximize the total amount of EXP generated!
+                </Tooltip>
+              }
+            >
+              <Button disabled variant="secondary">
+                EXP
+              </Button>
+            </OverlayTrigger>
+          </ButtonGroup>
+        </Form.Group>
+      </Form>
+    );
+  };
+
+  renderBuffsInput = () => {
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="basic-addon2">
+              Cooking Time Reduction
+            </InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Recipient's username"
+            aria-label="Recipient's username"
+            aria-describedby="basic-addon2"
+          />
+        </InputGroup>
+      </Form>
+    );
+  };
+
+  render() {
+    return (
+      /**
+       * Input Types:
+       * One of the two are necessary:
+       * - How many you want to make
+       * - How much silver you have
+       *
+       * Switch between the three different types of calculations.
+       * For now only enable PPH (price per hour) calculations.
+       * Disable the other two possible buttons on the switch
+       *
+       * Applied Buffs
+       */
+      <React.Fragment>
+        <Accordion defaultActiveKey="0">
+          {/* Card 3 */}
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="2">
+                Total Profit (Output)
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body>{this.renderOutput()}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+        <br></br>
+        <Accordion defaultActiveKey="0">
+          {/* Card 1 */}
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                Input
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body>{this.renderInput()}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+          {/* Card 2 */}
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                Your Active Buffs
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="1">
+              <Card.Body>{this.renderBuffsInput()}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="2">
+                What you need to buy
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="2">
+              <Card.Body>{this.renderShoppingCart()}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+      </React.Fragment>
+    );
+  }
+}
+
 const RecipesSidebar = withRouter(sidebar);
 export default RecipesSidebar;

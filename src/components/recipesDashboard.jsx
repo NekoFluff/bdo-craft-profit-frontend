@@ -16,6 +16,7 @@ import {
 import { Row, Col, Card, Form, Button } from "react-bootstrap";
 import RecipesSidebar from "../components/recipesSidebar";
 import Sticky from "react-stickynode";
+import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
 
 class Item {
   /**
@@ -108,6 +109,9 @@ class Recipe {
 class RecipesDashboard extends Component {
   state = {
     items: null,
+    recipeTables: null,
+    openProfitDetails: {},
+    craftCount: 100,
   };
 
   componentDidMount() {
@@ -134,6 +138,7 @@ class RecipesDashboard extends Component {
     // Only update if the props changed
     console.log("New product name:", productName);
     if (nextProps.product != productName) {
+      this.setState({ openProfitDetails: {} });
       await this.getData(productName);
     }
   }
@@ -245,11 +250,36 @@ class RecipesDashboard extends Component {
       items
     );
 
-    // Step 4: Calculate the costs associated with the desired action tree. (TODO: Move to separate function?)
-    console.log("THIS PROPS PRODUCT = ", this.props.product, this.items);
-    this.shoppingCart.calculateCosts(this.props.product, 5, items);
+    // Step 4: Recalculate all the costs!
+    this.recalculate();
+  };
 
-    // Step 5: Finally update the state to see the changes
+  /**
+   *
+   * @param {obj} overrides
+   * {
+   *  craftCount: int
+   *  valuePackEnabled: true/false
+   * }
+   */
+  recalculate = (overrides) => {
+    // Step 1: Calculate the costs associated with the desired action tree. (TODO: Move to separate function?)
+    // console.log("THIS PROPS PRODUCT = ", this.props.product, this.items);
+    if (overrides != null) {
+      this.shoppingCart.calculateCosts(
+        this.props.product,
+        overrides.craftCount,
+        this.items
+      );
+    } else {
+      this.shoppingCart.calculateCosts(
+        this.props.product,
+        this.state.craftCount,
+        this.items
+      );
+    }
+
+    // Step 2: Finally update the state to see the changes
     this.updateTables();
   };
 
@@ -418,6 +448,18 @@ class RecipesDashboard extends Component {
               item={item}
               onRecipeClick={this.selectRecipe}
               onBuyClick={(itemName) => this.selectRecipe(itemName, null)}
+              detailsShown={this.state.openProfitDetails[item.name]}
+              onProfitDetailsButtonPressed={(itemName) => {
+                const temp = { ...this.state.openProfitDetails };
+                console.log(temp);
+                console.log(temp[itemName], itemName);
+                temp[itemName] =
+                  temp[itemName] == null || temp[itemName] == false
+                    ? true
+                    : false;
+                console.log(temp);
+                this.setState({ openProfitDetails: temp });
+              }}
             ></RecipesTable>
           );
         })}
@@ -438,7 +480,17 @@ class RecipesDashboard extends Component {
             top={50}
             bottomBoundary={2000}
           >
-            <RecipesSidebar></RecipesSidebar>
+            <RecipesSidebar
+              recipeTables={this.state.recipeTables}
+              onUpdateCraftCount={(newCraftCount) => {
+                this.setState({ craftCount: newCraftCount });
+                this.recalculate({ craftCount: newCraftCount });
+              }}
+              onUpdateValuePack={(valuePackEnabled) => {
+                ProfitCalculator.valuePackEnabled = valuePackEnabled
+                this.resetToOptimal()
+              }}
+            ></RecipesSidebar>
           </Sticky>
         </Col>
       </Row>

@@ -13,21 +13,25 @@ import {
   scroller,
 } from "react-scroll";
 import { ButtonGroup, Button, Badge, Accordion, Card } from "react-bootstrap";
+import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
 
 class RecipesTable extends Component {
   state = {};
 
-  renderDetailsButton() {
+  renderDetailsButton(shoppingCartData) {
+
+    let active = this.props.detailsShown ? "0" : null
+
     return (
-      <Accordion>
+      <Accordion defaultActiveKey={active}>
         <Card>
           <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey="0">
+            <Accordion.Toggle as={Button} onClick={(e)=>{this.props.onProfitDetailsButtonPressed(this.props.item.name)}} variant="link" eventKey="0">
               Profit Details
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            <Card.Body>{this.renderBadges()}</Card.Body>
+            <Card.Body>{this.renderBadges(shoppingCartData)}</Card.Body>
           </Accordion.Collapse>
         </Card>
         {/* <Card>
@@ -44,8 +48,8 @@ class RecipesTable extends Component {
     );
   }
 
-  renderBadges() {
-    const { shoppingCartData, marketData, valuePack } = this.props.item;
+  renderBadges(shoppingCartData) {
+    // const { shoppingCartData, marketData, valuePackEnabled } = this.props.item;
     const marketPrice = this.props.item.getMarketPrice();
     let {
       expectedCount: count,
@@ -55,10 +59,7 @@ class RecipesTable extends Component {
 
     individualPrice = parseInt(individualPrice);
 
-    let sellingPrice = marketPrice * 0.65;
-    if (valuePack) sellingPrice = 1.3 * sellingPrice;
-    const profit = sellingPrice - individualPrice;
-    const profitPerSecond = Math.floor(profit / cumulativeTimeSpent);
+    const {profit, profitPerSecond} = ProfitCalculator.calculateProfitValuesForItem(this.props.item)
 
     return (
       <div
@@ -199,7 +200,7 @@ class RecipesTable extends Component {
 
     for (let ingredient of rowData) {
       ingredient["Total Needed"] =
-        ingredient["Amount"] * shoppingCartData.craftCount;
+        ingredient["Amount"] * shoppingCartData[0].craftCount;
     }
 
     // console.log("recipesTable.jsx | RENDERING ITEM", item)
@@ -207,6 +208,15 @@ class RecipesTable extends Component {
       <>
         {item.usedInRecipes.map(
           ({ actionTaken: craftOrBuy, parentRecipeId, parentName }, index) => {
+            let correctShoppingCartData;
+
+            for (const data of shoppingCartData) {
+              if (data.for == parentName) {
+                correctShoppingCartData = data
+                break
+              }
+            } 
+
             return (
               <Element name={item.name} className="m-4">
                 <MaterialTable
@@ -234,7 +244,7 @@ class RecipesTable extends Component {
                   ]}
                   data={selectedRecipe != null ? rowData : []} // TODO: Which recipe to choose?
                   // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
-                  title={`${productName} (x${shoppingCartData.expectedCount})`}
+                  title={`${productName} (x${correctShoppingCartData.expectedCount})`}
                   options={{
                     search: false,
                     paging: false,
@@ -266,7 +276,7 @@ class RecipesTable extends Component {
                             selectedRecipeId,
                             productName
                           )}
-                          {this.renderDetailsButton()}
+                          {this.renderDetailsButton(correctShoppingCartData)}
                         </div>
                       );
                     },
