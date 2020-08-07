@@ -27,7 +27,7 @@ class RecipesTable extends Component {
         <Card>
           <Card.Header>
             <Accordion.Toggle as={Button} onClick={(e)=>{this.props.onProfitDetailsButtonPressed(this.props.item.name)}} variant="link" eventKey="0">
-              Profit Details
+              {active ? 'Hide Profit Details' : 'Show Profit Details'}
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
