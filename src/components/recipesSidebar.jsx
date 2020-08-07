@@ -188,7 +188,7 @@ class sidebar extends Component {
             trigger="hover"
             overlay={
               <Tooltip trigger="hover" id="tooltip">
-                Last Updated: {marketPriceLastUpdated}
+                How much it can be sold for... Last Updated: {marketPriceLastUpdated}
               </Tooltip>
             }
           >
