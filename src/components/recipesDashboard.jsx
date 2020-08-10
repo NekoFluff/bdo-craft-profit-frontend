@@ -17,6 +17,7 @@ import { Row, Col, Card, Form, Button } from "react-bootstrap";
 import RecipesSidebar from "../components/recipesSidebar";
 import Sticky from "react-stickynode";
 import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
+import {API_ENDPOINT} from '../helpers/CONSTANTS'
 
 class Item {
   /**
@@ -151,7 +152,8 @@ class RecipesDashboard extends Component {
   async getData(productName) {
     try {
       const { data: recipes } = await axios.get(
-        "http://localhost:5000/api/recipes?item=" + productName
+        API_ENDPOINT +
+        "/recipes?item=" + productName
       );
       this.originalRecipesData = recipes;
       this.sortRecipes(recipes);

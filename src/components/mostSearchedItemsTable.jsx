@@ -3,6 +3,8 @@ import axios from "axios";
 import MaterialTable from "material-table";
 import tableIcons from "./../helpers/tableIcons";
 import { Link } from 'react-router-dom';
+import {API_ENDPOINT} from '../helpers/CONSTANTS'
+
 class MostSearchedItemsTable extends Component {
   state = {
     data: [],
@@ -12,7 +14,8 @@ class MostSearchedItemsTable extends Component {
     try {
       console.log("Page:", page, pageSize);
       const promise = await axios.get(
-        "http://localhost:5000/api/searchHistory?page=" +
+        API_ENDPOINT +
+        "/searchHistory?page=" +
           page +
           "&pageSize=" +
           pageSize
@@ -41,7 +44,7 @@ class MostSearchedItemsTable extends Component {
       <MaterialTable
         icons={tableIcons}
         columns={[
-          { title: "Name 2", field: "Name", render: (rowData) => (<Link to={{ pathname: `/recipes/${rowData.Name}` }}>{rowData.Name}</Link>) },
+          { title: "Name", field: "Name", render: (rowData) => (<Link to={{ pathname: `/recipes/${rowData.Name}` }}>{rowData.Name}</Link>) },
           { title: "Count", field: "Count" },
           
         ]}

@@ -1,0 +1,1 @@
+export let API_ENDPOINT = "https://bdocraftprofit-api.herokuapp.com/api"

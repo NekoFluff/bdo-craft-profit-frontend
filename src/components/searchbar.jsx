@@ -3,6 +3,7 @@ import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import '../css/AutosuggestTheme.css'
 import axios from 'axios';
+import {API_ENDPOINT} from '../helpers/CONSTANTS'
 
 let recipeNames = []
 
@@ -45,10 +46,9 @@ class SearchBar extends React.Component {
 
   async componentDidMount() {
     try {
-      console.log('Hello. Search bar loading.')
-      const promise = await axios.get(
-        "http://localhost:5000/api/recipes/names"
-      );
+      const uri = API_ENDPOINT + "/recipes/names"
+      console.log('Hello. Search bar loading. URI:', uri)
+      const promise = await axios.get(uri);
       recipeNames = promise.data
       console.log("Recipe Names:", recipeNames);
       

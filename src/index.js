@@ -8,7 +8,8 @@ import './css/BootstrapOverride.scss'
 import 'react-awesome-button/dist/themes/theme-c137.css';
 // import "react-awesome-button/dist/styles.css";
 import "font-awesome/css/font-awesome.css";
-
+require('dotenv').config()
+console.log('ENV', process.env)
 ReactDOM.render(
   <React.StrictMode>
     <App />
