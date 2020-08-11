@@ -471,7 +471,7 @@ class RecipesDashboard extends Component {
     return (
       <Row>
         <Col xs={8} md={9} style={{ paddingLeft: 0, paddingRight: 0 }}>
-          <div>{this.renderTables()}</div>;
+          <div>{this.renderTables()}</div>
         </Col>
         <Col xs={4} md={3} style={{ paddingLeft: 0, paddingRight: 0 }}>
           <Sticky
