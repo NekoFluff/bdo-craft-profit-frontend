@@ -16,11 +16,11 @@ class RecipesPage extends Component {
 
   componentDidUpdate(prevProps) {
     const newItem = this.props.match.params.item;
+    // const oldItem = prevProps.match.params.item;
     if (
-      this.props.location.pathname != prevProps.location.pathname &&
-      this.state.product != newItem
+      this.props.location.pathname !== prevProps.location.pathname &&
+      this.state.product !== newItem
     ) {
-      const oldItem = prevProps.match.params.item;
       this.setState({ product: newItem });
     }
   }

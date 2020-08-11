@@ -228,7 +228,7 @@ class PPHOptimizer {
   }
 
   * sequenceGenerator(n, arr, i) {
-      if (i == n) {
+      if (i === n) {
         yield arr
         return
       }
@@ -247,7 +247,6 @@ class PPHOptimizer {
     * @param {object} optimalActions 
     */
   calculateOptimalActions(item, recipeRestriction = null, optimalActions = {}) {
-
     // If the calculations were already performed, just return those.
     if (optimalActions[item.name] != null) return optimalActions
 
@@ -262,7 +261,7 @@ class PPHOptimizer {
     // For every possible recipe that can be crafted...
 
     for (const [recipe_id, possibleRecipe] of Object.entries(item.recipes)) {
-      if (recipeRestriction != null && recipe_id != recipeRestriction) continue;
+      if (recipeRestriction != null && recipe_id !== recipeRestriction) continue;
 
       const recipeIngredients = possibleRecipe.ingredients
       // Skip to next recipe if there is no crafting option
@@ -273,7 +272,7 @@ class PPHOptimizer {
       for (let i = 0; i < recipeIngredients.length; i++) { arr.push("Buy") }
       const gen = this.sequenceGenerator(arr.length, arr, 0) // Sample sequence: ['Buy', 'Sell', 'Buy']
       let generatorResult = gen.next()
-      while (generatorResult.done == false) {
+      while (generatorResult.done === false) {
         let sequence = generatorResult.value
         let totalCost = 0
         let totalTime = 0
@@ -284,6 +283,15 @@ class PPHOptimizer {
           const buyOrCraft = sequence[i]
           const ingredient = recipeIngredients[i] // The string
           const ingredientItem = this.items[ingredient['Item Name']] // The object
+
+          // Uh oh! There isn't a recipe entry in the database for this ingredient!
+          if (ingredientItem == null) {
+            optimalActions[ingredient['Item Name']] = {}
+            optimalActions[ingredient['Item Name']]['Buy'] = new Action(itemMarketPrice, 0, null, null, null)
+            console.log("ERROR: There is no recipe entry for " + ingredient['Item Name'])
+            continue
+          }
+
           const result = this.calculateOptimalActions(ingredientItem, null, optimalActions)
           const action = result[ingredient['Item Name']][buyOrCraft]
           // The provided sequence is impossible. (Cannot craft the ingredient!)
@@ -294,7 +302,7 @@ class PPHOptimizer {
 
           // For this 'possible recipe' what is the cost to craft it?
           // (using optimal action)
-          if (buyOrCraft == "Buy") {
+          if (buyOrCraft === "Buy") {
             totalCost += ingredient['Amount'] * action.monetaryCost
           } else {
             // Some items used to produce this ingredent may have been bought while others were crafted
@@ -306,7 +314,7 @@ class PPHOptimizer {
         }
         
         
-        console.log('PPHOptimizer.jsx | ', item.name, generatorResult.value, totalCost / possibleRecipe.quantityProduced, possibleRecipe)
+        // console.log('PPHOptimizer.jsx | ', item.name, generatorResult.value, totalCost / possibleRecipe.quantityProduced, possibleRecipe)
         if (!sequenceImpossible) { // The sequence was valid!
           possibleCraftOptions.push(new Action(totalCost / possibleRecipe.quantityProduced, 
                                                (totalTime + possibleRecipe.timeToProduce) / possibleRecipe.quantityProduced, 
@@ -325,19 +333,19 @@ class PPHOptimizer {
     }
 
     // Finally choose the best possible crafting action
-    console.log('POSSIBLE ACTIONS', possibleCraftOptions)
+    // console.log('POSSIBLE ACTIONS', possibleCraftOptions)
     let bestAction = null;
     let bestProfitValue = null;
     for (const action of possibleCraftOptions) {
       if (bestAction == null) {
         bestAction = action;
         bestProfitValue = action.calculateProfit(itemMarketPrice)
-        console.log('ACTION:', bestProfitValue, bestAction)
+        // console.log('ACTION:', bestProfitValue, bestAction)
         continue;
       }
       
       const profit = action.calculateProfit(itemMarketPrice)
-      console.log('ACTION:', profit, action)
+      // console.log('ACTION:', profit, action)
       if (profit > bestProfitValue) {
         bestAction = action
       }
@@ -374,8 +382,8 @@ class Action {
   calculateProfit(sellPrice) {
     let mode = 'pps' //TODO: Switch based on mode of optimization selected
     // Measure the profit for each action
-    console.log('Calculate Profit | ACTION: SELL PRICE ', sellPrice, this.monetaryCost, this.time)
-    if (mode == 'pps')
+    // console.log('[Action] calculateProfit() | Sell price:', sellPrice, 'Cost to obtain (per item):', this.monetaryCost, 'Amount of time (per item):', this.time)
+    if (mode === 'pps')
     return this.calculatePPS(sellPrice)
   }
 

@@ -3,8 +3,6 @@ import {
   InputGroup,
   FormControl,
   Form,
-  Col,
-  Row,
   Button,
   Accordion,
   Card,
@@ -12,7 +10,6 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import { Nav } from "react-bootstrap";
 import { withRouter } from "react-router";
 import "../css/Dashboard.css";
 import ProfitCalculator from "./../helpers/ShoppingCartProfitCalculator";
@@ -21,7 +18,7 @@ import secondsToHms from "./../helpers/secondsToHms";
 
 class sidebar extends Component {
   state = {
-    overrideMarketPrice: null,
+    overrideMarketPrice: 0,
   };
 
   componentWillReceiveProps(newProps) {
@@ -33,7 +30,7 @@ class sidebar extends Component {
       if (
         this.state.overrideMarketPrice == null ||
         (oldRecipeTables != null &&
-          oldRecipeTables[0].name != recipeTables[0].name)
+          oldRecipeTables[0].name !== recipeTables[0].name)
       ) {
         this.setState({ overrideMarketPrice: item.getMarketPrice() });
       }
@@ -90,7 +87,8 @@ class sidebar extends Component {
       const item = recipeTables[0];
       marketPrice = item.getMarketPrice();
 
-      marketPriceLastUpdated = item.marketData["Last Updated"];
+      if (item.marketData != null)
+        marketPriceLastUpdated = item.marketData["Last Updated"];
 
       let correctShoppingCartData
       for (const data of item.shoppingCartData) {
@@ -99,31 +97,34 @@ class sidebar extends Component {
           break
         }
       }
-      console.log("CORRECT DATA", correctShoppingCartData)
+
+      if (correctShoppingCartData != null) {
+        craftCount = correctShoppingCartData.craftCount;
+        cumulativeTimeSpent = correctShoppingCartData.cumulativeTimeSpent;
+        expectedCount = correctShoppingCartData.expectedCount;
+        totalTime = cumulativeTimeSpent * expectedCount;
+        individualPrice = correctShoppingCartData.individualPrice;
+        profitPerItem = ProfitCalculator.calculateProfit(
+          marketPrice,
+          individualPrice
+        );
+
+        // console.log(
+        //   "Total Profit | ",
+        //   marketPrice,
+        //   profitPerItem,
+        //   expectedCount,
+        //   individualPrice
+        // );
+        totalProfit = profitPerItem * expectedCount;
+        pps = ProfitCalculator.calculateProfitPerSecond(
+          marketPrice,
+          individualPrice,
+          cumulativeTimeSpent
+        );
+      }
 
 
-      craftCount = correctShoppingCartData.craftCount;
-      cumulativeTimeSpent = correctShoppingCartData.cumulativeTimeSpent;
-      expectedCount = correctShoppingCartData.expectedCount;
-      totalTime = cumulativeTimeSpent * expectedCount;
-      individualPrice = correctShoppingCartData.individualPrice;
-      profitPerItem = ProfitCalculator.calculateProfit(
-        marketPrice,
-        individualPrice
-      );
-      console.log(
-        "Total Profit | ",
-        marketPrice,
-        profitPerItem,
-        expectedCount,
-        individualPrice
-      );
-      totalProfit = profitPerItem * expectedCount;
-      pps = ProfitCalculator.calculateProfitPerSecond(
-        marketPrice,
-        individualPrice,
-        cumulativeTimeSpent
-      );
     }
 
     return (
@@ -131,9 +132,9 @@ class sidebar extends Component {
         {/* Total Profit */}
         <Form.Group>
           <OverlayTrigger
-            trigger="hover"
+            trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger="hover" id="tooltip">
+              <Tooltip trigger={["hover", "focus"]} id="tooltip">
                 Profit = Silver spent - Silver earned from market
               </Tooltip>
             }
@@ -148,9 +149,9 @@ class sidebar extends Component {
           {/* Total Profit */}
           {/* <Form.Group> */}
           <OverlayTrigger
-            trigger="hover"
+            trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger="hover" id="tooltip">
+              <Tooltip trigger={["hover", "focus"]} id="tooltip">
                 Total amount of time spent crafting everything
               </Tooltip>
             }
@@ -162,9 +163,9 @@ class sidebar extends Component {
           {/* PPS */}
           <br></br>
           <OverlayTrigger
-            trigger="hover"
+            trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger="hover" id="tooltip">
+              <Tooltip trigger={["hover", "focus"]} id="tooltip">
                 Total profit / Time spent crafting
               </Tooltip>
             }
@@ -182,9 +183,9 @@ class sidebar extends Component {
           {/* Profit per Item */}
           {/* <Form.Group> */}
           <OverlayTrigger
-            trigger="hover"
+            trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger="hover" id="tooltip">
+              <Tooltip trigger={["hover", "focus"]} id="tooltip">
                 Total profit / # of items sold
               </Tooltip>
             }
@@ -196,9 +197,9 @@ class sidebar extends Component {
           </OverlayTrigger>
           <br></br>
           <OverlayTrigger
-            trigger="hover"
+            trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger="hover" id="tooltip">
+              <Tooltip trigger={["hover", "focus"]} id="tooltip">
                 How much it can be sold for... Last Updated: {marketPriceLastUpdated}
               </Tooltip>
             }
@@ -229,8 +230,14 @@ class sidebar extends Component {
   };
 
   renderShoppingCart = () => {
-    let sample = ["Item 1", "Item 2"];
     console.log("RENDER SHOPPING CART", this.props.recipeTables);
+
+    // Handle null case
+    if (this.props.recipeTables == null) {
+      return (<p>Please select a recipe using the search bar. There is no shopping cart data to display.</p>)
+    }
+
+    // Handle non-null case
     var totalCost = 0;
     return (
       <Form handleSubmit={this.handleSubmit}>
@@ -241,9 +248,9 @@ class sidebar extends Component {
         </Form.Group>
         <Form.Group>
           <OverlayTrigger
-            trigger="hover"
+            trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger="hover" id="tooltip">
+              <Tooltip trigger={["hover", "focus"]} id="tooltip">
                 What the optimizer suggests you buy to craft the items.
               </Tooltip>
             }
@@ -273,7 +280,7 @@ class sidebar extends Component {
         </Form.Group>
 
         <Form.Group>
-          <Form.Label className={"text"} className="font-weight-bold">
+          <Form.Label className={"text font-weight-bold"}>
             {`Total: ${numberWithCommas(totalCost)} silver`}{" "}
           </Form.Label>
         </Form.Group>
@@ -317,9 +324,9 @@ class sidebar extends Component {
         <Form.Group>
           <ButtonGroup aria-label="Basic example">
             <OverlayTrigger
-              trigger="hover"
+              trigger={["hover", "focus"]}
               overlay={
-                <Tooltip trigger="hover" id="tooltip">
+                <Tooltip trigger={["hover", "focus"]} id="tooltip">
                   Maximize the silver earned per second (a.k.a Profit Per
                   Second)!
                 </Tooltip>
@@ -329,9 +336,9 @@ class sidebar extends Component {
             </OverlayTrigger>
 
             <OverlayTrigger
-              trigger="hover"
+              trigger={["hover", "focus"]}
               overlay={
-                <Tooltip trigger="hover" id="tooltip">
+                <Tooltip trigger={["hover", "focus"]} id="tooltip">
                   (Not implemented) Maximize the total amount of profit (at the
                   cost of time)!
                 </Tooltip>
@@ -343,9 +350,9 @@ class sidebar extends Component {
             </OverlayTrigger>
 
             <OverlayTrigger
-              trigger="hover"
+              trigger={["hover", "focus"]}
               overlay={
-                <Tooltip trigger="hover" id="tooltip">
+                <Tooltip trigger={["hover", "focus"]} id="tooltip">
                   (Not implemented) Maximize the total amount of EXP generated!
                 </Tooltip>
               }

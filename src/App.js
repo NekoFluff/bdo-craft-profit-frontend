@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import "./css/App.css";
-import GridSample from "./components/grid";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import RecipesPage from "./pages/recipesPage";
 import HomePage from "./pages/homePage";
 import HamburgerMenu from "./components/menu";
-import Headroom from "react-headroom"
+// import Headroom from "react-headroom"
 class App extends Component {
   render() {
     return (

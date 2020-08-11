@@ -4,20 +4,12 @@ import axios from "axios";
 import ShoppingCart from "../helpers/ShoppingCart";
 import PPHOptimizer from "../helpers/PPHOptimizer";
 import RecipesTable from "./recipesTable";
-import {
-  Link,
-  DirectLink,
-  Element,
-  Events,
-  animateScroll as scroll,
-  scrollSpy,
-  scroller,
-} from "react-scroll";
-import { Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Events, scrollSpy } from "react-scroll";
+import { Row, Col } from "react-bootstrap";
 import RecipesSidebar from "../components/recipesSidebar";
 import Sticky from "react-stickynode";
-import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
-import {API_ENDPOINT} from '../helpers/CONSTANTS'
+import ProfitCalculator from "./../helpers/ShoppingCartProfitCalculator";
+import { API_ENDPOINT } from "../helpers/CONSTANTS";
 
 class Item {
   /**
@@ -32,7 +24,7 @@ class Item {
     this.usedInRecipes = [];
     this.activeRecipeId = null;
     this.depth = initialItemData["depth"] || -1;
-    this.overrideMarketPrice = null
+    this.overrideMarketPrice = null;
     this.addRecipe(
       initialItemData["_id"],
       initialItemData["Name"],
@@ -43,7 +35,7 @@ class Item {
   }
 
   getMarketPrice() {
-    return this.overrideMarketPrice || this.marketData["Market Price"];
+    return this.overrideMarketPrice || (this.marketData && this.marketData["Market Price"]) || 0;
   }
 
   addRecipe(_id, productName, recipe, quantityProduced, timeToProduce) {
@@ -65,7 +57,7 @@ class Item {
    */
   addUse(actionTaken, parentName, parentRecipeId, activeRecipeId) {
     for (const { parentUsedAlready } of this.usedInRecipes) {
-      if (parentUsedAlready == parentRecipeId) return;
+      if (parentUsedAlready === parentRecipeId) return;
     }
 
     this.usedInRecipes.push({
@@ -74,10 +66,14 @@ class Item {
       parentRecipeId,
     });
 
-    if (this.activeRecipeId == null)
-      this.selectRecipe(activeRecipeId);
-    else
-      console.log("SERIOUR ERROR: Recursive recipe OR recipe needs to be bought/crafted at the same time... or crafted using multiple recipes")
+    if (this.activeRecipeId == null) this.selectRecipe(activeRecipeId);
+    else if (activeRecipeId != this.activeRecipeId)
+      console.log(
+        "POSSIBLE ERROR: Recursive recipe OR recipe needs to be bought/crafted at the same time... or crafted using multiple recipes. \nItem name:",
+        this.name,
+        '\nActive recipe:', this.activeRecipeId,
+        '\nTarget recipe:', activeRecipeId
+      );
   }
 
   selectRecipe(recipeId) {
@@ -124,11 +120,11 @@ class RecipesDashboard extends Component {
     this.shoppingCart = new ShoppingCart(new PPHOptimizer());
 
     Events.scrollEvent.register("begin", function (to, element) {
-      console.log("begin", arguments);
+      console.log("Begin Scroll", arguments);
     });
 
     Events.scrollEvent.register("end", function (to, element) {
-      console.log("end", arguments);
+      console.log("End Scroll", arguments);
     });
 
     scrollSpy.update();
@@ -143,7 +139,7 @@ class RecipesDashboard extends Component {
     const { product: productName } = this.props;
     // Only update if the props changed
     console.log("New product name:", productName);
-    if (nextProps.product != productName) {
+    if (nextProps.product !== productName) {
       this.setState({ openProfitDetails: {} });
       await this.getData(productName);
     }
@@ -156,8 +152,7 @@ class RecipesDashboard extends Component {
   async getData(productName) {
     try {
       const { data: recipes } = await axios.get(
-        API_ENDPOINT +
-        "/recipes?item=" + productName
+        API_ENDPOINT + "/recipes?item=" + productName
       );
       this.originalRecipesData = recipes;
       this.sortRecipes(recipes);
@@ -173,6 +168,7 @@ class RecipesDashboard extends Component {
    * @param {object} recipes
    */
   sortRecipes(recipes) {
+    if (recipes.length <= 1) return recipes;
     for (let recipe of recipes) {
       // Sort ingredients
       recipe.Ingredients = recipe.Ingredients.sort(function (a, b) {
@@ -201,7 +197,6 @@ class RecipesDashboard extends Component {
     }
 
     // Get optimal actions
-    console.log("This items", this.items);
     this.resetToOptimal();
     return this.items;
   }
@@ -296,7 +291,7 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   startRecursiveReset(item, items) {
-    this.alreadyResetItems = {}
+    this.alreadyResetItems = {};
     console.log("recipesDashboard.jsx | Starting recursive reset:", item);
     const recipeId = item.activeRecipeId;
 
@@ -317,8 +312,8 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   recursivelyResetItemUses(item, items) {
-    if (this.alreadyResetItems[item.name]) return // Already reset item
-    this.alreadyResetItems[item.name] = true
+    if (item == null || this.alreadyResetItems[item.name]) return; // Already reset item
+    this.alreadyResetItems[item.name] = true;
 
     const recipeId = item.activeRecipeId;
 
@@ -389,26 +384,30 @@ class RecipesDashboard extends Component {
     parent = {}
   ) {
     const { parentRecipeId, parentName } = parent;
-    console.log("Optimal Actions", JSON.stringify(optimalActions, null, 4));
-    console.log("Active Item:", currentItem);
-    console.log("Action Taken:", actionTaken);
+    // console.log("Optimal Actions", JSON.stringify(optimalActions, null, 4));
+    // console.log("Active Item:", currentItem);
+    // console.log("Action Taken:", actionTaken);
     const action = optimalActions[currentItem][actionTaken];
     if (action == null) return items; // Base case. Return when there is no valid action
 
-    items[currentItem].addUse(
-      actionTaken,
-      parentName,
-      parentRecipeId,
-      action.recipe_id
-    ); // e.g. Item.addUse('Craft', parentRecipeId, action's recipe Id which may be null if Buying)
-    if (actionTaken == "Buy") return items;
+    if (items[currentItem] != null) {
+      items[currentItem].addUse(
+        actionTaken,
+        parentName,
+        parentRecipeId,
+        action.recipe_id
+      ); // e.g. Item.addUse('Craft', parentRecipeId, action's recipe Id which may be null if Buying)
+    } else {
+      console.log(`ERROR: '${currentItem}' does not have a recipe entry in the database. Request a FIX by sending a DM on discord to @Kitsune#1040`)
+    }
+
+    if (actionTaken === "Buy") return items;
 
     // Recursively update activeRecipes dictionary using more calls to cascadeActiveRecipeWithOptimalActions
     for (const ingredientIdx in action.recipe.ingredients) {
       const ingredient = action.recipe.ingredients[ingredientIdx];
       const name = ingredient["Item Name"];
       const ingredientAction = action.actionSequence[ingredientIdx];
-      console.log("TEMP", name, ingredientAction);
       const newParent = {
         parentRecipeId: action.recipe_id,
         parentName: currentItem,
@@ -426,7 +425,7 @@ class RecipesDashboard extends Component {
   }
 
   updateTables() {
-    console.log('Update Tables | this.items: ', this.items);
+    console.log("Update Tables | this.items: ", this.items);
 
     // Convert this.items into array
     let recipeTables = Object.values(this.items);
@@ -439,17 +438,33 @@ class RecipesDashboard extends Component {
 
     this.setState({ recipeTables });
   }
-
+  
   renderTables() {
     if (this.state.recipeTables == null) {
-      return (
-        <h2 style={{ "text-align": "center" }}>
-          Use the search bar to select a recipe
-        </h2>
-      );
+      if (this.props.product != null) {
+        return (
+          <React.Fragment>
+            <h2 style={{ "textAlign": "center" }}>
+              An unexpected error occured.
+            </h2>
+            <p style={{ "textAlign": "center" }}>
+              It seems as if{" "}
+              <span className={"font-weight-bold"}>'{this.props.product}'</span>{" "}
+              doesn't exist in our database. Please contact me on discord{" "}
+              <span className={"font-weight-bold"}>@Kitsune#1040 </span>and
+              let me know if you want this item added to the database.
+            </p>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <h2 style={{ "text-align": "center" }}>
+            Use the search bar to select a recipe
+          </h2>
+        );
+      }
     }
 
-    
     return (
       <div>
         {this.state.recipeTables.map((item) => {
@@ -463,7 +478,7 @@ class RecipesDashboard extends Component {
               onProfitDetailsButtonPressed={(itemName) => {
                 const temp = { ...this.state.openProfitDetails };
                 temp[itemName] =
-                  temp[itemName] == null || temp[itemName] == false
+                  temp[itemName] == null || temp[itemName] === false
                     ? true
                     : false;
                 this.setState({ openProfitDetails: temp });
@@ -475,14 +490,10 @@ class RecipesDashboard extends Component {
     );
   }
 
-  render() {
+  renderSidebar() {
+
     return (
-      <Row>
-        <Col xs={8} md={9} style={{ paddingLeft: 0, paddingRight: 0 }}>
-          <div>{this.renderTables()}</div>
-        </Col>
-        <Col xs={4} md={3} style={{ paddingLeft: 0, paddingRight: 0 }}>
-          <Sticky
+      <Sticky
             className="mt-4"
             enabled={true}
             top={50}
@@ -495,15 +506,28 @@ class RecipesDashboard extends Component {
                 this.recalculate({ craftCount: newCraftCount });
               }}
               onUpdateValuePack={(valuePackEnabled) => {
-                ProfitCalculator.valuePackEnabled = valuePackEnabled
-                this.resetToOptimal()
+                ProfitCalculator.valuePackEnabled = valuePackEnabled;
+                this.resetToOptimal();
               }}
               onMarketPriceChange={(newMarketPrice) => {
-                this.items[this.props.product]['overrideMarketPrice'] = newMarketPrice
-                this.resetToOptimal()
+                this.items[this.props.product][
+                  "overrideMarketPrice"
+                ] = newMarketPrice;
+                this.resetToOptimal();
               }}
             ></RecipesSidebar>
           </Sticky>
+    )
+  }
+
+  render() {
+    return (
+      <Row>
+        <Col xs={8} md={9} style={{ paddingLeft: 0, paddingRight: 0 }}>
+          {this.renderTables()}
+        </Col>
+        <Col xs={4} md={3} style={{ paddingLeft: 0, paddingRight: 0 }}>
+          {this.renderSidebar()}
         </Col>
       </Row>
     );

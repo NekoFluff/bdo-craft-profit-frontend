@@ -50,7 +50,7 @@ class SearchBar extends React.Component {
       console.log('Hello. Search bar loading. URI:', uri)
       const promise = await axios.get(uri);
       recipeNames = promise.data
-      console.log("Recipe Names:", recipeNames);
+      console.log("All Items with Recipes:", recipeNames);
       
     } catch (e) {
       console.log('Component did mount error:', e);

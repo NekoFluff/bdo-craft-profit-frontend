@@ -14,7 +14,7 @@ class HamburgerMenu extends React.Component {
   }
 
   onStateChange = (state) => {
-    if (this.state.isOpen != state.isOpen) {
+    if (this.state.isOpen !== state.isOpen) {
       this.setState({isOpen: state.isOpen})
     }
   }
@@ -28,7 +28,7 @@ class HamburgerMenu extends React.Component {
         <NavLink to="/about" onClick={() => {this.setState({isOpen: false})}}>About</NavLink>
         <NavLink to="/contact" onClick={() => {this.setState({isOpen: false})}}>Contact</NavLink>
 
-        <a onClick={ this.showSettings } className="menu-item--small" href="">Settings</a>
+        {/* <a onClick={ this.showSettings } className="menu-item--small">Settings</a> */}
       </Menu>
     );
   }

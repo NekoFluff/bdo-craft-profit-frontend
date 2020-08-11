@@ -19,8 +19,6 @@ class ShoppingCart {
     for (const [key, _] of Object.entries(items)) {
       items[key]['shoppingCartData'] = []
     }
-    this.rootItem = itemName
-    this.hitRootAlready = false
 
     this.addItem(itemName, quantity, items[itemName].activeRecipeId, null, items)
   }
@@ -31,33 +29,35 @@ class ShoppingCart {
    * @param {int} quantity The number 
    * @param {string} action Either Craft or Buy. Craft by default
    */
-  addItem(itemName, quantity = 1, selectedRecipeId, parentName = null, items) {
+  addItem(itemName, quantity = 1, selectedRecipeId, parentName = null, items, alreadyVisited = {}) {
     // Retrieve the recipe from the optimalActions variable in the optimizer
-    console.log('ShoppingCart.js | item name', itemName, items)
+    // console.log('ShoppingCart.js | Adding item to shopping cart:', itemName)
     const item = items[itemName]
+    if (item == null) return {currentCart: this.cart, recipePrice: 0, cumulativeTimeSpent: 0}
+
     const recipe = item.recipes[selectedRecipeId]
     let action = selectedRecipeId == null ? 'Buy' : 'Craft'
-    if (this.rootItem == itemName) {
-      if (this.hitRootAlready)
-        action = 'Buy'
-      this.hitRootAlready = true
+    if (alreadyVisited[itemName] === true) {
+      action = 'Buy'
     }
-    
+    alreadyVisited[itemName] = true
 
     // Calculate how many times the player must 'craft' the item
     let craftCount = quantity
-    if (action == "Craft") {
+    if (action === "Craft") {
       craftCount = Math.ceil(quantity / recipe.quantityProduced)
     }
 
     // Add the ingredients of the recipe to the cart as well if the item is being crafted
     let recipePrice = 0
     let cumulativeTimeSpent = 0
-    if (action == "Craft") {
+    if (action === "Craft") {
       for (let ingredient of recipe.ingredients) {
         const ingredientQuantity = ingredient['Amount'] * craftCount
         const ingredientName = ingredient['Item Name']
-        const {recipePrice: price, cumulativeTimeSpent: timeSpentToCraftIngredient} = this.addItem(ingredientName, ingredientQuantity, items[ingredientName].activeRecipeId, itemName, items)
+        const ingredientItem = items[ingredientName]
+        const activeRecipeId = ingredientItem == null ? null : ingredientItem.activeRecipeId
+        const {recipePrice: price, cumulativeTimeSpent: timeSpentToCraftIngredient} = this.addItem(ingredientName, ingredientQuantity, activeRecipeId, itemName, items, {...alreadyVisited})
         recipePrice += price * ingredient['Amount']
         cumulativeTimeSpent += timeSpentToCraftIngredient * ingredient['Amount']
       }
@@ -73,7 +73,7 @@ class ShoppingCart {
       // action: action,
       // recipe: recipe != null ? recipe.ingredients : null, 
       craftCount: craftCount,
-      expectedCount: action == "Craft" ? recipe.quantityProduced * craftCount : craftCount, // Store the total amount that is expected to be crafted
+      expectedCount: action === "Craft" ? recipe.quantityProduced * craftCount : craftCount, // Store the total amount that is expected to be crafted
       individualPrice: recipePrice,
       cumulativeTimeSpent: cumulativeTimeSpent,
       for: parentName 

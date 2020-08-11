@@ -5,14 +5,9 @@ import { Chip } from "@material-ui/core";
 import "../css/RecipeTable.css";
 import {
   Link,
-  DirectLink,
   Element,
-  Events,
-  animateScroll as scroll,
-  scrollSpy,
-  scroller,
 } from "react-scroll";
-import { ButtonGroup, Button, Badge, Accordion, Card } from "react-bootstrap";
+import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
 
 class RecipesTable extends Component {
@@ -122,7 +117,7 @@ class RecipesTable extends Component {
    * @param {} productName The name of the product being bought/crafted
    */
   renderChips(allRecipes, selectedRecipeId, productName, shoppingCartData) {
-    let isRecursive = shoppingCartData.for == productName
+    let isRecursive = shoppingCartData.for === productName
 
     return (
       <div
@@ -145,7 +140,8 @@ class RecipesTable extends Component {
         />
         {Object.keys(allRecipes).map((recipe_id, index) => {
           if (allRecipes[recipe_id].quantityProduced == null) return null;
-          const isSelected = selectedRecipeId == recipe_id;
+          const isSelected = selectedRecipeId === recipe_id;
+
           return (
             <Chip
               className="recipeChip"
@@ -212,13 +208,13 @@ class RecipesTable extends Component {
             let correctShoppingCartData;
 
             for (const data of shoppingCartData) {
-              if (data.for == parentName) {
+              if (data.for === parentName || data.for == null) {
                 correctShoppingCartData = data
                 break
               }
             } 
 
-            let isRecursive = correctShoppingCartData.for == productName
+            let isRecursive = correctShoppingCartData.for === productName
 
             return (
               <Element name={item.name} className="m-4">

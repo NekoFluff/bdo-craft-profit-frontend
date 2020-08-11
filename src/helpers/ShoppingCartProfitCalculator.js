@@ -17,7 +17,7 @@ class ProfitCalculator {
   static calculateProfit(marketPrice, individualPrice) {
     let sellingPrice = marketPrice * this.TAX_PERCENTAGE;
     if (this.valuePackEnabled) sellingPrice = 1.3 * sellingPrice;
-    console.log('Total Profit | Selling Price', sellingPrice, individualPrice)
+    // console.log('Total Profit | Selling Price:', sellingPrice, 'Individual Price:', individualPrice)
     const profit = sellingPrice - individualPrice;
     return profit
   }
