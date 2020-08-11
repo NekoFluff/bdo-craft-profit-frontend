@@ -21,7 +21,6 @@ class RecipesTable extends Component {
   renderDetailsButton(shoppingCartData) {
 
     let active = this.props.detailsShown ? "0" : null
-
     return (
       <Accordion defaultActiveKey={active}>
         <Card>
@@ -59,7 +58,7 @@ class RecipesTable extends Component {
 
     individualPrice = parseInt(individualPrice);
 
-    const {profit, profitPerSecond} = ProfitCalculator.calculateProfitValuesForItem(this.props.item)
+    const {profit, profitPerSecond} = ProfitCalculator.calculateProfitValuesForItem(this.props.item, shoppingCartData)
 
     return (
       <div
@@ -122,7 +121,9 @@ class RecipesTable extends Component {
    * @param {string} selectedRecipeId The selected recipe. If null, the action is 'Buy'
    * @param {} productName The name of the product being bought/crafted
    */
-  renderChips(allRecipes, selectedRecipeId, productName) {
+  renderChips(allRecipes, selectedRecipeId, productName, shoppingCartData) {
+    let isRecursive = shoppingCartData.for == productName
+
     return (
       <div
         id="toolbar-container"
@@ -135,7 +136,7 @@ class RecipesTable extends Component {
           className="recipeChip"
           clickable
           label="Buy"
-          color={selectedRecipeId == null ? "primary" : "secondary"}
+          color={selectedRecipeId == null || isRecursive ? "primary" : "secondary"}
           style={{ marginRight: 5 }}
           onClick={() => {
             console.log(`Clicked buy | id: ${productName}`);
@@ -150,7 +151,7 @@ class RecipesTable extends Component {
               className="recipeChip"
               clickable
               label={`Recipe #${index}`}
-              color={isSelected ? "primary" : "secondary"}
+              color={isSelected && !isRecursive ? "primary" : "secondary"}
               style={{ marginRight: 5 }}
               onClick={() => {
                 console.log(`Clicked recipe# ${index} | id: ${recipe_id}`);
@@ -217,6 +218,8 @@ class RecipesTable extends Component {
               }
             } 
 
+            let isRecursive = correctShoppingCartData.for == productName
+
             return (
               <Element name={item.name} className="m-4">
                 <MaterialTable
@@ -242,13 +245,13 @@ class RecipesTable extends Component {
                     { title: "Amount per Craft", field: "Amount" },
                     { title: "Total Needed", field: "Total Needed" },
                   ]}
-                  data={selectedRecipe != null ? rowData : []} // TODO: Which recipe to choose?
+                  data={selectedRecipe == null || isRecursive ? [] : rowData} // TODO: Which recipe to choose?
                   // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
                   title={`${productName} (x${correctShoppingCartData.expectedCount})`}
                   options={{
                     search: false,
                     paging: false,
-                    header: selectedRecipe != null ? true : false,
+                    header: selectedRecipe == null || isRecursive ? false : true,
                   }}
                   localization={{
                     body: {
@@ -274,7 +277,8 @@ class RecipesTable extends Component {
                           {this.renderChips(
                             allRecipes,
                             selectedRecipeId,
-                            productName
+                            productName,
+                            correctShoppingCartData
                           )}
                           {this.renderDetailsButton(correctShoppingCartData)}
                         </div>

@@ -3,13 +3,12 @@ class ProfitCalculator {
   static valuePackEnabled = false;
   static TAX_PERCENTAGE = 0.65;
 
-  static calculateProfitValuesForItem(item) {
-    const { shoppingCartData } = item;
+  static calculateProfitValuesForItem(item, shoppingCartData) {
     let {
       expectedCount: count,
       individualPrice,
       cumulativeTimeSpent,
-    } = shoppingCartData[0];
+    } = shoppingCartData;
 
     const marketPrice = item.getMarketPrice()
     return {profit: this.calculateProfit(marketPrice, individualPrice), profitPerSecond: this.calculateProfitPerSecond(marketPrice, individualPrice, cumulativeTimeSpent)}

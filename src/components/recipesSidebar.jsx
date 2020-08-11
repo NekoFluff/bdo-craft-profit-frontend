@@ -91,11 +91,22 @@ class sidebar extends Component {
       marketPrice = item.getMarketPrice();
 
       marketPriceLastUpdated = item.marketData["Last Updated"];
-      craftCount = item.shoppingCartData[0].craftCount;
-      cumulativeTimeSpent = item.shoppingCartData[0].cumulativeTimeSpent;
-      expectedCount = item.shoppingCartData[0].expectedCount;
+
+      let correctShoppingCartData
+      for (const data of item.shoppingCartData) {
+        if (data.for == null) {
+          correctShoppingCartData = data
+          break
+        }
+      }
+      console.log("CORRECT DATA", correctShoppingCartData)
+
+
+      craftCount = correctShoppingCartData.craftCount;
+      cumulativeTimeSpent = correctShoppingCartData.cumulativeTimeSpent;
+      expectedCount = correctShoppingCartData.expectedCount;
       totalTime = cumulativeTimeSpent * expectedCount;
-      individualPrice = item.shoppingCartData[0].individualPrice;
+      individualPrice = correctShoppingCartData.individualPrice;
       profitPerItem = ProfitCalculator.calculateProfit(
         marketPrice,
         individualPrice

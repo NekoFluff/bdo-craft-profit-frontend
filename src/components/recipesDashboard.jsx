@@ -73,7 +73,11 @@ class Item {
       parentName,
       parentRecipeId,
     });
-    this.activeRecipeId = activeRecipeId;
+
+    if (this.activeRecipeId == null)
+      this.selectRecipe(activeRecipeId);
+    else
+      console.log("SERIOUR ERROR: Recursive recipe OR recipe needs to be bought/crafted at the same time... or crafted using multiple recipes")
   }
 
   selectRecipe(recipeId) {
@@ -292,6 +296,7 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   startRecursiveReset(item, items) {
+    this.alreadyResetItems = {}
     console.log("recipesDashboard.jsx | Starting recursive reset:", item);
     const recipeId = item.activeRecipeId;
 
@@ -312,7 +317,9 @@ class RecipesDashboard extends Component {
    * @param {object} items Dictionary of Item objects. This is used to referenced Items used in the recipe
    */
   recursivelyResetItemUses(item, items) {
-    // item = {...item}
+    if (this.alreadyResetItems[item.name]) return // Already reset item
+    this.alreadyResetItems[item.name] = true
+
     const recipeId = item.activeRecipeId;
 
     if (recipeId != null) {
@@ -442,6 +449,7 @@ class RecipesDashboard extends Component {
       );
     }
 
+    
     return (
       <div>
         {this.state.recipeTables.map((item) => {

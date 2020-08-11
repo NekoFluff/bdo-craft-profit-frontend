@@ -19,6 +19,8 @@ class ShoppingCart {
     for (const [key, _] of Object.entries(items)) {
       items[key]['shoppingCartData'] = []
     }
+    this.rootItem = itemName
+    this.hitRootAlready = false
 
     this.addItem(itemName, quantity, items[itemName].activeRecipeId, null, items)
   }
@@ -34,7 +36,13 @@ class ShoppingCart {
     console.log('ShoppingCart.js | item name', itemName, items)
     const item = items[itemName]
     const recipe = item.recipes[selectedRecipeId]
-    const action = selectedRecipeId == null ? 'Buy' : 'Craft'
+    let action = selectedRecipeId == null ? 'Buy' : 'Craft'
+    if (this.rootItem == itemName) {
+      if (this.hitRootAlready)
+        action = 'Buy'
+      this.hitRootAlready = true
+    }
+    
 
     // Calculate how many times the player must 'craft' the item
     let craftCount = quantity
