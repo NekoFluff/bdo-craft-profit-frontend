@@ -7,7 +7,6 @@ import RecipesPage from "./pages/recipesPage";
 import HomePage from "./pages/homePage";
 import HamburgerMenu from "./components/menu";
 import Headroom from "react-headroom"
-
 class App extends Component {
   render() {
     return (
