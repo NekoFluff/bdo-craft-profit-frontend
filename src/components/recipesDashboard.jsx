@@ -548,7 +548,6 @@ class RecipesDashboard extends Component {
             className="mt-4"
             enabled={true}
             top={50}
-            bottomBoundary={2000}
           >
             <RecipesSidebar
               recipeTables={this.state.recipeTables}
