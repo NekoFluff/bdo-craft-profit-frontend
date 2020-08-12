@@ -240,7 +240,7 @@ class sidebar extends Component {
     // Handle non-null case
     var totalCost = 0;
     return (
-      <Form handleSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit}>
         <Form.Group>
           <Button style={{ textAlign: "center" }}>
             Download shopping list

@@ -217,7 +217,7 @@ class RecipesTable extends Component {
             let isRecursive = correctShoppingCartData.for === productName
 
             return (
-              <Element name={item.name} className="m-4">
+              <Element key={item.name} name={item.name} className="m-4">
                 <MaterialTable
                   name={item.name}
                   icons={tableIcons}

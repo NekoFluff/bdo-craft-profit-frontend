@@ -467,9 +467,10 @@ class RecipesDashboard extends Component {
 
     return (
       <div>
-        {this.state.recipeTables.map((item) => {
+        {this.state.recipeTables.map((item, index) => {
           return (
             <RecipesTable
+              // key={`${item}}`}
               productName={item.name}
               item={item}
               onRecipeClick={this.selectRecipe}

@@ -11,9 +11,11 @@ let recipeNames = []
 const getSuggestions = value => {
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
-
-  return inputLength === 0 ? [] : recipeNames.filter(sampleName =>
-    sampleName.toLowerCase().slice(0, inputLength) === inputValue
+  
+  return inputLength === 0 ? [] : recipeNames.filter(sampleName => {
+    if (sampleName == null)return null;
+    else return sampleName.toLowerCase().slice(0, inputLength) === inputValue
+  }
   );
 };
 
