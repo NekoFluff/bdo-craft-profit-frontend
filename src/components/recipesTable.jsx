@@ -9,6 +9,7 @@ import {
 } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
+import numberWithCommas from './../helpers/numberWithCommas';
 
 class RecipesTable extends Component {
   state = {};
@@ -66,45 +67,45 @@ class RecipesTable extends Component {
         <h4>
           {" "}
           <Badge variant="danger">
-            {`Market Price: ${marketPrice} silver`}
+            {`Market Price: ${numberWithCommas(marketPrice)} silver`}
           </Badge>
         </h4>
 
         {/* Profit */}
         <h4>
-          <Badge variant="success">{`Total Profit: ${Math.floor(
+          <Badge variant="success">{`Total Profit: ${numberWithCommas(Math.floor(
             profit * count
-          )} silver`}</Badge>
+          ))} silver`}</Badge>
         </h4>
         <h4>
-          <Badge variant="success">{`Profit per item: ${Math.floor(
+          <Badge variant="success">{`Profit per item: ${numberWithCommas(Math.floor(
             profit
-          )} silver`}</Badge>
+          ))} silver`}</Badge>
         </h4>
         <h4>
-          <Badge variant="success">{`Profit per sec: ${profitPerSecond} silver/second`}</Badge>
+          <Badge variant="success">{`Profit per sec: ${numberWithCommas(profitPerSecond)} silver/second`}</Badge>
         </h4>
 
         {/* Silver spent */}
         <h4>
           <Badge variant="warning">
-            {`${individualPrice * count} silver spent to get these materials`}
+            {`${numberWithCommas(individualPrice * count)} silver spent to get these materials`}
           </Badge>
         </h4>
         <h4>
-          <Badge variant="warning">{`${individualPrice} silver spent per item.`}</Badge>
+          <Badge variant="warning">{`${numberWithCommas(individualPrice)} silver spent per item.`}</Badge>
         </h4>
 
         {/* Time spent */}
         <h4>
-          <Badge variant="info">{`${(cumulativeTimeSpent * count).toFixed(
+          <Badge variant="info">{`${numberWithCommas((cumulativeTimeSpent * count).toFixed(
             2
-          )} total seconds crafting`}</Badge>
+          ))} total seconds crafting`}</Badge>
         </h4>
         <h4>
-          <Badge variant="info">{`${cumulativeTimeSpent.toFixed(
+          <Badge variant="info">{`${numberWithCommas(cumulativeTimeSpent.toFixed(
             2
-          )} seconds spent to craft one of these items`}</Badge>
+          ))} seconds spent to craft one of these items`}</Badge>
         </h4>
       </div>
     );

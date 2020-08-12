@@ -157,8 +157,8 @@ class RecipesDashboard extends Component {
   async componentDidUpdate(nextProps) {
     const { product: productName } = this.props;
     // Only update if the props changed
-    console.log("New product name:", productName);
     if (nextProps.product !== productName) {
+      console.log("New product name:", productName);
       this.setState({ openProfitDetails: {} });
       await this.getData(productName);
     }
