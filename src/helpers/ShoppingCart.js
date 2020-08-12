@@ -16,9 +16,9 @@ class ShoppingCart {
 
   calculateCosts(itemName, quantity = 1, items) {
     this.clearCart()
-    for (const [key, _] of Object.entries(items)) {
-      items[key]['shoppingCartData'] = []
-    }
+    // for (const [key, _] of Object.entries(items)) {
+    //   items[key]['shoppingCartData'] = [] // Oops everything is wiped...
+    // }
 
     this.addItem(itemName, quantity, items[itemName].activeRecipeId, null, items)
   }
@@ -29,13 +29,16 @@ class ShoppingCart {
    * @param {int} quantity The number 
    * @param {string} action Either Craft or Buy. Craft by default
    */
-  addItem(itemName, quantity = 1, selectedRecipeId, parentName = null, items, alreadyVisited = {}) {
+  addItem(itemName, quantity = 1, selectedRecipeId, parentName = null, items, alreadyVisited = {}, parentPath) {
     // Retrieve the recipe from the optimalActions variable in the optimizer
     // console.log('ShoppingCart.js | Adding item to shopping cart:', itemName)
     const item = items[itemName]
     if (item == null) return {currentCart: this.cart, recipePrice: 0, cumulativeTimeSpent: 0}
 
+    const currentPath = `${parentPath || ''}/${itemName}`
     const recipe = item.recipes[selectedRecipeId]
+
+    // Prevent infinite looping
     let action = selectedRecipeId == null ? 'Buy' : 'Craft'
     if (alreadyVisited[itemName] === true) {
       action = 'Buy'
@@ -57,7 +60,7 @@ class ShoppingCart {
         const ingredientName = ingredient['Item Name']
         const ingredientItem = items[ingredientName]
         const activeRecipeId = ingredientItem == null ? null : ingredientItem.activeRecipeId
-        const {recipePrice: price, cumulativeTimeSpent: timeSpentToCraftIngredient} = this.addItem(ingredientName, ingredientQuantity, activeRecipeId, itemName, items, {...alreadyVisited})
+        const {recipePrice: price, cumulativeTimeSpent: timeSpentToCraftIngredient} = this.addItem(ingredientName, ingredientQuantity, activeRecipeId, itemName, items, {...alreadyVisited}, currentPath)
         recipePrice += price * ingredient['Amount']
         cumulativeTimeSpent += timeSpentToCraftIngredient * ingredient['Amount']
       }
@@ -80,8 +83,8 @@ class ShoppingCart {
       // marketData: marketData
     }
     this.cart.push(shoppingCartData) 
-    items[itemName]['shoppingCartData'].push(shoppingCartData)
-
+    console.log('Added shopping cart data for ', itemName, shoppingCartData)
+    items[itemName].addShoppingCartData(currentPath, shoppingCartData)
     return {currentCart: this.cart, recipePrice, cumulativeTimeSpent}
   }
 

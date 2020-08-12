@@ -90,13 +90,14 @@ class sidebar extends Component {
       if (item.marketData != null)
         marketPriceLastUpdated = item.marketData["Last Updated"];
 
-      let correctShoppingCartData
-      for (const data of item.shoppingCartData) {
-        if (data.for == null) {
-          correctShoppingCartData = data
-          break
-        }
-      }
+      // let correctShoppingCartData
+      // for (const data of item.shoppingCartData) {
+      //   if (data.for == null) {
+      //     correctShoppingCartData = data
+      //     break
+      //   }
+      // }
+      let correctShoppingCartData = item.getShoppingCartData(`/${item.name}`);
 
       if (correctShoppingCartData != null) {
         craftCount = correctShoppingCartData.craftCount;
@@ -123,8 +124,6 @@ class sidebar extends Component {
           cumulativeTimeSpent
         );
       }
-
-
     }
 
     return (
@@ -200,7 +199,8 @@ class sidebar extends Component {
             trigger={["hover", "focus"]}
             overlay={
               <Tooltip trigger={["hover", "focus"]} id="tooltip">
-                How much it can be sold for... Last Updated: {marketPriceLastUpdated}
+                How much it can be sold for... Last Updated:{" "}
+                {marketPriceLastUpdated}
               </Tooltip>
             }
           >
@@ -234,7 +234,12 @@ class sidebar extends Component {
 
     // Handle null case
     if (this.props.recipeTables == null) {
-      return (<p>Please select a recipe using the search bar. There is no shopping cart data to display.</p>)
+      return (
+        <p>
+          Please select a recipe using the search bar. There is no shopping cart
+          data to display.
+        </p>
+      );
     }
 
     // Handle non-null case
@@ -242,8 +247,8 @@ class sidebar extends Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Group>
-          <Button style={{ textAlign: "center" }}>
-            Download shopping list
+          <Button disabled style={{ textAlign: "center" }}>
+            Download shopping list (Feature in-progress)
           </Button>
         </Form.Group>
         <Form.Group>
@@ -265,15 +270,31 @@ class sidebar extends Component {
             this.props.recipeTables.map((item) => {
               if (item.activeRecipeId != null) return null; // Only generate form labels for items being bought
               if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
-              return item.shoppingCartData.map((data) => {
-                const { expectedCount, individualPrice } = data;
+
+              return Object.keys(item.shoppingCartData).map((key) => {
+                const {
+                  expectedCount,
+                  individualPrice,
+                } = item.shoppingCartData[key];
                 totalCost += expectedCount * individualPrice;
                 return (
-                  <Form.Label className={"text"}>{`${
-                    item.name
-                  } x ${numberWithCommas(expectedCount)} = ${numberWithCommas(
-                    expectedCount * individualPrice
-                  )} silver`}</Form.Label>
+                  <React.Fragment>
+                    <Form.Label
+                      key={key}
+                      className={"text"}
+                      style={{ marginBottom: "0px" }}
+                    >{`${item.name} x ${numberWithCommas(
+                      expectedCount
+                    )} = ${numberWithCommas(
+                      expectedCount * individualPrice
+                    )} silver`}</Form.Label>
+                    <Form.Text
+                      className="text-muted"
+                      style={{ marginBottom: "0.5rem" }}
+                    >
+                      {`for ${key}`}
+                    </Form.Text>
+                  </React.Fragment>
                 );
               });
             })}

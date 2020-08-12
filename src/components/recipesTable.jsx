@@ -116,9 +116,8 @@ class RecipesTable extends Component {
    * @param {string} selectedRecipeId The selected recipe. If null, the action is 'Buy'
    * @param {} productName The name of the product being bought/crafted
    */
-  renderChips(allRecipes, selectedRecipeId, productName, shoppingCartData) {
+  renderChips(allRecipes, selectedRecipeId, productName, shoppingCartData, recipePath) {
     let isRecursive = shoppingCartData.for === productName
-
     return (
       <div
         id="toolbar-container"
@@ -135,15 +134,24 @@ class RecipesTable extends Component {
           style={{ marginRight: 5 }}
           onClick={() => {
             console.log(`Clicked buy | id: ${productName}`);
-            this.props.onBuyClick(productName);
+            this.props.onBuyClick(productName, recipePath);
           }}
         />
         {Object.keys(allRecipes).map((recipe_id, index) => {
           if (allRecipes[recipe_id].quantityProduced == null) return null;
           const isSelected = selectedRecipeId === recipe_id;
+          let isDisabled = false
+
+          for (const ingredient of allRecipes[recipe_id].ingredients) {
+            if (!this.props.itemHasMarketData(ingredient['Item Name'])) {
+              isDisabled = true;
+              break;
+            }
+          }
 
           return (
             <Chip
+              key={recipe_id}
               className="recipeChip"
               clickable
               label={`Recipe #${index}`}
@@ -151,8 +159,9 @@ class RecipesTable extends Component {
               style={{ marginRight: 5 }}
               onClick={() => {
                 console.log(`Clicked recipe# ${index} | id: ${recipe_id}`);
-                this.props.onRecipeClick(productName, recipe_id);
+                this.props.onRecipeClick(productName, recipe_id, recipePath);
               }}
+              disabled={isDisabled}
             />
           );
         })}
@@ -160,8 +169,11 @@ class RecipesTable extends Component {
     );
   }
 
-  renderParentLink(parentName) {
-    if (parentName == null) return null;
+  renderParentLink(recipePath) {
+    if (recipePath == null || recipePath == '') return null;
+    let recipeArr = recipePath.split('/')
+    let everythingButLast = recipeArr.slice(0, -1).join('/')
+    let last = recipeArr.slice(-1).join('/')
     return (
       <div
         id="toolbar-subtitle"
@@ -171,12 +183,13 @@ class RecipesTable extends Component {
         <Link
           activeClass="active"
           className="scrollLink text-primary"
-          to={parentName}
+          to={recipePath}
           spy={true}
           smooth={true}
           duration={500}
         >
-          {parentName}
+          {everythingButLast}
+          <span className="font-weight-bold">{`/${last}`}</span>
         </Link>
       </div>
     );
@@ -195,31 +208,37 @@ class RecipesTable extends Component {
 
     if (selectedRecipe != null) rowData = [...selectedRecipe.ingredients];
 
-    for (let ingredient of rowData) {
-      ingredient["Total Needed"] =
-        ingredient["Amount"] * shoppingCartData[0].craftCount;
-    }
+
 
     // console.log("recipesTable.jsx | RENDERING ITEM", item)
     return (
       <>
-        {item.usedInRecipes.map(
-          ({ actionTaken: craftOrBuy, parentRecipeId, parentName }, index) => {
-            let correctShoppingCartData;
+        {Object.keys(item.usedInRecipes).map(
+          (recipePath, index) => {
+            let { actionTaken: craftOrBuy, parentRecipeId, parentName } = item.usedInRecipes[recipePath]
+            let parentPath = recipePath.split('/').slice(0, -1).join('/')
+            // let correctShoppingCartData;
+            // for (const data of shoppingCartData) {
+            //   if (data.for === parentName || data.for == null) {
+            //     correctShoppingCartData = data
+            //     break
+            //   }
+            // } 
+            let correctShoppingCartData = item.getShoppingCartData(recipePath)  
+            for (let ingredient of rowData) {
+              ingredient["Total Needed"] =
+                ingredient["Amount"] * correctShoppingCartData.craftCount;
+            }
 
-            for (const data of shoppingCartData) {
-              if (data.for === parentName || data.for == null) {
-                correctShoppingCartData = data
-                break
-              }
-            } 
-
+            if (correctShoppingCartData == null) {
+              console.log("FATAL ERROR: correctShoppingCart data not found", item, 'parentName:', parentName)
+              return null
+            }
             let isRecursive = correctShoppingCartData.for === productName
 
             return (
-              <Element key={item.name} name={item.name} className="m-4">
+              <Element key={recipePath} name={recipePath} className="m-4">
                 <MaterialTable
-                  name={item.name}
                   icons={tableIcons}
                   columns={[
                     {
@@ -229,7 +248,8 @@ class RecipesTable extends Component {
                         <Link
                           activeClass="active"
                           className="scrollLink text-primary"
-                          to={rowData["Item Name"]}
+                          // to={rowData["Item Name"]}
+                          to={`${recipePath || ''}/${rowData['Item Name']}`}
                           spy={true}
                           smooth={true}
                           duration={500}
@@ -269,12 +289,13 @@ class RecipesTable extends Component {
                             style={{ "text-align": "center" }}
                           />
                           {/* <div {...props}>{props.title}</div> */}
-                          {this.renderParentLink(parentName)}
+                          {this.renderParentLink(parentPath)}
                           {this.renderChips(
                             allRecipes,
                             selectedRecipeId,
                             productName,
-                            correctShoppingCartData
+                            correctShoppingCartData,
+                            recipePath
                           )}
                           {this.renderDetailsButton(correctShoppingCartData)}
                         </div>
