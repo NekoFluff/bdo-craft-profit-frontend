@@ -242,7 +242,6 @@ class RecipesTable extends Component {
         ingredient["Amount"] * shoppingCart.craftCount;
       }
     }
-    console.log('Parent paths',parentPaths)
 
     return (
       <Element name={item.name} className="m-4">

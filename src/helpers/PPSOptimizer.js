@@ -401,7 +401,6 @@ class Action {
   }
 
   calculatePPS(sellPrice) {
-    console.log('optimal pps', sellPrice, this.monetaryCost, this.time)
     return ProfitCalculator.calculateProfitPerSecond(sellPrice, this.monetaryCost, this.time)
   }
 }

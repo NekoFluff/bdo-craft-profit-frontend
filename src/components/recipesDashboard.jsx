@@ -284,8 +284,6 @@ class RecipesDashboard extends Component {
     );
     console.log("recipesDashboard.jsx | optimalActions", optimalActions);
     let chosenAction = recipeId == null ? "Buy" : "Craft";
-    console.log("recipesDashboard.jsx | optimalActions 2", itemName, chosenAction);
-
 
     // Step 3: Using the new optimal actions calculated, update the items object so that the corresponding tables are displayed
     this.cascadeActiveRecipeWithOptimalActions(
@@ -483,7 +481,7 @@ class RecipesDashboard extends Component {
   }
 
   updateTables() {
-    console.log("Update Tables | this.items: ", this.items);
+    console.log("Update Tables using data... | (this.items): ", this.items);
 
     // Convert this.items into array
     let recipeTables = Object.values(this.items);
