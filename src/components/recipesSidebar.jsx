@@ -432,7 +432,7 @@ class sidebar extends Component {
         <Accordion defaultActiveKey="0">
           {/* Card 3 */}
           <Card>
-            <Card.Header>
+            <Card.Header style={{backgroundColor: 'rgb(230, 230, 230'}}>
               <Accordion.Toggle as={Button} variant="link" eventKey="2">
                 Total Profit (Output)
               </Accordion.Toggle>
@@ -446,7 +446,7 @@ class sidebar extends Component {
         <Accordion defaultActiveKey="0">
           {/* Card 1 */}
           <Card>
-            <Card.Header>
+            <Card.Header style={{backgroundColor: 'rgb(230, 230, 230'}}>
               <Accordion.Toggle as={Button} variant="link" eventKey="0">
                 Input
               </Accordion.Toggle>
@@ -468,7 +468,7 @@ class sidebar extends Component {
           </Card> */}
 
           <Card>
-            <Card.Header>
+            <Card.Header style={{backgroundColor: 'rgb(230, 230, 230'}}>
               <Accordion.Toggle as={Button} variant="link" eventKey="2">
                 What you need to buy
               </Accordion.Toggle>
