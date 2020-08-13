@@ -25,17 +25,14 @@ class RecipesPage extends Component {
     }
   }
 
-  onSearch = (event, data) => {
-    this.setState({ product: data.suggestionValue });
-    this.props.history.push("/recipes/" + data.suggestionValue);
-  };
-
   render() {
     return (
       <Container fluid>
         {/* <Row> */}
         <div className="p-3" align="center">
-          <SearchBar onSearch={this.onSearch} />
+          <SearchBar onSearch={(newProduct) => {
+            this.setState({ product: newProduct})
+          }}/>
         </div>
         {/* </Row> */}
         <RecipesDashboard product={this.state.product} />

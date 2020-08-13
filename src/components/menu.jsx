@@ -24,9 +24,9 @@ class HamburgerMenu extends React.Component {
     return (
       <Menu pageWrapId={ "page-wrap" } outerContainerId={ "outer-container" } isOpen={this.state.isOpen} onStateChange={this.onStateChange}>
         <NavLink to="/" className="menu-item" onClick={() => {this.setState({isOpen: false})}}>Home</NavLink>
-        <NavLink to="/recipes" onClick={() => {this.setState({isOpen: false})}}>Recipes</NavLink>
+        {/* <NavLink to="/recipes" onClick={() => {this.setState({isOpen: false})}}>Recipes</NavLink>
         <NavLink to="/about" onClick={() => {this.setState({isOpen: false})}}>About</NavLink>
-        <NavLink to="/contact" onClick={() => {this.setState({isOpen: false})}}>Contact</NavLink>
+        <NavLink to="/contact" onClick={() => {this.setState({isOpen: false})}}>Contact</NavLink> */}
 
         {/* <a onClick={ this.showSettings } className="menu-item--small">Settings</a> */}
       </Menu>
