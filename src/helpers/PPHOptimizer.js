@@ -254,7 +254,8 @@ class PPHOptimizer {
     const itemMarketPrice = item.getMarketPrice()
     if (optimalActions[item.name] == null) {
       optimalActions[item.name] = {}
-      optimalActions[item.name]['Buy'] = new Action(itemMarketPrice, 0, null, null, null)
+      if (!item.isSymbolic)
+        optimalActions[item.name]['Buy'] = new Action(itemMarketPrice, 0, null, null, null)
     }
 
     let possibleCraftOptions = []

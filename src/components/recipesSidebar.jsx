@@ -278,7 +278,7 @@ class sidebar extends Component {
                 } = item.shoppingCartData[key];
                 totalCost += expectedCount * individualPrice;
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={key}>
                     <Form.Label
                       key={key}
                       className={"text"}

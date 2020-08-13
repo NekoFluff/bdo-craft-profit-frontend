@@ -26,12 +26,14 @@ class Item {
     this.activeRecipeId = null;
     this.depth = initialItemData["depth"] || -1;
     this.overrideMarketPrice = null;
+    this.isSymbolic = false // A symbolic recipe is not meant to be bought
     this.addRecipe(
       initialItemData["_id"],
       initialItemData["Name"],
       initialItemData["Recipe"],
       initialItemData["Quantity Produced"],
-      initialItemData["Time to Produce"]
+      initialItemData["Time to Produce"],
+      initialItemData["Action"]
     );
   }
 
@@ -39,14 +41,21 @@ class Item {
     return this.overrideMarketPrice || (this.marketData && this.marketData["Market Price"]) || 0;
   }
 
-  addRecipe(_id, productName, recipe, quantityProduced, timeToProduce) {
-    if (this.recipes[_id] == null)
+  addRecipe(_id, productName, recipe, quantityProduced, timeToProduce, action) {
+    if (this.recipes[_id] == null) {
       this.recipes[_id] = new Recipe(
         productName,
         recipe,
         quantityProduced,
-        timeToProduce
+        timeToProduce,
+        action
       );
+
+      if (action == 'Symbolic') {
+        this.isSymbolic = true
+      }
+    }
+
     // this.printRecipes()
   }
 
@@ -93,10 +102,6 @@ class Item {
     } else {
       delete this.usedInRecipes[recipePath]
       delete this.shoppingCartData[recipePath]
-
-      // TODO: Store full path of recipe when adding use.
-      // TODO: Store full path of recipe when adding shopping cart data
-      // TODO: Remove shopping cart data for the recipe that was just deselected. (Use the full path match between the use and the shopping cart data)
     }
 
     console.log("Reset Use: ", this.name, 'Recipe Path:', recipePath, 'Used in Recipes:',this.usedInRecipes)
@@ -114,12 +119,14 @@ class Recipe {
     productName,
     ingredients,
     quantityProduced = null,
-    timeToProduce = null
+    timeToProduce = null,
+    action = null
   ) {
     this.productName = productName;
     this.ingredients = ingredients;
     this.quantityProduced = quantityProduced;
     this.timeToProduce = timeToProduce;
+    this.action = action
   }
 
   printIngredients() {
@@ -234,7 +241,8 @@ class RecipesDashboard extends Component {
         item["Name"],
         item.Recipe,
         item["Quantity Produced"],
-        item["Time to Produce"]
+        item["Time to Produce"],
+        item["Action"]
       );
     }
 

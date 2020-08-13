@@ -15,7 +15,7 @@ class RecipesTable extends Component {
   state = {};
 
   renderDetailsButton() {
-
+    if (this.props.item.isSymbolic) return null
     let active = this.props.detailsShown ? "0" : null
     return (
       <Accordion defaultActiveKey={active}>
@@ -134,7 +134,7 @@ class RecipesTable extends Component {
         }}
       >
         {/* <Chip clickable={false} style={{borderRadius: "3px"}} label={'Buy or Craft?:'}></Chip> */}
-        <Chip
+        {!this.props.item.isSymbolic && <Chip
           className="recipeChip"
           clickable
           label="Buy"
@@ -146,7 +146,8 @@ class RecipesTable extends Component {
               this.props.onBuyClick(productName, recipePath);
             }
           }}
-        />
+        />}
+        
         {Object.keys(allRecipes).map((recipe_id, index) => {
           if (allRecipes[recipe_id].quantityProduced == null) return null;
           const isSelected = selectedRecipeId === recipe_id;
@@ -158,13 +159,13 @@ class RecipesTable extends Component {
               break;
             }
           }
-
+          let recipeLabel = this.props.item.isSymbolic ? allRecipes[recipe_id].ingredients[0]['Item Name'] : `Recipe #${index}` 
           return (
             <Chip
               key={recipe_id}
               className="recipeChip"
               clickable
-              label={`Recipe #${index}`}
+              label={recipeLabel}
               color={isSelected ? "primary" : "secondary"}
               style={{ marginRight: 5 }}
               onClick={() => {
@@ -195,7 +196,7 @@ class RecipesTable extends Component {
             let last = recipeArr.slice(-1).join('/')
             let data = this.props.item.shoppingCartData[`${recipePath}/${this.props.item.name}`]
             return (
-              <div>
+              <div key={recipePath}>
                 {`x${data != null ? data.expectedCount : 'Invalid path? ' + recipePath} for`}
                 <Link
                   activeClass="active"
