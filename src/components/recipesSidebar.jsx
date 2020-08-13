@@ -18,7 +18,7 @@ import secondsToHms from "./../helpers/secondsToHms";
 
 class sidebar extends Component {
   state = {
-    overrideMarketPrice: 0,
+    overrideMarketPrice: null,
   };
 
   componentWillReceiveProps(newProps) {
@@ -61,14 +61,18 @@ class sidebar extends Component {
     e.preventDefault();
   };
 
-  handleMarketPriceChange = (e) => {
-    this.setState({ overrideMarketPrice: e.target.value });
-    console.log("MARKET PRICE CHANGE", e.target.value);
+  handleMarketPriceFormSubmit = (e) => {
+    e.preventDefault();
     const { onMarketPriceChange: callback } = this.props;
 
     if (callback != null) {
-      callback(parseInt(e.target.value));
+      callback(parseInt(this.state.overrideMarketPrice));
     }
+  };
+
+  handleMarketPriceChange = (e) => {
+    this.setState({ overrideMarketPrice: e.target.value });
+    // console.log("MARKET PRICE CHANGE", e.target.value);
   };
 
   renderOutput = () => {
@@ -89,14 +93,6 @@ class sidebar extends Component {
 
       if (item.marketData != null)
         marketPriceLastUpdated = item.marketData["Last Updated"];
-
-      // let correctShoppingCartData
-      // for (const data of item.shoppingCartData) {
-      //   if (data.for == null) {
-      //     correctShoppingCartData = data
-      //     break
-      //   }
-      // }
       let correctShoppingCartData = item.getShoppingCartData(`/${item.name}`);
 
       if (correctShoppingCartData != null) {
@@ -127,7 +123,7 @@ class sidebar extends Component {
     }
 
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleMarketPriceFormSubmit}>
         {/* Total Profit */}
         <Form.Group>
           <OverlayTrigger
@@ -204,7 +200,7 @@ class sidebar extends Component {
               </Tooltip>
             }
           >
-            <InputGroup>
+            <InputGroup controlId="formMarketInput">
               <InputGroup.Prepend>
                 <InputGroup.Text id="inputGroupPrepend">
                   Market Price
@@ -219,6 +215,10 @@ class sidebar extends Component {
                 onChange={this.handleMarketPriceChange}
                 // isInvalid={!!errors.username}
               />
+              <Form.Text className="text-muted">
+                Press 'Enter' after changing the market price to re-calculate
+                costs.
+              </Form.Text>
             </InputGroup>
             {/* <Form.Input className="text-muted">
               Market Price: {numberWithCommas(marketPrice)} silver
@@ -230,7 +230,10 @@ class sidebar extends Component {
   };
 
   renderShoppingCart = () => {
-    console.log("RENDER SHOPPING CART", this.props.recipeTables);
+    console.log(
+      "Render shopping cart (what you need to buy)",
+      this.props.recipeTables
+    );
 
     // Handle null case
     if (this.props.recipeTables == null) {
