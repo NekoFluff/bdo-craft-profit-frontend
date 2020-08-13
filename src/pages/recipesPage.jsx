@@ -31,7 +31,7 @@ class RecipesPage extends Component {
         {/* <Row> */}
         <div className="p-3" align="center">
           <SearchBar onSearch={(newProduct) => {
-            this.setState({ product: newProduct})
+            this.setState({ product: newProduct })
           }}/>
         </div>
         {/* </Row> */}

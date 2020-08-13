@@ -12,13 +12,11 @@ class MostSearchedItemsTable extends Component {
 
   fetchData = async (pageSize, page) => {
     try {
-      console.log("Page:", page, pageSize);
+      let url =
+      API_ENDPOINT + "/searchHistory?page=" + page + "&pageSize=" + pageSize;
+      console.log("Page:", page, pageSize, 'URL:', url);
       const promise = await axios.get(
-        API_ENDPOINT +
-        "/searchHistory?page=" +
-          page +
-          "&pageSize=" +
-          pageSize
+        url
       );
       console.log("Promise Result: ", promise);
       const { data: mostFrequentSearches } = promise;

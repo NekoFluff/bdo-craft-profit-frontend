@@ -27,6 +27,7 @@ class sidebar extends Component {
 
     if (recipeTables != null) {
       const item = recipeTables[0];
+      if (item == null) return
       if (
         this.state.overrideMarketPrice == null ||
         (oldRecipeTables != null &&

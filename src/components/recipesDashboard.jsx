@@ -183,6 +183,11 @@ class RecipesDashboard extends Component {
       );
       this.originalRecipesData = recipes;
       // this.sortRecipes(recipes);
+      if (recipes.length > 0) {
+        this.officialProductName = recipes[0]['Name']
+      } else {
+        this.officialProductName = null
+      }
       this.parseRecipes(recipes);
       console.log("Final Items", this.items);
     } catch (e) {
@@ -326,16 +331,16 @@ class RecipesDashboard extends Component {
    */
   recalculate = (overrides) => {
     // Step 1: Calculate the costs associated with the desired action tree. (TODO: Move to separate function?)
-    // console.log("THIS PROPS PRODUCT = ", this.props.product, this.items);
+    // console.log("THIS PROPS PRODUCT = ", this.officialProductName, this.items);
     if (overrides != null) {
       this.shoppingCart.calculateCosts(
-        this.props.product,
+        this.officialProductName,
         overrides.craftCount,
         this.items
       );
     } else {
       this.shoppingCart.calculateCosts(
-        this.props.product,
+        this.officialProductName,
         this.state.craftCount,
         this.items
       );
@@ -416,13 +421,19 @@ class RecipesDashboard extends Component {
   }
 
   resetToOptimal() {
+    console.log("OFFICIAL PRODUCT NAME:", this.officialProductName)
+
+    if (this.officialProductName == null) {
+      this.updateTables(); 
+      return;
+    }
+
     // Get optimal action for each recipe of the root product
     const bestRecipeActions = this.shoppingCart.optimizer.findOptimalActionSets(
-      this.props.product,
+      this.officialProductName,
       this.items
     );
-    const { product } = this.props;
-
+    const product = this.officialProductName;
     // Choose most optimal recipe and the optimal actions for profit
     let bestActionSet = null;
     for (let actionSetIdx in bestRecipeActions) {
@@ -443,11 +454,21 @@ class RecipesDashboard extends Component {
     }
 
     console.log("recipesDashboard.jsx | Best Action Set", bestActionSet);
-    this.selectRecipe(
-      product,
-      bestActionSet["optimalActions"][product]["Craft"].recipe_id,
-      `/${this.props.product}`
-    );
+    let craftAction = bestActionSet["optimalActions"][product]["Craft"]
+    if (craftAction != null) {
+      this.selectRecipe(
+        product,
+        craftAction.recipe_id,
+        `/${product}`
+      );
+    } else {
+      this.selectRecipe(
+        product,
+        bestActionSet["optimalActions"][product]["Buy"].recipe_id,
+        `/${product}`
+      );
+    }
+
   }
 
   /**
@@ -525,13 +546,17 @@ class RecipesDashboard extends Component {
     recipeTables = recipeTables.sort(function (a, b) {
       return a.depth - b.depth;
     });
+
+    if (Object.keys(recipeTables).length == 0) {
+      recipeTables = null
+    }
     
     this.setState({ recipeTables });
   }
   
   renderTables() {
     if (this.state.recipeTables == null) {
-      if (this.props.product != null) {
+      if (this.officialProductName == null) {
         return (
           <React.Fragment>
             <h2 style={{ "textAlign": "center" }}>
@@ -557,7 +582,7 @@ class RecipesDashboard extends Component {
 
     return (
       <div>
-        {this.state.recipeTables.map((item, index) => {
+        {this.officialProductName && this.state.recipeTables.map((item, index) => {
           return (
             <RecipesTable
               key={`${item.name}`}
@@ -617,7 +642,7 @@ class RecipesDashboard extends Component {
                 this.resetToOptimal();
               }}
               onMarketPriceChange={(newMarketPrice) => {
-                this.items[this.props.product][
+                this.items[this.officialProductName][
                   "overrideMarketPrice"
                 ] = newMarketPrice;
                 this.resetToOptimal();
