@@ -377,7 +377,8 @@ class RecipesTable extends Component {
                   {/* <div {...props}>{props.title}</div> */}
 
                   {this.renderParentLinks(parentPaths)}
-                  <div
+
+                  {selectedRecipeAction != 'Symbolic' && <div
                     id="toolbar-subtitle-action "
                     style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                   >
@@ -389,8 +390,8 @@ class RecipesTable extends Component {
                             totalTimeSpent
                           )})`}
                     </span>
-                  </div>
-                  {action != "Buy" && (
+                  </div>}
+                  {action != "Buy" && selectedRecipeAction != 'Symbolic' && (
                     <div
                       id="toolbar-subtitle-items-per-craft"
                       style={{ fontSize: "0.8em", paddingLeft: "25px" }}
