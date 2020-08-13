@@ -181,7 +181,7 @@ class RecipesDashboard extends Component {
         API_ENDPOINT + "/recipes?item=" + productName
       );
       this.originalRecipesData = recipes;
-      this.sortRecipes(recipes);
+      // this.sortRecipes(recipes);
       this.parseRecipes(recipes);
       console.log("Final Items", this.items);
     } catch (e) {

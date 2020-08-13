@@ -341,14 +341,26 @@ class PPHOptimizer {
       if (bestAction == null) {
         bestAction = action;
         bestProfitValue = action.calculateProfit(itemMarketPrice)
+
+        // This if statement handles symbolic recipes
+        if (!Number.isFinite(bestProfitValue)) {
+          bestProfitValue = -action.monetaryCost
+        }
         // console.log('ACTION:', bestProfitValue, bestAction)
         continue;
       }
       
-      const profit = action.calculateProfit(itemMarketPrice)
-      // console.log('ACTION:', profit, action)
+      let profit = action.calculateProfit(itemMarketPrice)
+
+      // This if statement handles symbolic recipes
+      if (!Number.isFinite(profit)) {
+        profit = -action.monetaryCost
+      }
+
+      // We found a better crafting recipe!
       if (profit > bestProfitValue) {
         bestAction = action
+        bestProfitValue = profit
       }
     }
 
@@ -389,6 +401,7 @@ class Action {
   }
 
   calculatePPS(sellPrice) {
+    console.log('optimal pps', sellPrice, this.monetaryCost, this.time)
     return ProfitCalculator.calculateProfitPerSecond(sellPrice, this.monetaryCost, this.time)
   }
 }
