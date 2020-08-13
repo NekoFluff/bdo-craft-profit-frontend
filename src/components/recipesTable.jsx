@@ -287,12 +287,15 @@ class RecipesTable extends Component {
     const action = selectedRecipeId != null ? "Craft" : "Buy";
     const selectedRecipe =
       selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
-    const selectedRecipeAction =
-      selectedRecipe != null ? selectedRecipe["action"] : null;
-
+    let selectedRecipeAction = null;
+    let quantityProduced = null
     let rowData = [];
 
-    if (selectedRecipe != null) rowData = [...selectedRecipe.ingredients];
+    if (selectedRecipe != null) {
+      rowData = [...selectedRecipe.ingredients]
+      selectedRecipeAction = selectedRecipe["action"]
+      quantityProduced = selectedRecipe["quantityProduced"]
+    }
 
     let parentPaths = [];
     let totalItemCount = 0;
@@ -375,14 +378,30 @@ class RecipesTable extends Component {
 
                   {this.renderParentLinks(parentPaths)}
                   <div
-                    id="toolbar-subtitle"
+                    id="toolbar-subtitle-action "
                     style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                   >
                     <span className="font-weight-bold">
-                    {action == "Buy"
-                      ? "Buy or Gather"
-                      : selectedRecipeAction + ` ${craftCount} times (${secondsToHms(totalTimeSpent)})`}</span>
+                      {action == "Buy"
+                        ? "Buy or Gather"
+                        : selectedRecipeAction +
+                          ` [${craftCount} times] (${secondsToHms(
+                            totalTimeSpent
+                          )})`}
+                    </span>
                   </div>
+                  {action != "Buy" && (
+                    <div
+                      id="toolbar-subtitle-items-per-craft"
+                      style={{ fontSize: "0.8em", paddingLeft: "25px" }}
+                    >
+                      <span className="font-weight-bold">
+                        {
+                          `${quantityProduced} items per craft`}
+                      </span>
+                    </div>
+                  )}
+
                   {this.renderChips(allRecipes, selectedRecipeId, productName)}
                   {this.renderDetailsButton()}
                 </div>

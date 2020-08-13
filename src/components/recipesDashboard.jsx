@@ -110,6 +110,12 @@ class Item {
       this.activeRecipeId = null;
   };
 
+  setDepth(depth) {
+    if (this.depth == -1 || depth < this.depth) {
+      this.depth = depth
+    }
+  }
+
   printRecipes() {
     console.log("Recipes:", this.recipes);
   }
@@ -250,6 +256,7 @@ class RecipesDashboard extends Component {
         item["Time to Produce"],
         item["Action"]
       );
+      items[item.Name].setDepth(item['depth'])
     }
 
     // console.log('item name', item.Name)
