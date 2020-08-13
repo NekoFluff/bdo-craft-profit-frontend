@@ -3,26 +3,31 @@ import MaterialTable, { MTableToolbar } from "material-table"; // https://materi
 import tableIcons from "../helpers/tableIcons";
 import { Chip } from "@material-ui/core";
 import "../css/RecipeTable.css";
-import {
-  Link,
-  Element,
-} from "react-scroll";
+import { Link, Element } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
-import ProfitCalculator from './../helpers/ShoppingCartProfitCalculator';
-import numberWithCommas from './../helpers/numberWithCommas';
+import ProfitCalculator from "./../helpers/ShoppingCartProfitCalculator";
+import numberWithCommas from "./../helpers/numberWithCommas";
+import secondsToHms from './../helpers/secondsToHms';
 
 class RecipesTable extends Component {
   state = {};
 
   renderDetailsButton() {
-    if (this.props.item.isSymbolic) return null
-    let active = this.props.detailsShown ? "0" : null
+    if (this.props.item.isSymbolic) return null;
+    let active = this.props.detailsShown ? "0" : null;
     return (
       <Accordion defaultActiveKey={active}>
         <Card>
           <Card.Header>
-            <Accordion.Toggle as={Button} onClick={(e)=>{this.props.onProfitDetailsButtonPressed(this.props.item.name)}} variant="link" eventKey="0">
-              {active ? 'Hide Profit Details' : 'Show Profit Details'}
+            <Accordion.Toggle
+              as={Button}
+              onClick={(e) => {
+                this.props.onProfitDetailsButtonPressed(this.props.item.name);
+              }}
+              variant="link"
+              eventKey="0"
+            >
+              {active ? "Hide Profit Details" : "Show Profit Details"}
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
@@ -44,42 +49,52 @@ class RecipesTable extends Component {
   }
 
   renderBadges() {
+    if (this.props.item == null) return;
     // const { shoppingCartData, marketData, valuePackEnabled } = this.props.item;
     // if (this.props.item.shoppingCartData.length == null || this.props.item.shoppingCartData.length == 0) return <h2>No shopping cart data available</h2>
     const marketPrice = this.props.item.getMarketPrice();
-    let buyCount = 0
-    let craftCount = 0
-    const firstKey = [0]
-    if (firstKey == null) return
+    let buyCount = 0; // Total number of items
+    let craftCount = 0;
+    let timesCrafted = 0; // Number of times this has been done
+    let timesBought = 0;
+    const firstKey = [0];
+    if (firstKey == null) return;
 
-    let individualPrice = -1
-    let cumulativeTimeSpent = -1
+    let individualPrice = -1;
+    let cumulativeTimeSpent = -1;
     for (const [key, val] of Object.entries(this.props.item.shoppingCartData)) {
-      if (this.props.item.activeRecipeId != null && val.action == 'Craft') {
-        individualPrice = val.individualPrice
-        cumulativeTimeSpent = val.cumulativeTimeSpent
-        break
-      } else if (this.props.item.activeRecipeId == null && val.action == 'Buy') {
-        individualPrice = val.individualPrice
-        cumulativeTimeSpent = val.cumulativeTimeSpent
-        break
+      if (this.props.item.activeRecipeId != null && val.action == "Craft") {
+        individualPrice = val.individualPrice;
+        cumulativeTimeSpent = val.cumulativeTimeSpent;
+        break;
+      } else if (
+        this.props.item.activeRecipeId == null &&
+        val.action == "Buy"
+      ) {
+        individualPrice = val.individualPrice;
+        cumulativeTimeSpent = val.cumulativeTimeSpent;
+        break;
       }
     }
 
-    for (const [recipePath, {expectedCount, action}] of Object.entries(this.props.item.shoppingCartData)) {
-      if (this.props.item.name == "Acacia Plywood") {
-        console.log("TEMP TEST Reset?", action, expectedCount, cumulativeTimeSpent, this.props.item)
-      }
-      if (action == 'Buy') {
-        buyCount += expectedCount
-      } else if (action == 'Craft') {
-        craftCount += expectedCount
+    for (const [recipePath, { expectedCount, action, craftCount: repeatCount }] of Object.entries(
+      this.props.item.shoppingCartData
+    )) {
+      if (action == "Buy") {
+        buyCount += expectedCount;
+        timesBought += repeatCount;
+      } else if (action == "Craft") {
+        craftCount += expectedCount;
+        timesCrafted += repeatCount
       }
     }
 
     individualPrice = parseInt(individualPrice);
 
-    const {profit, profitPerSecond} = ProfitCalculator.calculateProfitValuesForItem(this.props.item)
+    const {
+      profit,
+      profitPerSecond,
+    } = ProfitCalculator.calculateProfitValuesForItem(this.props.item);
 
     return (
       <div
@@ -89,49 +104,65 @@ class RecipesTable extends Component {
           paddingBottom: "20px",
         }}
       >
-        <h4>
+        <div>
           {" "}
           <Badge variant="danger">
             {`Market Price: ${numberWithCommas(marketPrice)} silver`}
           </Badge>
-        </h4>
+        </div>
 
         {/* Profit */}
-        <h4>
-          <Badge variant="success">{`Total Profit: ${numberWithCommas(Math.floor(
-            profit * craftCount
-          ))} silver`}</Badge>
-        </h4>
-        <h4>
-          <Badge variant="success">{`Profit per item: ${numberWithCommas(Math.floor(
-            profit
-          ))} silver`}</Badge>
-        </h4>
-        <h4>
-          <Badge variant="success">{`Profit per sec: ${numberWithCommas(profitPerSecond)} silver/second`}</Badge>
-        </h4>
+        <div>
+          <Badge variant="success">{`Total Profit: ${numberWithCommas(
+            Math.floor(profit * craftCount)
+          )} silver`}</Badge>
+        </div>
+        <div>
+          <Badge variant="success">{`Profit per item: ${numberWithCommas(
+            Math.floor(profit)
+          )} silver`}</Badge>
+        </div>
+        <div>
+          <Badge variant="success">{`Profit per sec: ${numberWithCommas(
+            profitPerSecond
+          )} silver/second`}</Badge>
+        </div>
 
         {/* Silver spent */}
-        <h4>
+        <div>
           <Badge variant="warning">
-            {`${numberWithCommas(individualPrice * craftCount)} silver spent to get these materials`}
+            {`${numberWithCommas(
+              individualPrice * craftCount
+            )} silver spent to get these materials`}
           </Badge>
-        </h4>
-        <h4>
-          <Badge variant="warning">{`${numberWithCommas(individualPrice)} silver spent per item.`}</Badge>
-        </h4>
+        </div>
+        <div>
+          <Badge variant="warning">{`${numberWithCommas(
+            individualPrice
+          )} silver spent per item.`}</Badge>
+        </div>
 
         {/* Time spent */}
-        <h4>
-          <Badge variant="info">{`${numberWithCommas((cumulativeTimeSpent * craftCount).toFixed(
-            2
-          ))} total seconds crafting`}</Badge>
-        </h4>
-        <h4>
-          <Badge variant="info">{`${numberWithCommas(cumulativeTimeSpent.toFixed(
-            2
-          ))} seconds spent to craft one of these items`}</Badge>
-        </h4>
+        <div>
+          <Badge variant="info">{`${numberWithCommas(
+            (cumulativeTimeSpent * craftCount).toFixed(2)
+          )} total seconds crafting`}</Badge>
+        </div>
+        <div>
+          <Badge variant="info">{`${numberWithCommas(
+            cumulativeTimeSpent.toFixed(2)
+          )} seconds spent to craft one of these items`}</Badge>
+        </div>
+        <div>
+          <Badge variant="dark">{`${numberWithCommas(
+            timesCrafted
+          )} times crafted`}</Badge>
+        </div>
+        <div>
+          <Badge variant="dark">{`${numberWithCommas(
+            timesBought
+          )} times bought`}</Badge>
+        </div>
       </div>
     );
   }
@@ -143,7 +174,6 @@ class RecipesTable extends Component {
    * @param {} productName The name of the product being bought/crafted
    */
   renderChips(allRecipes, selectedRecipeId, productName) {
-    
     return (
       <div
         id="toolbar-container"
@@ -152,31 +182,38 @@ class RecipesTable extends Component {
         }}
       >
         {/* <Chip clickable={false} style={{borderRadius: "3px"}} label={'Buy or Craft?:'}></Chip> */}
-        {!this.props.item.isSymbolic && <Chip
-          className="recipeChip"
-          clickable
-          label="Buy"
-          color={selectedRecipeId == null ? "primary" : "secondary"}
-          style={{ marginRight: 5 }}
-          onClick={() => {
-            console.log(`Clicked buy | id: ${productName}`);
-            this.props.onBuyClick(productName, Object.keys(this.props.item.shoppingCartData))
-          }}
-        />}
-        
+        {!this.props.item.isSymbolic && (
+          <Chip
+            className="recipeChip"
+            clickable
+            label="Buy"
+            color={selectedRecipeId == null ? "primary" : "secondary"}
+            style={{ marginRight: 5 }}
+            onClick={() => {
+              console.log(`Clicked buy | id: ${productName}`);
+              this.props.onBuyClick(
+                productName,
+                Object.keys(this.props.item.shoppingCartData)
+              );
+            }}
+          />
+        )}
+
         {Object.keys(allRecipes).map((recipe_id, index) => {
           if (allRecipes[recipe_id].quantityProduced == null) return null;
           const isSelected = selectedRecipeId === recipe_id;
-          let isDisabled = false
+          let isDisabled = false;
 
           // If an ingredient doesn't have market data and isn't symbolic
           for (const ingredient of allRecipes[recipe_id].ingredients) {
-            if (!this.props.itemHasMarketData(ingredient['Item Name'])) {
+            if (!this.props.itemHasMarketData(ingredient["Item Name"])) {
               isDisabled = true;
               break;
             }
           }
-          let recipeLabel = this.props.item.isSymbolic ? allRecipes[recipe_id].ingredients[0]['Item Name'] : `Recipe #${index}` 
+          let recipeLabel = this.props.item.isSymbolic
+            ? allRecipes[recipe_id].ingredients[0]["Item Name"]
+            : `Recipe #${index}`;
           return (
             <Chip
               key={recipe_id}
@@ -187,7 +224,11 @@ class RecipesTable extends Component {
               style={{ marginRight: 5 }}
               onClick={() => {
                 console.log(`Clicked recipe# ${index} | id: ${recipe_id}`);
-                this.props.onRecipeClick(productName, recipe_id, Object.keys(this.props.item.shoppingCartData)) 
+                this.props.onRecipeClick(
+                  productName,
+                  recipe_id,
+                  Object.keys(this.props.item.shoppingCartData)
+                );
               }}
               disabled={isDisabled}
             />
@@ -203,32 +244,35 @@ class RecipesTable extends Component {
         id="toolbar-subtitle"
         style={{ fontSize: "0.8em", paddingLeft: "25px" }}
       >
-        {
-          recipePaths.map((recipePath) => {
-            if (recipePath == null || recipePath == '') return null;
-            let recipeArr = recipePath.split('/')
-            let everythingButLast = recipeArr.slice(0, -1).join('/')
-            let last = recipeArr.slice(-1).join('/')
-            let data = this.props.item.shoppingCartData[`${recipePath}/${this.props.item.name}`]
-            return (
-              <div key={recipePath}>
-                {`x${data != null ? data.expectedCount : 'Invalid path? ' + recipePath} for `}
-                <Link
-                  activeClass="active"
-                  className="scrollLink text-primary"
-                  to={last}
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                >
-                  {everythingButLast}
-                  <span className="font-weight-bold">{`/${last}`}</span>
-                </Link>
-              </div>
-            )
-          }) 
-        }
-        
+        {recipePaths.map((recipePath) => {
+          if (recipePath == null || recipePath == "") return null;
+          let recipeArr = recipePath.split("/");
+          let everythingButLast = recipeArr.slice(0, -1).join("/");
+          let last = recipeArr.slice(-1).join("/");
+          let data = this.props.item.shoppingCartData[
+            `${recipePath}/${this.props.item.name}`
+          ];
+          return (
+            <div key={recipePath}>
+              {`x${
+                data != null
+                  ? data.expectedCount
+                  : "Invalid path? " + recipePath
+              } for `}
+              <Link
+                activeClass="active"
+                className="scrollLink text-primary"
+                to={last}
+                spy={true}
+                smooth={true}
+                duration={500}
+              >
+                {everythingButLast}
+                <span className="font-weight-bold">{`/${last}`}</span>
+              </Link>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -240,29 +284,38 @@ class RecipesTable extends Component {
       recipes: allRecipes,
       activeRecipeId: selectedRecipeId,
     } = item;
+    const action = selectedRecipeId != null ? "Craft" : "Buy";
     const selectedRecipe =
       selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
+    const selectedRecipeAction =
+      selectedRecipe != null ? selectedRecipe["action"] : null;
+
     let rowData = [];
 
     if (selectedRecipe != null) rowData = [...selectedRecipe.ingredients];
 
-    let parentPaths = []
-    let totalCount = 0
+    let parentPaths = [];
+    let totalItemCount = 0;
+    let craftCount = 0;
+    let totalTimeSpent = 0
     for (let ingredient of rowData) {
-      ingredient["Total Needed"] = 0
+      ingredient["Total Needed"] = 0;
     }
 
-    for (const [recipePath, shoppingCart] of Object.entries(item.shoppingCartData)) {
-      console.log('Reset???', item.name, item.shoppingCartData, recipePath)
-      totalCount += shoppingCart.expectedCount
-      parentPaths.push(recipePath.split('/').slice(0,-1).join('/'))
+    for (const [recipePath, shoppingCart] of Object.entries(shoppingCartData)) {
+      totalItemCount += shoppingCart.expectedCount;
+      parentPaths.push(recipePath.split("/").slice(0, -1).join("/"));
 
-      const recipePathArr = recipePath.split('/')
-      const containsLoop = new Set(recipePathArr).size !== recipePathArr.length
-      if (containsLoop) continue
+      const recipePathArr = recipePath.split("/");
+      const containsLoop = new Set(recipePathArr).size !== recipePathArr.length;
+      if (containsLoop) continue;
+      craftCount += shoppingCart.craftCount; //Counts for crafting and buying
+      totalTimeSpent += shoppingCart.expectedCount * shoppingCart.cumulativeTimeSpent
 
       for (let ingredient of rowData) {
-        ingredient["Total Needed"] = (ingredient["Total Needed"]) + ingredient["Amount"] * shoppingCart.craftCount;
+        ingredient["Total Needed"] =
+          ingredient["Total Needed"] +
+          ingredient["Amount"] * shoppingCart.craftCount;
       }
     }
 
@@ -279,7 +332,7 @@ class RecipesTable extends Component {
                   activeClass="active"
                   className="scrollLink text-primary"
                   // to={rowData["Item Name"]}
-                  to={`${rowData['Item Name']}`}
+                  to={`${rowData["Item Name"]}`}
                   spy={true}
                   smooth={true}
                   duration={500}
@@ -293,7 +346,7 @@ class RecipesTable extends Component {
           ]}
           data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
           // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
-          title={`${productName} (x${totalCount})`}
+          title={`${productName} (x${totalItemCount})`}
           options={{
             search: false,
             paging: false,
@@ -319,12 +372,18 @@ class RecipesTable extends Component {
                     style={{ "text-align": "center" }}
                   />
                   {/* <div {...props}>{props.title}</div> */}
+
                   {this.renderParentLinks(parentPaths)}
-                  {this.renderChips(
-                    allRecipes,
-                    selectedRecipeId,
-                    productName
-                  )}
+                  <div
+                    id="toolbar-subtitle"
+                    style={{ fontSize: "0.8em", paddingLeft: "25px" }}
+                  >
+                    <span className="font-weight-bold">
+                    {action == "Buy"
+                      ? "Buy or Gather"
+                      : selectedRecipeAction + ` ${craftCount} times (${secondsToHms(totalTimeSpent)})`}</span>
+                  </div>
+                  {this.renderChips(allRecipes, selectedRecipeId, productName)}
                   {this.renderDetailsButton()}
                 </div>
               );
@@ -332,7 +391,7 @@ class RecipesTable extends Component {
           }}
         />
       </Element>
-    )
+    );
   }
 }
 

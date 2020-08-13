@@ -75,13 +75,14 @@ class Item {
     });
 
     if (this.activeRecipeId == null) this.selectRecipe(activeRecipeId);
-    else if (activeRecipeId != this.activeRecipeId)
+    else if (activeRecipeId != this.activeRecipeId) {
       console.log(
         "POSSIBLE ERROR: Recursive recipe OR recipe needs to be bought/crafted at the same time... or crafted using multiple recipes. \nItem name:",
         this.name,
         '\nActive recipe:', this.activeRecipeId,
         '\nTarget recipe:', activeRecipeId
       );
+    }
   }
 
   addShoppingCartData(recipePath, data) {
@@ -431,9 +432,6 @@ class RecipesDashboard extends Component {
         continue;
       }
 
-      console.log("TEMP", bestActionSet.optimalActions);
-      console.log("TEMP", product);
-      console.log("TEMP", bestActionSet.optimalActions[product]);
       const oldCraftAction = bestActionSet.optimalActions[product]["Craft"];
       const newCraftAction = actionSet.optimalActions[product]["Craft"];
       const marketPrice = this.items[product].getMarketPrice();
@@ -474,6 +472,11 @@ class RecipesDashboard extends Component {
     if (action == null) return items; // Base case. Return when there is no valid action
 
     const currentPath = `${parentPath || ''}/${currentItem}`
+    const recipePathArr = currentPath.split('/')
+    const containsLoop = new Set(recipePathArr).size !== recipePathArr.length
+    if (containsLoop) {
+      actionTaken = 'Buy'
+    }
 
     if (items[currentItem] != null) {
       items[currentItem].addUse(
