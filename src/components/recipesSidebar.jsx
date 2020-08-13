@@ -456,7 +456,7 @@ class sidebar extends Component {
             </Accordion.Collapse>
           </Card>
           {/* Card 2 */}
-          <Card>
+          {/* <Card>
             <Card.Header>
               <Accordion.Toggle as={Button} variant="link" eventKey="1">
                 Your Active Buffs
@@ -465,7 +465,7 @@ class sidebar extends Component {
             <Accordion.Collapse eventKey="1">
               <Card.Body>{this.renderBuffsInput()}</Card.Body>
             </Accordion.Collapse>
-          </Card>
+          </Card> */}
 
           <Card>
             <Card.Header>
