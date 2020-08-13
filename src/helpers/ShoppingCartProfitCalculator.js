@@ -5,8 +5,15 @@ class ProfitCalculator {
 
   static calculateProfitValuesForItem(item, shoppingCartData) {
     if (shoppingCartData == null) {
-      const firstKey = Object.keys(item.shoppingCartData)[0]
-      shoppingCartData = item.shoppingCartData[firstKey]
+      for (const [key, val] of Object.entries(item.shoppingCartData)) {
+        if (item.activeRecipeId != null && val.action == 'Craft') {
+          shoppingCartData = val
+          break
+        } else if (item.activeRecipeId == null && val.action == 'Buy') {
+          shoppingCartData = val
+          break
+        }
+      }
     } 
 
     let {

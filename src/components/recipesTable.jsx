@@ -47,16 +47,34 @@ class RecipesTable extends Component {
     // const { shoppingCartData, marketData, valuePackEnabled } = this.props.item;
     // if (this.props.item.shoppingCartData.length == null || this.props.item.shoppingCartData.length == 0) return <h2>No shopping cart data available</h2>
     const marketPrice = this.props.item.getMarketPrice();
-    let count = 0
-    const firstKey = Object.keys(this.props.item.shoppingCartData)[0]
+    let buyCount = 0
+    let craftCount = 0
+    const firstKey = [0]
     if (firstKey == null) return
-    let {
-      individualPrice,
-      cumulativeTimeSpent
-    } = this.props.item.shoppingCartData[firstKey];
 
-    for (const [recipePath, {expectedCount}] of Object.entries(this.props.item.shoppingCartData)) {
-      count += expectedCount
+    let individualPrice = -1
+    let cumulativeTimeSpent = -1
+    for (const [key, val] of Object.entries(this.props.item.shoppingCartData)) {
+      if (this.props.item.activeRecipeId != null && val.action == 'Craft') {
+        individualPrice = val.individualPrice
+        cumulativeTimeSpent = val.cumulativeTimeSpent
+        break
+      } else if (this.props.item.activeRecipeId == null && val.action == 'Buy') {
+        individualPrice = val.individualPrice
+        cumulativeTimeSpent = val.cumulativeTimeSpent
+        break
+      }
+    }
+
+    for (const [recipePath, {expectedCount, action}] of Object.entries(this.props.item.shoppingCartData)) {
+      if (this.props.item.name == "Acacia Plywood") {
+        console.log("TEMP TEST Reset?", action, expectedCount, cumulativeTimeSpent, this.props.item)
+      }
+      if (action == 'Buy') {
+        buyCount += expectedCount
+      } else if (action == 'Craft') {
+        craftCount += expectedCount
+      }
     }
 
     individualPrice = parseInt(individualPrice);
@@ -81,7 +99,7 @@ class RecipesTable extends Component {
         {/* Profit */}
         <h4>
           <Badge variant="success">{`Total Profit: ${numberWithCommas(Math.floor(
-            profit * count
+            profit * craftCount
           ))} silver`}</Badge>
         </h4>
         <h4>
@@ -96,7 +114,7 @@ class RecipesTable extends Component {
         {/* Silver spent */}
         <h4>
           <Badge variant="warning">
-            {`${numberWithCommas(individualPrice * count)} silver spent to get these materials`}
+            {`${numberWithCommas(individualPrice * craftCount)} silver spent to get these materials`}
           </Badge>
         </h4>
         <h4>
@@ -105,7 +123,7 @@ class RecipesTable extends Component {
 
         {/* Time spent */}
         <h4>
-          <Badge variant="info">{`${numberWithCommas((cumulativeTimeSpent * count).toFixed(
+          <Badge variant="info">{`${numberWithCommas((cumulativeTimeSpent * craftCount).toFixed(
             2
           ))} total seconds crafting`}</Badge>
         </h4>
@@ -142,9 +160,7 @@ class RecipesTable extends Component {
           style={{ marginRight: 5 }}
           onClick={() => {
             console.log(`Clicked buy | id: ${productName}`);
-            for (let [recipePath, data] of Object.entries(this.props.item.shoppingCartData)) {
-              this.props.onBuyClick(productName, recipePath);
-            }
+            this.props.onBuyClick(productName, Object.keys(this.props.item.shoppingCartData))
           }}
         />}
         
@@ -171,9 +187,7 @@ class RecipesTable extends Component {
               style={{ marginRight: 5 }}
               onClick={() => {
                 console.log(`Clicked recipe# ${index} | id: ${recipe_id}`);
-                for (let [recipePath, data] of Object.entries(this.props.item.shoppingCartData)) {
-                  this.props.onRecipeClick(productName, recipe_id, recipePath);
-                }
+                this.props.onRecipeClick(productName, recipe_id, Object.keys(this.props.item.shoppingCartData)) 
               }}
               disabled={isDisabled}
             />
@@ -234,12 +248,21 @@ class RecipesTable extends Component {
 
     let parentPaths = []
     let totalCount = 0
+    for (let ingredient of rowData) {
+      ingredient["Total Needed"] = 0
+    }
+
     for (const [recipePath, shoppingCart] of Object.entries(item.shoppingCartData)) {
+      console.log('Reset???', item.name, item.shoppingCartData, recipePath)
       totalCount += shoppingCart.expectedCount
       parentPaths.push(recipePath.split('/').slice(0,-1).join('/'))
+
+      const recipePathArr = recipePath.split('/')
+      const containsLoop = new Set(recipePathArr).size !== recipePathArr.length
+      if (containsLoop) continue
+
       for (let ingredient of rowData) {
-        ingredient["Total Needed"] = (ingredient["Total Needed"] || 0) +
-        ingredient["Amount"] * shoppingCart.craftCount;
+        ingredient["Total Needed"] = (ingredient["Total Needed"]) + ingredient["Amount"] * shoppingCart.craftCount;
       }
     }
 

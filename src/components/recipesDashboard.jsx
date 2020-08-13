@@ -104,7 +104,7 @@ class Item {
       delete this.shoppingCartData[recipePath]
     }
 
-    console.log("Reset Use: ", this.name, 'Recipe Path:', recipePath, 'Used in Recipes:',this.usedInRecipes)
+    console.log("Reset Use: ", this.name, 'Recipe Path:', recipePath, 'Used in Recipes:', JSON.stringify(this.usedInRecipes, null, 4), JSON.stringify(this.shoppingCartData, null, 4))
     if (Object.keys(this.usedInRecipes).length == 0)
       this.activeRecipeId = null;
   };
@@ -249,6 +249,25 @@ class RecipesDashboard extends Component {
     // console.log('item name', item.Name)
   }
 
+  resetRecipePath = (itemName, recipePath) => {
+    const items = this.items;
+    // Step 0: Parse path variables
+    let pathArr = recipePath.split('/')
+    let parentName = pathArr.length >= 2  ? pathArr[pathArr.length - 2] : null
+    if (parentName == "") parentName = null
+    let parentPath = pathArr.slice(0, -1).join('/')
+    if (parentPath == "") parentPath = null
+    console.log('Reset', pathArr, parentName, parentPath)
+    // let parentRecipeId = this.items[parentName] != null ? this.items[parentName].activeRecipeId : null
+
+
+    // Step 1: Reset items that were dependent on the previous recipe
+    // for (let [parentPath, val] of Object.entries(items[itemName].usedInRecipes)) {
+    //   this.startRecursiveReset(items[itemName], items, parentPath);
+    // }
+    this.startRecursiveReset(items[itemName], items, parentPath);
+  }
+
   /**
    * Callback function for RecipesTable.onRecipeClick
    * Updates the 'this.items' object in this component's state, which updates the RecipesTable(s)
@@ -263,18 +282,11 @@ class RecipesDashboard extends Component {
     if (parentName == "") parentName = null
     let parentPath = pathArr.slice(0, -1).join('/')
     if (parentPath == "") parentPath = null
-    console.log(pathArr, parentName, parentPath)
+    console.log('Select', pathArr, parentName, parentPath)
     let parentRecipeId = this.items[parentName] != null ? this.items[parentName].activeRecipeId : null
 
-
-    // Step 1: Reset items that were dependent on the previous recipe
-    // for (let [parentPath, val] of Object.entries(items[itemName].usedInRecipes)) {
-    //   this.startRecursiveReset(items[itemName], items, parentPath);
-    // }
-    this.startRecursiveReset(items[itemName], items, parentPath);
     items[itemName].selectRecipe(recipeId);
     // console.log('recipesDashboard.jsx | items after recursive reset', items)
-
 
     // Step 2: Find the best way to make money using the new decision
     let optimalActions = this.shoppingCart.optimizer.startCalculatingOptimalActions(
@@ -339,8 +351,18 @@ class RecipesDashboard extends Component {
    */
   startRecursiveReset(item, items, parentPath) {
     this.alreadyResetPath = {}
-    console.log("recipesDashboard.jsx | Starting recursive reset:", item);
-    this.recursivelyResetItemUses(item, items, parentPath);
+    // if (parentPath != null) {
+    //   const everythingButLast = parentPath.split('/').slice(0, -1).join('/')
+    //   const lastObject = parentPath.split('/').slice(-1)[0]
+    //   console.log("recipesDashboard.jsx | Starting recursive reset:", parentPath, item, everythingButLast, lastObject);
+    //   if (lastObject == item.name) {
+    //     return this.recursivelyResetItemUses(item, items, everythingButLast);
+    //   }
+    // }
+    console.log("recipesDashboard.jsx | Starting recursive reset:", parentPath, item);
+
+    return this.recursivelyResetItemUses(item, items, parentPath);
+    
 
     // const recipeId = item.activeRecipeId;
 
@@ -364,8 +386,14 @@ class RecipesDashboard extends Component {
   recursivelyResetItemUses(item, items, parentPath = null) {
     const recipeId = item.activeRecipeId;
     const currentPath = `${parentPath || ''}/${item.name}`
-    if (this.alreadyResetPath[currentPath]) return;
-    if (item.usedInRecipes[currentPath] == null) return;
+    if (this.alreadyResetPath[currentPath]) {
+      console.log('Already reset', item.name); 
+      return;
+    }
+    if (item.usedInRecipes[currentPath] == null) {
+      console.log('Reset... No data', item.name, currentPath, JSON.stringify(item.usedInRecipes,null, 4)); 
+      return;
+    }
     this.alreadyResetPath[currentPath] = true
 
     if (recipeId != null) {
@@ -375,11 +403,14 @@ class RecipesDashboard extends Component {
           "recipesDashboard.jsx | Ingredient reset:",
           ingredient["Item Name"], parentPath
         );
+        const newPath = `${currentPath || ''}/${ingredientName}`
 
         this.recursivelyResetItemUses(items[ingredientName], items, currentPath);
       }
     }
-    item.resetUses(currentPath);
+    // items[ingredientName].resetUses(newPath);
+
+    item.resetUses(currentPath)
     items[item.name] = item;
   }
 
@@ -529,8 +560,22 @@ class RecipesDashboard extends Component {
               key={`${item.name}`}
               productName={item.name}
               item={item}
-              onRecipeClick={this.selectRecipe}
-              onBuyClick={(itemName, recipePath) => this.selectRecipe(itemName, null, recipePath)}
+              onRecipeClick={(itemName, recipeId, recipePaths) => {
+                for (const path of recipePaths) {
+                  this.resetRecipePath(itemName, path)
+                }
+                for (const path of recipePaths) {
+                  this.selectRecipe(itemName, recipeId, path)
+                }
+              }}
+              onBuyClick={(itemName, recipePaths) => {
+                for (const path of recipePaths) {
+                  this.resetRecipePath(itemName, path)
+                }
+                for (const path of recipePaths) {
+                  this.selectRecipe(itemName, null, path)
+                }
+              }}
               detailsShown={this.state.openProfitDetails[item.name]}
               onProfitDetailsButtonPressed={(itemName) => {
                 const temp = { ...this.state.openProfitDetails };

@@ -40,10 +40,11 @@ class ShoppingCart {
 
     // Prevent infinite looping
     let action = selectedRecipeId == null ? 'Buy' : 'Craft'
-    // if (alreadyVisited[itemName] === true) {
-    //   action = 'Buy'
-    // }
-    // alreadyVisited[itemName] = true
+    const recipePathArr = currentPath.split('/')
+    const containsLoop = new Set(recipePathArr).size !== recipePathArr.length
+    if (containsLoop) {
+      action = 'Buy'
+    }
     if (item.usedInRecipes[currentPath] == null) return {currentCart: this.cart, recipePrice: 0, cumulativeTimeSpent: 0}
 
     // Calculate how many times the player must 'craft' the item
@@ -74,7 +75,7 @@ class ShoppingCart {
 
     const shoppingCartData = {
       // name: itemName,
-      // action: action,
+      action: action,
       // recipe: recipe != null ? recipe.ingredients : null, 
       craftCount: craftCount,
       expectedCount: action === "Craft" ? recipe.quantityProduced * craftCount : craftCount, // Store the total amount that is expected to be crafted

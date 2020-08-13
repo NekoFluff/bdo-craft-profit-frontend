@@ -271,14 +271,17 @@ class sidebar extends Component {
         <Form.Group>
           {this.props.recipeTables != null &&
             this.props.recipeTables.map((item) => {
-              if (item.activeRecipeId != null) return null; // Only generate form labels for items being bought
+              // if (item.activeRecipeId != null) return null; // Only generate form labels for items being bought
               if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
 
               return Object.keys(item.shoppingCartData).map((key) => {
+
                 const {
+                  action,
                   expectedCount,
                   individualPrice,
                 } = item.shoppingCartData[key];
+                if (action != 'Buy') return
                 totalCost += expectedCount * individualPrice;
                 return (
                   <React.Fragment key={key}>
