@@ -212,7 +212,7 @@ class RecipesTable extends Component {
             let data = this.props.item.shoppingCartData[`${recipePath}/${this.props.item.name}`]
             return (
               <div key={recipePath}>
-                {`x${data != null ? data.expectedCount : 'Invalid path? ' + recipePath} for`}
+                {`x${data != null ? data.expectedCount : 'Invalid path? ' + recipePath} for `}
                 <Link
                   activeClass="active"
                   className="scrollLink text-primary"
