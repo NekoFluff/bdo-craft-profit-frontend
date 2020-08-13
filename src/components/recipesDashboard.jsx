@@ -255,11 +255,14 @@ class RecipesDashboard extends Component {
     if (parentName == "") parentName = null
     let parentPath = pathArr.slice(0, -1).join('/')
     if (parentPath == "") parentPath = null
-    // console.log(pathArr, parentName, parentPath)
+    console.log(pathArr, parentName, parentPath)
     let parentRecipeId = this.items[parentName] != null ? this.items[parentName].activeRecipeId : null
 
 
     // Step 1: Reset items that were dependent on the previous recipe
+    // for (let [parentPath, val] of Object.entries(items[itemName].usedInRecipes)) {
+    //   this.startRecursiveReset(items[itemName], items, parentPath);
+    // }
     this.startRecursiveReset(items[itemName], items, parentPath);
     items[itemName].selectRecipe(recipeId);
     // console.log('recipesDashboard.jsx | items after recursive reset', items)
@@ -476,13 +479,13 @@ class RecipesDashboard extends Component {
 
     // Convert this.items into array
     let recipeTables = Object.values(this.items);
-    recipeTables.filter(function (item) {
-      return Object.keys(item.usedInRecipes).length > 0 || item.activeRecipeId != null;
+    recipeTables = recipeTables.filter(function (item) {
+      return Object.keys(item.shoppingCartData).length > 0 || item.activeRecipeId != null;
     });
-    recipeTables.sort(function (a, b) {
+    recipeTables = recipeTables.sort(function (a, b) {
       return a.depth - b.depth;
     });
-
+    
     this.setState({ recipeTables });
   }
   

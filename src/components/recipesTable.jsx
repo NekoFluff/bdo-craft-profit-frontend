@@ -14,7 +14,7 @@ import numberWithCommas from './../helpers/numberWithCommas';
 class RecipesTable extends Component {
   state = {};
 
-  renderDetailsButton(shoppingCartData) {
+  renderDetailsButton() {
 
     let active = this.props.detailsShown ? "0" : null
     return (
@@ -26,7 +26,7 @@ class RecipesTable extends Component {
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            <Card.Body>{this.renderBadges(shoppingCartData)}</Card.Body>
+            <Card.Body>{this.renderBadges()}</Card.Body>
           </Accordion.Collapse>
         </Card>
         {/* <Card>
@@ -43,18 +43,25 @@ class RecipesTable extends Component {
     );
   }
 
-  renderBadges(shoppingCartData) {
+  renderBadges() {
     // const { shoppingCartData, marketData, valuePackEnabled } = this.props.item;
+    // if (this.props.item.shoppingCartData.length == null || this.props.item.shoppingCartData.length == 0) return <h2>No shopping cart data available</h2>
     const marketPrice = this.props.item.getMarketPrice();
+    let count = 0
+    const firstKey = Object.keys(this.props.item.shoppingCartData)[0]
+    if (firstKey == null) return
     let {
-      expectedCount: count,
       individualPrice,
-      cumulativeTimeSpent,
-    } = shoppingCartData;
+      cumulativeTimeSpent
+    } = this.props.item.shoppingCartData[firstKey];
+
+    for (const [recipePath, {expectedCount}] of Object.entries(this.props.item.shoppingCartData)) {
+      count += expectedCount
+    }
 
     individualPrice = parseInt(individualPrice);
 
-    const {profit, profitPerSecond} = ProfitCalculator.calculateProfitValuesForItem(this.props.item, shoppingCartData)
+    const {profit, profitPerSecond} = ProfitCalculator.calculateProfitValuesForItem(this.props.item)
 
     return (
       <div
@@ -117,8 +124,8 @@ class RecipesTable extends Component {
    * @param {string} selectedRecipeId The selected recipe. If null, the action is 'Buy'
    * @param {} productName The name of the product being bought/crafted
    */
-  renderChips(allRecipes, selectedRecipeId, productName, shoppingCartData, recipePath) {
-    let isRecursive = shoppingCartData.for === productName
+  renderChips(allRecipes, selectedRecipeId, productName) {
+    
     return (
       <div
         id="toolbar-container"
@@ -131,11 +138,13 @@ class RecipesTable extends Component {
           className="recipeChip"
           clickable
           label="Buy"
-          color={selectedRecipeId == null || isRecursive ? "primary" : "secondary"}
+          color={selectedRecipeId == null ? "primary" : "secondary"}
           style={{ marginRight: 5 }}
           onClick={() => {
             console.log(`Clicked buy | id: ${productName}`);
-            this.props.onBuyClick(productName, recipePath);
+            for (let [recipePath, data] of Object.entries(this.props.item.shoppingCartData)) {
+              this.props.onBuyClick(productName, recipePath);
+            }
           }}
         />
         {Object.keys(allRecipes).map((recipe_id, index) => {
@@ -156,11 +165,13 @@ class RecipesTable extends Component {
               className="recipeChip"
               clickable
               label={`Recipe #${index}`}
-              color={isSelected && !isRecursive ? "primary" : "secondary"}
+              color={isSelected ? "primary" : "secondary"}
               style={{ marginRight: 5 }}
               onClick={() => {
                 console.log(`Clicked recipe# ${index} | id: ${recipe_id}`);
-                this.props.onRecipeClick(productName, recipe_id, recipePath);
+                for (let [recipePath, data] of Object.entries(this.props.item.shoppingCartData)) {
+                  this.props.onRecipeClick(productName, recipe_id, recipePath);
+                }
               }}
               disabled={isDisabled}
             />
@@ -170,28 +181,38 @@ class RecipesTable extends Component {
     );
   }
 
-  renderParentLink(recipePath) {
-    if (recipePath == null || recipePath == '') return null;
-    let recipeArr = recipePath.split('/')
-    let everythingButLast = recipeArr.slice(0, -1).join('/')
-    let last = recipeArr.slice(-1).join('/')
+  renderParentLinks(recipePaths) {
     return (
       <div
         id="toolbar-subtitle"
         style={{ fontSize: "0.8em", paddingLeft: "25px" }}
       >
-        {"for "}
-        <Link
-          activeClass="active"
-          className="scrollLink text-primary"
-          to={recipePath}
-          spy={true}
-          smooth={true}
-          duration={500}
-        >
-          {everythingButLast}
-          <span className="font-weight-bold">{`/${last}`}</span>
-        </Link>
+        {
+          recipePaths.map((recipePath) => {
+            if (recipePath == null || recipePath == '') return null;
+            let recipeArr = recipePath.split('/')
+            let everythingButLast = recipeArr.slice(0, -1).join('/')
+            let last = recipeArr.slice(-1).join('/')
+            let data = this.props.item.shoppingCartData[`${recipePath}/${this.props.item.name}`]
+            return (
+              <div>
+                {`x${data != null ? data.expectedCount : 'Invalid path? ' + recipePath} for`}
+                <Link
+                  activeClass="active"
+                  className="scrollLink text-primary"
+                  to={last}
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                >
+                  {everythingButLast}
+                  <span className="font-weight-bold">{`/${last}`}</span>
+                </Link>
+              </div>
+            )
+          }) 
+        }
+        
       </div>
     );
   }
@@ -209,107 +230,85 @@ class RecipesTable extends Component {
 
     if (selectedRecipe != null) rowData = [...selectedRecipe.ingredients];
 
+    let parentPaths = []
+    let totalCount = 0
+    for (const [recipePath, shoppingCart] of Object.entries(item.shoppingCartData)) {
+      totalCount += shoppingCart.expectedCount
+      parentPaths.push(recipePath.split('/').slice(0,-1).join('/'))
+      for (let ingredient of rowData) {
+        ingredient["Total Needed"] = (ingredient["Total Needed"] || 0) +
+        ingredient["Amount"] * shoppingCart.craftCount;
+      }
+    }
+    console.log('Parent paths',parentPaths)
 
-
-    // console.log("recipesTable.jsx | RENDERING ITEM", item)
     return (
-      <>
-        {Object.keys(item.usedInRecipes).map(
-          (recipePath, index) => {
-            let { actionTaken: craftOrBuy, parentRecipeId, parentName } = item.usedInRecipes[recipePath]
-            let parentPath = recipePath.split('/').slice(0, -1).join('/')
-            // let correctShoppingCartData;
-            // for (const data of shoppingCartData) {
-            //   if (data.for === parentName || data.for == null) {
-            //     correctShoppingCartData = data
-            //     break
-            //   }
-            // } 
-            let correctShoppingCartData = item.getShoppingCartData(recipePath)  
-            for (let ingredient of rowData) {
-              ingredient["Total Needed"] =
-                ingredient["Amount"] * correctShoppingCartData.craftCount;
-            }
-
-            if (correctShoppingCartData == null) {
-              console.log("FATAL ERROR: correctShoppingCart data not found", item, 'parentName:', parentName)
-              return null
-            }
-            let isRecursive = correctShoppingCartData.for === productName
-
-            return (
-              <Element key={recipePath} name={recipePath} className="m-4">
-                <MaterialTable
-                  icons={tableIcons}
-                  columns={[
-                    {
-                      title: `Name`,
-                      field: "Item Name",
-                      render: (rowData) => (
-                        <Link
-                          activeClass="active"
-                          className="scrollLink text-primary"
-                          // to={rowData["Item Name"]}
-                          to={`${recipePath || ''}/${rowData['Item Name']}`}
-                          spy={true}
-                          smooth={true}
-                          duration={500}
-                        >
-                          {rowData["Item Name"]}
-                        </Link>
-                      ),
-                    },
-                    { title: "Amount per Craft", field: "Amount" },
-                    { title: "Total Needed", field: "Total Needed" },
-                  ]}
-                  data={selectedRecipe == null || isRecursive ? [] : rowData} // TODO: Which recipe to choose?
-                  // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
-                  title={`${productName} (x${correctShoppingCartData.expectedCount})`}
-                  options={{
-                    search: false,
-                    paging: false,
-                    header: selectedRecipe == null || isRecursive ? false : true,
+      <Element name={item.name} className="m-4">
+        <MaterialTable
+          icons={tableIcons}
+          columns={[
+            {
+              title: `Name`,
+              field: "Item Name",
+              render: (rowData) => (
+                <Link
+                  activeClass="active"
+                  className="scrollLink text-primary"
+                  // to={rowData["Item Name"]}
+                  to={`${rowData['Item Name']}`}
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                >
+                  {rowData["Item Name"]}
+                </Link>
+              ),
+            },
+            { title: "Amount per Craft", field: "Amount" },
+            { title: "Total Needed", field: "Total Needed" },
+          ]}
+          data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
+          // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
+          title={`${productName} (x${totalCount})`}
+          options={{
+            search: false,
+            paging: false,
+            header: selectedRecipe == null ? false : true,
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage:
+                "You must gather/purchase this ingredient",
+            },
+          }}
+          components={{
+            Toolbar: (props) => {
+              return (
+                <div
+                  id="toolbar"
+                  style={{
+                    backgroundColor: "rgb(230, 230, 230)",
                   }}
-                  localization={{
-                    body: {
-                      emptyDataSourceMessage:
-                        "You must gather/purchase this ingredient",
-                    },
-                  }}
-                  components={{
-                    Toolbar: (props) => {
-                      return (
-                        <div
-                          id="toolbar"
-                          style={{
-                            backgroundColor: "rgb(230, 230, 230)",
-                          }}
-                        >
-                          <MTableToolbar
-                            {...props}
-                            style={{ "text-align": "center" }}
-                          />
-                          {/* <div {...props}>{props.title}</div> */}
-                          {this.renderParentLink(parentPath)}
-                          {this.renderChips(
-                            allRecipes,
-                            selectedRecipeId,
-                            productName,
-                            correctShoppingCartData,
-                            recipePath
-                          )}
-                          {this.renderDetailsButton(correctShoppingCartData)}
-                        </div>
-                      );
-                    },
-                  }}
-                />
-              </Element>
-            );
-          }
-        )}
-      </>
-    );
+                >
+                  <MTableToolbar
+                    {...props}
+                    style={{ "text-align": "center" }}
+                  />
+                  {/* <div {...props}>{props.title}</div> */}
+                  {this.renderParentLinks(parentPaths)}
+                  {this.renderChips(
+                    allRecipes,
+                    selectedRecipeId,
+                    productName
+                  )}
+                  {this.renderDetailsButton()}
+                </div>
+              );
+            },
+          }}
+        />
+      </Element>
+    )
   }
 }
 

@@ -4,8 +4,12 @@ class ProfitCalculator {
   static TAX_PERCENTAGE = 0.65;
 
   static calculateProfitValuesForItem(item, shoppingCartData) {
+    if (shoppingCartData == null) {
+      const firstKey = Object.keys(item.shoppingCartData)[0]
+      shoppingCartData = item.shoppingCartData[firstKey]
+    } 
+
     let {
-      expectedCount: count,
       individualPrice,
       cumulativeTimeSpent,
     } = shoppingCartData;
