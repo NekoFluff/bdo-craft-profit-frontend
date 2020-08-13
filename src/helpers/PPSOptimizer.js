@@ -186,7 +186,7 @@ sample = {
 }
 
 
-class PPHOptimizer {
+class PPSOptimizer {
 
   constructor(rootItem = null, items = null) {
     this.bestRecipeActions = null
@@ -308,14 +308,14 @@ class PPHOptimizer {
           } else {
             // Some items used to produce this ingredent may have been bought while others were crafted
             totalTime += ingredient['Amount'] * action.time 
-            // console.log('PPHOptimizer.jsx | ', item.name, ingredient['Item Name'], totalCost, action.monetaryCost, ingredient['Amount'], totalCost + action.monetaryCost * ingredient['Amount'])
+            // console.log('PPSOptimizer.jsx | ', item.name, ingredient['Item Name'], totalCost, action.monetaryCost, ingredient['Amount'], totalCost + action.monetaryCost * ingredient['Amount'])
             totalCost += ingredient['Amount'] * action.monetaryCost 
           } 
           
         }
         
         
-        // console.log('PPHOptimizer.jsx | ', item.name, generatorResult.value, totalCost / possibleRecipe.quantityProduced, possibleRecipe)
+        // console.log('PPSOptimizer.jsx | ', item.name, generatorResult.value, totalCost / possibleRecipe.quantityProduced, possibleRecipe)
         if (!sequenceImpossible) { // The sequence was valid!
           possibleCraftOptions.push(new Action(totalCost / possibleRecipe.quantityProduced, 
                                                (totalTime + possibleRecipe.timeToProduce) / possibleRecipe.quantityProduced, 
@@ -364,7 +364,7 @@ class PPHOptimizer {
       }
     }
 
-    // console.log('PPHOptimizer.jsx | Action!!!', item.name, bestAction)
+    // console.log('PPSOptimizer.jsx | Action!!!', item.name, bestAction)
     optimalActions[item.name]['Craft'] = bestAction
     
     
@@ -406,4 +406,4 @@ class Action {
   }
 }
 
-export default PPHOptimizer
+export default PPSOptimizer

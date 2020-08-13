@@ -2,7 +2,7 @@ class ShoppingCart {
 
   /**
    * 
-   * @param {object} optimizer Instance of PPHOptimizer
+   * @param {object} optimizer Instance of PPSOptimizer
    */
   constructor(optimizer) {
     this.cart = []

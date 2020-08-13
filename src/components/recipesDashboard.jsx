@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import axios from "axios";
 import ShoppingCart from "../helpers/ShoppingCart";
-import PPHOptimizer from "../helpers/PPHOptimizer";
+import PPSOptimizer from "../helpers/PPSOptimizer";
 import RecipesTable from "./recipesTable";
 import { Events, scrollSpy } from "react-scroll";
 import { Row, Col } from "react-bootstrap";
@@ -143,7 +143,7 @@ class RecipesDashboard extends Component {
   };
 
   componentDidMount() {
-    this.shoppingCart = new ShoppingCart(new PPHOptimizer());
+    this.shoppingCart = new ShoppingCart(new PPSOptimizer());
 
     Events.scrollEvent.register("begin", function (to, element) {
       console.log("Begin Scroll", arguments);
