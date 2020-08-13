@@ -153,6 +153,7 @@ class RecipesTable extends Component {
           const isSelected = selectedRecipeId === recipe_id;
           let isDisabled = false
 
+          // If an ingredient doesn't have market data and isn't symbolic
           for (const ingredient of allRecipes[recipe_id].ingredients) {
             if (!this.props.itemHasMarketData(ingredient['Item Name'])) {
               isDisabled = true;

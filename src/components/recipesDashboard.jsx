@@ -543,7 +543,7 @@ class RecipesDashboard extends Component {
                 this.setState({ openProfitDetails: temp });
               }}
               itemHasMarketData={(itemName) => {
-                return this.items[itemName].marketData != null
+                return this.items[itemName].marketData != null || this.items[itemName].isSymbolic
               }} 
             ></RecipesTable>
           );
