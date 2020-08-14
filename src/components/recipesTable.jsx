@@ -5,7 +5,7 @@ import { Chip } from "@material-ui/core";
 import "../css/RecipeTable.css";
 import { Link, Element } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
-import ProfitCalculator from "./../helpers/ShoppingCartProfitCalculator";
+import ProfitCalculator from "./../helpers/shoppingCart/ShoppingCartProfitCalculator";
 import numberWithCommas from "./../helpers/numberWithCommas";
 import secondsToHms from './../helpers/secondsToHms';
 

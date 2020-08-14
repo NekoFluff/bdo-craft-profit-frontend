@@ -1,3 +1,5 @@
+import PPSOptimizer from './../optimizers/PPSOptimizer';
+
 class ShoppingCart {
 
   /**
@@ -6,7 +8,8 @@ class ShoppingCart {
    */
   constructor(optimizer) {
     this.cart = []
-    this.optimizer = optimizer
+    this.optimizer = new PPSOptimizer()
+
   }
 
   clearCart() {

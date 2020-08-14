@@ -1,4 +1,4 @@
-import ProfitCalculator from './ShoppingCartProfitCalculator';
+import ProfitCalculator from '../shoppingCart/ShoppingCartProfitCalculator';
 
 let sample = {
   "_id": "5f1a1a47f99c32cda3f4e998",
