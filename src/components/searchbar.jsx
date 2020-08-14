@@ -16,10 +16,18 @@ const getSuggestions = (value) => {
 
   return inputLength === 0
     ? []
+    // : recipeNames.filter((sampleName) => {
+    //     if (sampleName == null) return null;
+    //     else
+    //       return sampleName.toLowerCase().slice(0, inputLength) === inputValue;
+    //   });
     : recipeNames.filter((sampleName) => {
         if (sampleName == null) return null;
-        else
-          return sampleName.toLowerCase().slice(0, inputLength) === inputValue;
+        else {
+          const matches = sampleName.toLowerCase().match(inputValue)
+          if (matches == null) return null
+          else return matches.length > 0
+        }
       });
 };
 
