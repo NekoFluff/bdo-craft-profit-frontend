@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import { withRouter } from "react-router";
 import "../css/Dashboard.css";
-import ProfitCalculator from "./../helpers/shoppingCart/ShoppingCartProfitCalculator";
+import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "./../helpers/secondsToHms";
 

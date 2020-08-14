@@ -1,17 +1,13 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-import ShoppingCart from "../helpers/shoppingCart/ShoppingCart";
-import ProfitCalculator from "./../helpers/shoppingCart/ShoppingCartProfitCalculator";
-
-import PPSOptimizer from "../helpers/optimizers/PPSOptimizer";
+import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
 import RecipesTable from "./recipesTable";
 import { Events, scrollSpy } from "react-scroll";
 import { Row, Col } from "react-bootstrap";
 import RecipesSidebar from "../components/recipesSidebar";
 import Sticky from "react-stickynode";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
-import { ItemManager } from './../helpers/shoppingCart/ShoppingCartCore';
 
 class RecipesDashboard extends Component {
   state = {
