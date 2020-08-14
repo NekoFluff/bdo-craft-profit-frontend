@@ -178,7 +178,7 @@ class RecipesTable extends Component {
       <div
         id="toolbar-container"
         style={{
-          padding: "10px 0px 10px 20px",
+          padding: "5px 0px 10px 20px",
         }}
       >
         {/* <Chip clickable={false} style={{borderRadius: "3px"}} label={'Buy or Craft?:'}></Chip> */}
@@ -213,7 +213,7 @@ class RecipesTable extends Component {
           }
           let recipeLabel = this.props.item.isSymbolic
             ? allRecipes[recipe_id].ingredients[0]["Item Name"]
-            : `Recipe #${index}`;
+            : `Craft #${index}`;
           return (
             <Chip
               key={recipe_id}
@@ -386,7 +386,7 @@ class RecipesTable extends Component {
                       {action == "Buy"
                         ? "Buy or Gather"
                         : selectedRecipeAction +
-                          ` [${craftCount} times] (${secondsToHms(
+                          ` [Craft ${craftCount} times] (${secondsToHms(
                             totalTimeSpent
                           )})`}
                     </span>
@@ -398,11 +398,18 @@ class RecipesTable extends Component {
                     >
                       <span className="font-weight-bold">
                         {
-                          `${quantityProduced} items per craft`}
+                          `${quantityProduced} ${quantityProduced == 1 ? "item" : "items"} per craft`}
                       </span>
                     </div>
                   )}
-
+                  <div
+                      id="toolbar-subtitle-items-per-craft"
+                      style={{ fontSize: "0.8em", paddingLeft: "25px", paddingTop: "1rem" }}
+                    >
+                      <span className="text-muted">
+                        Pick one of the options below (Blue color = currently selected):
+                      </span>
+                    </div>
                   {this.renderChips(allRecipes, selectedRecipeId, productName)}
                   {this.renderDetailsButton()}
                 </div>
