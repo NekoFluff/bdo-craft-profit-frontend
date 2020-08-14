@@ -189,11 +189,11 @@ class RecipesDashboard extends Component {
       );
       this.originalRecipesData = recipes;
       // this.sortRecipes(recipes);
-      if (recipes.length > 0) {
-        this.officialProductName = recipes[0]['Name']
-      } else {
-        this.officialProductName = null
-      }
+      this.officialProductName = null
+      for (const recipe of recipes) {
+        if (recipe['Name'].toLowerCase() == this.props.product.toLowerCase())
+          this.officialProductName = recipe['Name']
+      } 
       this.parseRecipes(recipes);
       console.log("Final Items", this.items);
     } catch (e) {
@@ -256,7 +256,8 @@ class RecipesDashboard extends Component {
         item["Time to Produce"],
         item["Action"]
       );
-      items[item.Name].setDepth(item['depth'])
+      if (item.Name != this.officialProductName)
+        items[item.Name].setDepth(item['depth'])
     }
 
     // console.log('item name', item.Name)
