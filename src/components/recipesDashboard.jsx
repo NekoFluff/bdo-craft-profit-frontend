@@ -57,6 +57,7 @@ class RecipesDashboard extends Component {
       const { data: recipes } = await axios.get(API_ENDPOINT + "/recipes?item=" + productName);
 
       const items = this.itemManager.parseRecipes(recipes);
+      this.itemManager.resetToOptimal()
       console.log("Final Items", items);
       this.updateTables()
     } catch (e) {
