@@ -52,11 +52,19 @@ class MostSearchedItemsTable extends Component {
             // console.log("Query", query.page, parseInt(data.page));
 
             // prepare your data and then call resolve like this:
-            resolve({
-              data: data.searchHistory, // your data array
-              page: parseInt(data.page), // current page number
-              totalCount: data.totalCount, // total row number
-            });
+            if (data) {
+              resolve({
+                data: data.searchHistory, // your data array
+                page: parseInt(data.page), // current page number
+                totalCount: data.totalCount, // total row number
+              });
+            } else {
+              resolve({
+                data: [], // your data array
+                page: 0, // current page number
+                totalCount: 0, // total row number
+              });
+            }
           })
         }
         title={"Most Searched Items"}
