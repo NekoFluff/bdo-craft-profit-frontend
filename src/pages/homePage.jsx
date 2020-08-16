@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SearchBar from "../components/searchbar";
 import MostSearchedItemsTable from "./../components/mostSearchedItemsTable";
 import { withRouter } from 'react-router';
+import PPSTable from "../components/ppsTable";
 
 class HomePage extends Component {
   render() {
@@ -10,6 +11,7 @@ class HomePage extends Component {
         <div className="p-3" align="center">
           <SearchBar />
         </div>
+        <PPSTable></PPSTable>
         <MostSearchedItemsTable></MostSearchedItemsTable>
       </div>
     );
