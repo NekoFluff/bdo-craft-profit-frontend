@@ -27,7 +27,7 @@
     "react-dom": "^16.13.1",
     "react-headroom": "^3.0.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.3",
     "react-scroll": "^1.8.1",
     "react-skylight": "^0.5.1",
     "react-stickynode": "^3.0.3"
