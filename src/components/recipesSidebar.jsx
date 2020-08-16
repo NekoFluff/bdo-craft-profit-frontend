@@ -21,6 +21,10 @@ class sidebar extends Component {
     overrideMarketPrice: null,
   };
 
+  componentDidMount() {
+    ProfitCalculator.valuePackEnabled = true;
+  }
+
   componentWillReceiveProps(newProps) {
     const { recipeTables } = newProps;
     const { recipeTables: oldRecipeTables } = this.props;
@@ -340,6 +344,7 @@ class sidebar extends Component {
             type="checkbox"
             label="Value Pack Enabled"
             onChange={this.onUpdateValuePack}
+            checked={ProfitCalculator.valuePackEnabled}
           />
           <Form.Text className="text-muted">
             This checkbox re-runs the optimizer and reselects what items to
