@@ -14,12 +14,16 @@ import { withRouter } from "react-router";
 import "../css/Dashboard.css";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
-import secondsToHms from "./../helpers/secondsToHms";
+import secondsToHms from "../helpers/secondsToHms";
 
 class sidebar extends Component {
   state = {
     overrideMarketPrice: null,
   };
+
+  componentDidMount() {
+    ProfitCalculator.valuePackEnabled = true
+  }
 
   componentWillReceiveProps(newProps) {
     const { recipeTables } = newProps;
@@ -340,6 +344,7 @@ class sidebar extends Component {
             type="checkbox"
             label="Value Pack Enabled"
             onChange={this.onUpdateValuePack}
+            checked={ProfitCalculator.valuePackEnabled}
           />
           <Form.Text className="text-muted">
             This checkbox re-runs the optimizer and reselects what items to

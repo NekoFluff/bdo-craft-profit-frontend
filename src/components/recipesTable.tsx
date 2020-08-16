@@ -6,8 +6,8 @@ import "../css/RecipeTable.css";
 import { Link, Element } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "./../helpers/numberWithCommas";
-import secondsToHms from './../helpers/secondsToHms';
+import numberWithCommas from "../helpers/numberWithCommas";
+import secondsToHms from '../helpers/secondsToHms';
 
 class RecipesTable extends Component {
   state = {};

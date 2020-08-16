@@ -4,7 +4,7 @@ import MaterialTable from "material-table";
 import tableIcons from "../helpers/tableIcons";
 import { Link } from 'react-router-dom';
 import {API_ENDPOINT} from '../helpers/CONSTANTS'
-import numberWithCommas from './../helpers/numberWithCommas';
+import numberWithCommas from '../helpers/numberWithCommas';
 
 class PPSTable extends Component {
   state = {
