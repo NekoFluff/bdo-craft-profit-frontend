@@ -132,7 +132,7 @@ class RecipesDashboard extends Component {
                   this.itemManager.resetRecipePath(itemName, path)
                 }
                 for (const path of recipePaths) {
-                  this.itemManager.selectRecipe(itemName, null, path)
+                  this.itemManager.selectRecipe(itemName, '', path)
                 }
                 this.updateTables()
 
