@@ -42,7 +42,7 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "start": "ts-node server/server.ts",
+    "start": "node server/server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
