@@ -38,7 +38,6 @@
     "react-scroll": "^1.8.1",
     "react-skylight": "^0.5.1",
     "react-stickynode": "^3.0.3",
-    "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
   "scripts": {
@@ -63,5 +62,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-node": "^8.10.2"
+  }
 }
