@@ -57,18 +57,16 @@ class RecipesTable extends Component {
     let craftCount = 0;
     let timesCrafted = 0; // Number of times this has been done
     let timesBought = 0;
-    const firstKey = [0];
-    if (firstKey == null) return;
 
     let individualPrice = -1;
     let cumulativeTimeSpent = -1;
     for (const [key, val] of Object.entries(this.props.item.shoppingCartData)) {
-      if (this.props.item.activeRecipeId != null && val.action == "Craft") {
+      if (this.props.item.activeRecipeId != '' && val.action == "Craft") {
         individualPrice = val.individualPrice;
         cumulativeTimeSpent = val.cumulativeTimeSpent;
         break;
       } else if (
-        this.props.item.activeRecipeId == null &&
+        this.props.item.activeRecipeId == '' &&
         val.action == "Buy"
       ) {
         individualPrice = val.individualPrice;
@@ -187,7 +185,7 @@ class RecipesTable extends Component {
             className="recipeChip"
             clickable
             label="Buy"
-            color={selectedRecipeId == null ? "primary" : "secondary"}
+            color={selectedRecipeId == '' ? "primary" : "secondary"}
             style={{ marginRight: 5 }}
             onClick={() => {
               console.log(`Clicked buy | id: ${productName}`);
@@ -200,7 +198,7 @@ class RecipesTable extends Component {
         )}
 
         {Object.keys(allRecipes).map((recipe_id, index) => {
-          if (allRecipes[recipe_id].quantityProduced == null) return null;
+          if (allRecipes[recipe_id].quantityProduced == null || allRecipes[recipe_id].quantityProduced == 0) return null;
           const isSelected = selectedRecipeId === recipe_id;
           let isDisabled = false;
 
@@ -284,11 +282,11 @@ class RecipesTable extends Component {
       recipes: allRecipes,
       activeRecipeId: selectedRecipeId,
     } = item;
-    const action = selectedRecipeId != null ? "Craft" : "Buy";
+    const action = selectedRecipeId != '' ? "Craft" : "Buy";
     const selectedRecipe =
-      selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
-    let selectedRecipeAction = null;
-    let quantityProduced = null
+      selectedRecipeId != '' ? allRecipes[selectedRecipeId] : null;
+    let selectedRecipeAction = '';
+    let quantityProduced = 0
     let rowData = [];
 
     if (selectedRecipe != null) {
@@ -347,13 +345,12 @@ class RecipesTable extends Component {
             { title: "Amount per Craft", field: "Amount" },
             { title: "Total Needed", field: "Total Needed" },
           ]}
-          data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
-          // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
+          data={selectedRecipe == '' ? [] : rowData} // TODO: Which recipe to choose?
           title={`${productName} (x${totalItemCount})`}
           options={{
             search: false,
             paging: false,
-            header: selectedRecipe == null ? false : true,
+            header: selectedRecipe == "" ? false : true,
           }}
           localization={{
             body: {

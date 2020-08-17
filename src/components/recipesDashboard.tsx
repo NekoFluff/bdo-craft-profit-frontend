@@ -5,7 +5,7 @@ import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
 import RecipesTable from "./recipesTable";
 import { Events, scrollSpy } from "react-scroll";
 import { Row, Col } from "react-bootstrap";
-import RecipesSidebar from "../components/recipesSidebar";
+import RecipesSidebar from "./recipesSidebar";
 import Sticky from "react-stickynode";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
 
@@ -55,7 +55,7 @@ class RecipesDashboard extends Component {
     try {
       // Get the data
       const { data: recipes } = await axios.get(API_ENDPOINT + "/recipes?item=" + productName);
-
+      console.log("Original Recipes", recipes)
       const items = this.itemManager.parseRecipes(recipes);
       this.itemManager.resetToOptimal()
       console.log("Final Items", items);
@@ -71,7 +71,7 @@ class RecipesDashboard extends Component {
     // Convert this.itemManager.items into array
     let recipeTables = Object.values(this.itemManager.items);
     recipeTables = recipeTables.filter(function (item) {
-      return Object.keys(item.shoppingCartData).length > 0 || item.activeRecipeId != null;
+      return Object.keys(item.shoppingCartData).length > 0 || item.activeRecipeId != '';
     });
     recipeTables = recipeTables.sort(function (a, b) {
       return a.depth - b.depth;
