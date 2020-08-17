@@ -22,6 +22,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
     "material-table": "^1.68.1",
+    "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.2",
