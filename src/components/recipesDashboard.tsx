@@ -8,9 +8,20 @@ import { Row, Col } from "react-bootstrap";
 import RecipesSidebar from "./recipesSidebar";
 import Sticky from "react-stickynode";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
+import { Item } from 'bdo-shopping-cart-package'
 
-class RecipesDashboard extends Component {
-  state = {
+type DashboardProps = {
+  product: string
+}
+type DashboardState = {
+  recipeTables: Item[],
+  openProfitDetails: any,
+  craftCount: number,
+}
+class RecipesDashboard extends Component<DashboardProps, DashboardState> {
+  itemManager: ItemManager
+
+  state : DashboardState = {
     recipeTables: null,
     openProfitDetails: {},
     craftCount: 100,
@@ -18,7 +29,6 @@ class RecipesDashboard extends Component {
 
   componentDidMount() {
     this.itemManager = new ItemManager()
-    this.itemManager.craftCount = this.state.craftCount
     console.log('Item Manager', this.itemManager)
 
     Events.scrollEvent.register("begin", function (to, element) {
@@ -76,10 +86,6 @@ class RecipesDashboard extends Component {
     recipeTables = recipeTables.sort(function (a, b) {
       return a.depth - b.depth;
     });
-
-    if (Object.keys(recipeTables).length == 0) {
-      recipeTables = null
-    }
     
     this.setState({ recipeTables });
   }
@@ -103,7 +109,7 @@ class RecipesDashboard extends Component {
         );
       } else {
         return (
-          <h2 style={{ "text-align": "center" }}>
+          <h2 style={{ "textAlign": "center" }}>
             Use the search bar to select a recipe
           </h2>
         );
@@ -168,7 +174,6 @@ class RecipesDashboard extends Component {
               recipeTables={this.state.recipeTables}
               onUpdateCraftCount={(newCraftCount) => {
                 this.setState({ craftCount: newCraftCount });
-                this.itemManager.craftCount = newCraftCount
                 this.itemManager.recalculate({ craftCount: newCraftCount });
                 this.updateTables();
               }}

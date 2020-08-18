@@ -3,9 +3,16 @@ import SearchBar from "../components/searchbar";
 import RecipesDashboard from "../components/recipesDashboard";
 import { Container } from "react-bootstrap";
 import "../css/Dashboard.css";
+import { withRouter, RouteComponentProps } from 'react-router';
 
+type RecipesPageProps = {
+} & RouteComponentProps<{item: string}>
 
-class RecipesPage extends Component {
+type RecipesPageState = {
+  product: string
+}
+
+class RecipesPage extends Component<RecipesPageProps, RecipesPageState> {
   state = {
     product: "",
   };
@@ -29,7 +36,7 @@ class RecipesPage extends Component {
     return (
       <Container fluid>
         {/* <Row> */}
-        <div className="p-3" align="center">
+        <div className="p-3" style={{textAlign: 'center'}}>
           <SearchBar onSearch={(newProduct) => {
             this.setState({ product: newProduct })
           }}/>
@@ -40,5 +47,4 @@ class RecipesPage extends Component {
     );
   }
 }
-
-export default RecipesPage;
+export default withRouter(RecipesPage);

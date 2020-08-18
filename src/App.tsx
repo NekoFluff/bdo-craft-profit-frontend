@@ -13,9 +13,8 @@ class App extends Component {
         <Router>
           <HamburgerMenu></HamburgerMenu>
           <main className="container-fluid" id="page-wrap" >
-            <h1 className="p-3" align="center">
-              {" "}
-              Craft Profit{" "}
+            <h1 className="p-3" text-align="center">
+              Craft Profit
             </h1>
             <div>
 

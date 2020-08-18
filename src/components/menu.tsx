@@ -2,9 +2,10 @@ import { elastic as Menu } from 'react-burger-menu'
 import React from 'react';
 import "../css/MenuSidebar.css"
 import { NavLink } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
+type MyProps = RouteComponentProps
 
-class HamburgerMenu extends React.Component {
+class HamburgerMenu extends React.Component<MyProps, {isOpen: boolean}> {
   state = {
     isOpen: false
   }

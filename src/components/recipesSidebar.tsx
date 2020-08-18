@@ -10,14 +10,26 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import { withRouter } from "react-router";
 import "../css/Dashboard.css";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "../helpers/secondsToHms";
 import { ProfitCalculator } from 'bdo-shopping-cart-package';
+import { Item } from 'bdo-shopping-cart-package'
+import { withRouter, RouteComponentProps } from 'react-router';
 
-class sidebar extends Component {
-  state = {
+type sidebarProps = {
+  recipeTables: Item[],
+  onUpdateCraftCount: (newCraftCount) => void,
+  onUpdateValuePack: (valuePackEnabled) => void,
+  onMarketPriceChange: (newMarketPrice) => void,
+} & RouteComponentProps
+
+type sidebarState = {
+  overrideMarketPrice: number | null
+}
+
+class sidebar extends Component<sidebarProps, sidebarState> {
+  state : sidebarState = {
     overrideMarketPrice: null,
   };
 
@@ -71,7 +83,7 @@ class sidebar extends Component {
     const { onMarketPriceChange: callback } = this.props;
 
     if (callback != null) {
-      callback(parseInt(this.state.overrideMarketPrice));
+      callback(Math.round(this.state.overrideMarketPrice));
     }
   };
 
@@ -82,16 +94,16 @@ class sidebar extends Component {
 
   renderOutput = () => {
     const { recipeTables } = this.props;
-    let craftCount = "N/A",
-      cumulativeTimeSpent = "N/A",
-      expectedCount = "N/A",
-      individualPrice = "N/A";
+    let craftCount = 0
+    let cumulativeTimeSpent = 0;
+    let expectedCount = 0;
+    let individualPrice = 0;
     let profitPerItem = 0;
-    let totalProfit = "N/A";
+    let totalProfit = 0;
     let pps = 0;
-    let totalTime = "N/A";
-    let marketPrice = "N/A";
-    let marketPriceLastUpdated = "N/A";
+    let totalTime = 0;
+    let marketPrice = 0;
+    let marketPriceLastUpdated = 0;
     if (recipeTables != null) {
       const item = recipeTables[0];
       marketPrice = item.getMarketPrice();
@@ -134,13 +146,13 @@ class sidebar extends Component {
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger={["hover", "focus"]} id="tooltip">
+              <Tooltip id="tooltip">
                 Profit = Silver spent - Silver earned from market
               </Tooltip>
             }
           >
             <Form.Label className="text">
-              Total Profit: {numberWithCommas(parseInt(totalProfit))} silver
+              Total Profit: {numberWithCommas(Math.round(totalProfit))} silver
             </Form.Label>
           </OverlayTrigger>
           {/* </Form.Group> */}
@@ -151,7 +163,7 @@ class sidebar extends Component {
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger={["hover", "focus"]} id="tooltip">
+              <Tooltip id="tooltip">
                 Total amount of time spent crafting everything
               </Tooltip>
             }
@@ -165,47 +177,47 @@ class sidebar extends Component {
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger={["hover", "focus"]} id="tooltip">
+              <Tooltip id="tooltip">
                 Total profit / Time spent crafting
               </Tooltip>
             }
           >
             <Form.Label className="text font-weight-bold">
-              Profit per second (PPS): {numberWithCommas(pps.toFixed(2))}{" "}
+              Profit per second (PPS): {numberWithCommas(pps.toFixed(2))}
               silver/sec
             </Form.Label>
           </OverlayTrigger>
         </Form.Group>
 
         <Form.Group>
-          {/* </Form.Group> */}
-
           {/* Profit per Item */}
-          {/* <Form.Group> */}
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger={["hover", "focus"]} id="tooltip">
+              <Tooltip id="tooltip">
                 Total profit / # of items sold
               </Tooltip>
             }
           >
             <Form.Text className="text-muted">
-              Profit per item: {numberWithCommas(profitPerItem.toFixed(2))}{" "}
+              Profit per item: {numberWithCommas(profitPerItem.toFixed(2))}
               silver
             </Form.Text>
           </OverlayTrigger>
+
           <br></br>
+
+          {/* Market Price */}
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger={["hover", "focus"]} id="tooltip">
+              <Tooltip id="tooltip">
                 How much it can be sold for... Last Updated:{" "}
                 {marketPriceLastUpdated}
               </Tooltip>
             }
           >
-            <InputGroup controlId="formMarketInput">
+            <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text id="inputGroupPrepend">
                   Market Price
@@ -213,7 +225,7 @@ class sidebar extends Component {
               </InputGroup.Prepend>
               <Form.Control
                 type="number"
-                placeholder={marketPrice}
+                placeholder={marketPrice.toString()}
                 aria-describedby="inputGroupPrepend"
                 name="marketPrice"
                 value={this.state.overrideMarketPrice}
@@ -225,9 +237,6 @@ class sidebar extends Component {
                 costs.
               </Form.Text>
             </InputGroup>
-            {/* <Form.Input className="text-muted">
-              Market Price: {numberWithCommas(marketPrice)} silver
-            </Form.Input> */}
           </OverlayTrigger>
         </Form.Group>
       </Form>
@@ -263,7 +272,7 @@ class sidebar extends Component {
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip trigger={["hover", "focus"]} id="tooltip">
+              <Tooltip id="tooltip">
                 What the optimizer suggests you buy to craft the items.
               </Tooltip>
             }
@@ -321,8 +330,6 @@ class sidebar extends Component {
   };
 
   renderInput = () => {
-    const { selectedOptimizer } = this.props;
-
     return (
       <Form onSubmit={this.handleSubmit}>
         {/* Craft COunt */}
@@ -359,7 +366,7 @@ class sidebar extends Component {
             <OverlayTrigger
               trigger={["hover", "focus"]}
               overlay={
-                <Tooltip trigger={["hover", "focus"]} id="tooltip">
+                <Tooltip id="tooltip">
                   Maximize the silver earned per second (a.k.a Profit Per
                   Second)!
                 </Tooltip>
@@ -371,7 +378,7 @@ class sidebar extends Component {
             <OverlayTrigger
               trigger={["hover", "focus"]}
               overlay={
-                <Tooltip trigger={["hover", "focus"]} id="tooltip">
+                <Tooltip id="tooltip">
                   (Not implemented) Maximize the total amount of profit (at the
                   cost of time)!
                 </Tooltip>
@@ -385,7 +392,7 @@ class sidebar extends Component {
             <OverlayTrigger
               trigger={["hover", "focus"]}
               overlay={
-                <Tooltip trigger={["hover", "focus"]} id="tooltip">
+                <Tooltip id="tooltip">
                   (Not implemented) Maximize the total amount of EXP generated!
                 </Tooltip>
               }

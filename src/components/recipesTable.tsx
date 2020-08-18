@@ -8,8 +8,20 @@ import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from '../helpers/secondsToHms';
+import { Item } from 'bdo-shopping-cart-package'
 
-class RecipesTable extends Component {
+type TableProps = {
+  key: string,
+  productName: string,
+  item: Item,
+  onRecipeClick: (itemName: string, recipeId:string, recipePaths: string[]) => void,
+  onBuyClick: (itemName: string, recipePaths: string[]) => void,
+  detailsShown: boolean,
+  onProfitDetailsButtonPressed: (itemName: string) => void,
+  itemHasMarketData: (itemName: string) => boolean
+}
+
+class RecipesTable extends Component<TableProps, {}> {
   state = {};
 
   renderDetailsButton() {
@@ -87,7 +99,7 @@ class RecipesTable extends Component {
       }
     }
 
-    individualPrice = parseInt(individualPrice);
+    individualPrice = Math.round(individualPrice);
 
     const {
       profit,
@@ -345,12 +357,12 @@ class RecipesTable extends Component {
             { title: "Amount per Craft", field: "Amount" },
             { title: "Total Needed", field: "Total Needed" },
           ]}
-          data={selectedRecipe == '' ? [] : rowData} // TODO: Which recipe to choose?
+          data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
           title={`${productName} (x${totalItemCount})`}
           options={{
             search: false,
             paging: false,
-            header: selectedRecipe == "" ? false : true,
+            header: selectedRecipe == null ? false : true,
           }}
           localization={{
             body: {
