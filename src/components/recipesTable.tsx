@@ -65,21 +65,21 @@ class RecipesTable extends Component<TableProps, {}> {
     // const { shoppingCartData, marketData, valuePackEnabled } = this.props.item;
     // if (this.props.item.shoppingCartData.length == null || this.props.item.shoppingCartData.length == 0) return <h2>No shopping cart data available</h2>
     const marketPrice = this.props.item.getMarketPrice();
-    let buyCount = 0; // Total number of items
+    // let buyCount = 0; // Total number of items
     let craftCount = 0;
     let timesCrafted = 0; // Number of times this has been done
     let timesBought = 0;
 
     let individualPrice = -1;
     let cumulativeTimeSpent = -1;
-    for (const [key, val] of Object.entries(this.props.item.shoppingCartData)) {
-      if (this.props.item.activeRecipeId != '' && val.action == "Craft") {
+    for (const val of Object.values(this.props.item.shoppingCartData)) {
+      if (this.props.item.activeRecipeId !== '' && val.action === "Craft") {
         individualPrice = val.individualPrice;
         cumulativeTimeSpent = val.cumulativeTimeSpent;
         break;
       } else if (
-        this.props.item.activeRecipeId == '' &&
-        val.action == "Buy"
+        this.props.item.activeRecipeId === '' &&
+        val.action === "Buy"
       ) {
         individualPrice = val.individualPrice;
         cumulativeTimeSpent = val.cumulativeTimeSpent;
@@ -87,13 +87,13 @@ class RecipesTable extends Component<TableProps, {}> {
       }
     }
 
-    for (const [recipePath, { expectedCount, action, craftCount: repeatCount }] of Object.entries(
+    for (const { expectedCount, action, craftCount: repeatCount } of Object.values(
       this.props.item.shoppingCartData
     )) {
-      if (action == "Buy") {
-        buyCount += expectedCount;
+      if (action === "Buy") {
+        // buyCount += expectedCount;
         timesBought += repeatCount;
-      } else if (action == "Craft") {
+      } else if (action === "Craft") {
         craftCount += expectedCount;
         timesCrafted += repeatCount
       }
@@ -197,7 +197,7 @@ class RecipesTable extends Component<TableProps, {}> {
             className="recipeChip"
             clickable
             label="Buy"
-            color={selectedRecipeId == '' ? "primary" : "secondary"}
+            color={selectedRecipeId === '' ? "primary" : "secondary"}
             style={{ marginRight: 5 }}
             onClick={() => {
               console.log(`Clicked buy | id: ${productName}`);
@@ -210,7 +210,7 @@ class RecipesTable extends Component<TableProps, {}> {
         )}
 
         {Object.keys(allRecipes).map((recipe_id, index) => {
-          if (allRecipes[recipe_id].quantityProduced == null || allRecipes[recipe_id].quantityProduced == 0) return null;
+          if (allRecipes[recipe_id].quantityProduced == null || allRecipes[recipe_id].quantityProduced === 0) return null;
           const isSelected = selectedRecipeId === recipe_id;
           let isDisabled = false;
 
@@ -255,7 +255,7 @@ class RecipesTable extends Component<TableProps, {}> {
         style={{ fontSize: "0.8em", paddingLeft: "25px" }}
       >
         {recipePaths.map((recipePath) => {
-          if (recipePath == null || recipePath == "") return null;
+          if (recipePath == null || recipePath === "") return null;
           let recipeArr = recipePath.split("/");
           let everythingButLast = recipeArr.slice(0, -1).join("/");
           let last = recipeArr.slice(-1).join("/");
@@ -294,9 +294,9 @@ class RecipesTable extends Component<TableProps, {}> {
       recipes: allRecipes,
       activeRecipeId: selectedRecipeId,
     } = item;
-    const action = selectedRecipeId != '' ? "Craft" : "Buy";
+    const action = selectedRecipeId !== '' ? "Craft" : "Buy";
     const selectedRecipe =
-      selectedRecipeId != '' ? allRecipes[selectedRecipeId] : null;
+      selectedRecipeId !== '' ? allRecipes[selectedRecipeId] : null;
     let selectedRecipeAction = '';
     let quantityProduced = 0
     let rowData = [];
@@ -387,12 +387,12 @@ class RecipesTable extends Component<TableProps, {}> {
 
                   {this.renderParentLinks(parentPaths)}
 
-                  {selectedRecipeAction != 'Symbolic' && <div
+                  {selectedRecipeAction !== 'Symbolic' && <div
                     id="toolbar-subtitle-action "
                     style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                   >
                     <span className="font-weight-bold">
-                      {action == "Buy"
+                      {action === "Buy"
                         ? "Buy or Gather"
                         : selectedRecipeAction +
                           ` [Craft ${craftCount} times] (${secondsToHms(
@@ -400,14 +400,14 @@ class RecipesTable extends Component<TableProps, {}> {
                           )})`}
                     </span>
                   </div>}
-                  {action != "Buy" && selectedRecipeAction != 'Symbolic' && (
+                  {action !== "Buy" && selectedRecipeAction !== 'Symbolic' && (
                     <div
                       id="toolbar-subtitle-items-per-craft"
                       style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                     >
                       <span className="font-weight-bold">
                         {
-                          `${quantityProduced} ${quantityProduced == 1 ? "item" : "items"} per craft`}
+                          `${quantityProduced} ${quantityProduced === 1 ? "item" : "items"} per craft`}
                       </span>
                     </div>
                   )}

@@ -81,7 +81,7 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
     // Convert this.itemManager.items into array
     let recipeTables = Object.values(this.itemManager.items);
     recipeTables = recipeTables.filter(function (item) {
-      return Object.keys(item.shoppingCartData).length > 0 || item.activeRecipeId != '';
+      return Object.keys(item.shoppingCartData).length > 0 || item.activeRecipeId !== '';
     });
     recipeTables = recipeTables.sort(function (a, b) {
       return a.depth - b.depth;

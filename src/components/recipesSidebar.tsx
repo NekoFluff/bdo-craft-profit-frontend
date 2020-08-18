@@ -94,7 +94,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
 
   renderOutput = () => {
     const { recipeTables } = this.props;
-    let craftCount = 0
+    // let craftCount = 0
     let cumulativeTimeSpent = 0;
     let expectedCount = 0;
     let individualPrice = 0;
@@ -113,7 +113,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
       let correctShoppingCartData = item.getShoppingCartData(`/${item.name}`);
 
       if (correctShoppingCartData != null) {
-        craftCount = correctShoppingCartData.craftCount;
+        // craftCount = correctShoppingCartData.craftCount;
         cumulativeTimeSpent = correctShoppingCartData.cumulativeTimeSpent;
         expectedCount = correctShoppingCartData.expectedCount;
         totalTime = cumulativeTimeSpent * expectedCount;
@@ -295,7 +295,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
                   expectedCount,
                   individualPrice,
                 } = item.shoppingCartData[key];
-                if (action != 'Buy') return
+                if (action !== 'Buy') return null
                 totalCost += expectedCount * individualPrice;
                 return (
                   <React.Fragment key={key}>
