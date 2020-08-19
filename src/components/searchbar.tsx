@@ -5,7 +5,7 @@ import "../css/AutosuggestTheme.css";
 import axios from "axios";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
 import { Form } from 'react-bootstrap';
-import { withRouter } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 let recipeNames = [];
 
@@ -39,20 +39,22 @@ const getSuggestionValue = (suggestion) => suggestion;
 // Use your imagination to render suggestions.
 const renderSuggestion = (suggestion) => <span>{suggestion}</span>;
 
-class SearchBar extends React.Component {
-  constructor() {
-    super();
+type SearchBarProps = {
+  onSearch: (newProduct) => void
+} & RouteComponentProps
 
-    // Autosuggest is a controlled component.
-    // This means that you need to provide an input value
-    // and an onChange handler that updates this value (see below).
-    // Suggestions also need to be provided to the Autosuggest,
-    // and they are initially empty because the Autosuggest is closed.
-    this.state = {
-      value: "",
-      suggestions: [],
-    };
-  }
+type SearchBarState = {
+  value: string
+  suggestions: string[]
+  product: string
+}
+
+class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
+  state : SearchBarState = {
+    value: "",
+    suggestions: [],
+    product: ""
+  };
 
   async componentDidMount() {
     try {

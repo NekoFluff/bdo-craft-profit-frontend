@@ -6,10 +6,22 @@ import "../css/RecipeTable.css";
 import { Link, Element } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "./../helpers/numberWithCommas";
-import secondsToHms from './../helpers/secondsToHms';
+import numberWithCommas from "../helpers/numberWithCommas";
+import secondsToHms from '../helpers/secondsToHms';
+import { Item } from 'bdo-shopping-cart-package'
 
-class RecipesTable extends Component {
+type TableProps = {
+  key: string,
+  productName: string,
+  item: Item,
+  onRecipeClick: (itemName: string, recipeId:string, recipePaths: string[]) => void,
+  onBuyClick: (itemName: string, recipePaths: string[]) => void,
+  detailsShown: boolean,
+  onProfitDetailsButtonPressed: (itemName: string) => void,
+  itemHasMarketData: (itemName: string) => boolean
+}
+
+class RecipesTable extends Component<TableProps, {}> {
   state = {};
 
   renderDetailsButton() {
@@ -53,23 +65,21 @@ class RecipesTable extends Component {
     // const { shoppingCartData, marketData, valuePackEnabled } = this.props.item;
     // if (this.props.item.shoppingCartData.length == null || this.props.item.shoppingCartData.length == 0) return <h2>No shopping cart data available</h2>
     const marketPrice = this.props.item.getMarketPrice();
-    let buyCount = 0; // Total number of items
+    // let buyCount = 0; // Total number of items
     let craftCount = 0;
     let timesCrafted = 0; // Number of times this has been done
     let timesBought = 0;
-    const firstKey = [0];
-    if (firstKey == null) return;
 
     let individualPrice = -1;
     let cumulativeTimeSpent = -1;
-    for (const [key, val] of Object.entries(this.props.item.shoppingCartData)) {
-      if (this.props.item.activeRecipeId != null && val.action == "Craft") {
+    for (const val of Object.values(this.props.item.shoppingCartData)) {
+      if (this.props.item.activeRecipeId !== '' && val.action === "Craft") {
         individualPrice = val.individualPrice;
         cumulativeTimeSpent = val.cumulativeTimeSpent;
         break;
       } else if (
-        this.props.item.activeRecipeId == null &&
-        val.action == "Buy"
+        this.props.item.activeRecipeId === '' &&
+        val.action === "Buy"
       ) {
         individualPrice = val.individualPrice;
         cumulativeTimeSpent = val.cumulativeTimeSpent;
@@ -77,19 +87,19 @@ class RecipesTable extends Component {
       }
     }
 
-    for (const [recipePath, { expectedCount, action, craftCount: repeatCount }] of Object.entries(
+    for (const { expectedCount, action, craftCount: repeatCount } of Object.values(
       this.props.item.shoppingCartData
     )) {
-      if (action == "Buy") {
-        buyCount += expectedCount;
+      if (action === "Buy") {
+        // buyCount += expectedCount;
         timesBought += repeatCount;
-      } else if (action == "Craft") {
+      } else if (action === "Craft") {
         craftCount += expectedCount;
         timesCrafted += repeatCount
       }
     }
 
-    individualPrice = parseInt(individualPrice);
+    individualPrice = Math.round(individualPrice);
 
     const {
       profit,
@@ -187,7 +197,7 @@ class RecipesTable extends Component {
             className="recipeChip"
             clickable
             label="Buy"
-            color={selectedRecipeId == null ? "primary" : "secondary"}
+            color={selectedRecipeId === '' ? "primary" : "secondary"}
             style={{ marginRight: 5 }}
             onClick={() => {
               console.log(`Clicked buy | id: ${productName}`);
@@ -200,7 +210,7 @@ class RecipesTable extends Component {
         )}
 
         {Object.keys(allRecipes).map((recipe_id, index) => {
-          if (allRecipes[recipe_id].quantityProduced == null) return null;
+          if (allRecipes[recipe_id].quantityProduced == null || allRecipes[recipe_id].quantityProduced === 0) return null;
           const isSelected = selectedRecipeId === recipe_id;
           let isDisabled = false;
 
@@ -245,7 +255,7 @@ class RecipesTable extends Component {
         style={{ fontSize: "0.8em", paddingLeft: "25px" }}
       >
         {recipePaths.map((recipePath) => {
-          if (recipePath == null || recipePath == "") return null;
+          if (recipePath == null || recipePath === "") return null;
           let recipeArr = recipePath.split("/");
           let everythingButLast = recipeArr.slice(0, -1).join("/");
           let last = recipeArr.slice(-1).join("/");
@@ -284,11 +294,11 @@ class RecipesTable extends Component {
       recipes: allRecipes,
       activeRecipeId: selectedRecipeId,
     } = item;
-    const action = selectedRecipeId != null ? "Craft" : "Buy";
+    const action = selectedRecipeId !== '' ? "Craft" : "Buy";
     const selectedRecipe =
-      selectedRecipeId != null ? allRecipes[selectedRecipeId] : null;
-    let selectedRecipeAction = null;
-    let quantityProduced = null
+      selectedRecipeId !== '' ? allRecipes[selectedRecipeId] : null;
+    let selectedRecipeAction = '';
+    let quantityProduced = 0
     let rowData = [];
 
     if (selectedRecipe != null) {
@@ -348,7 +358,6 @@ class RecipesTable extends Component {
             { title: "Total Needed", field: "Total Needed" },
           ]}
           data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
-          // title={`${productName}` + (parentName != null ? `... for ${parentName}` : '')}
           title={`${productName} (x${totalItemCount})`}
           options={{
             search: false,
@@ -378,12 +387,12 @@ class RecipesTable extends Component {
 
                   {this.renderParentLinks(parentPaths)}
 
-                  {selectedRecipeAction != 'Symbolic' && <div
+                  {selectedRecipeAction !== 'Symbolic' && <div
                     id="toolbar-subtitle-action "
                     style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                   >
                     <span className="font-weight-bold">
-                      {action == "Buy"
+                      {action === "Buy"
                         ? "Buy or Gather"
                         : selectedRecipeAction +
                           ` [Craft ${craftCount} times] (${secondsToHms(
@@ -391,14 +400,14 @@ class RecipesTable extends Component {
                           )})`}
                     </span>
                   </div>}
-                  {action != "Buy" && selectedRecipeAction != 'Symbolic' && (
+                  {action !== "Buy" && selectedRecipeAction !== 'Symbolic' && (
                     <div
                       id="toolbar-subtitle-items-per-craft"
                       style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                     >
                       <span className="font-weight-bold">
                         {
-                          `${quantityProduced} ${quantityProduced == 1 ? "item" : "items"} per craft`}
+                          `${quantityProduced} ${quantityProduced === 1 ? "item" : "items"} per craft`}
                       </span>
                     </div>
                   )}

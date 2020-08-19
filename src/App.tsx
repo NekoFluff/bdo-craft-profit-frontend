@@ -13,9 +13,8 @@ class App extends Component {
         <Router>
           <HamburgerMenu></HamburgerMenu>
           <main className="container-fluid" id="page-wrap" >
-            <h1 className="p-3" align="center">
-              {" "}
-              Craft Profit{" "}
+            <h1 className="p-3" style={{textAlign: 'center'}}>
+              Craft Profit v0.2.0
             </h1>
             <div>
 
