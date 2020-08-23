@@ -34,7 +34,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
   };
 
   componentDidMount() {
-    ProfitCalculator.valuePackEnabled = true
+    ProfitCalculator.valuePackEnabled = true;
   }
 
   componentWillReceiveProps(newProps) {
