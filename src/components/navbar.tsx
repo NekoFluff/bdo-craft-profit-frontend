@@ -1,32 +1,40 @@
-import '../scss/Navbar.scss'
+import "../scss/Navbar.scss";
 
-import React, {useState} from "react";
-import {
-  Navbar,
-  Nav,
-} from "react-bootstrap";
+import React, { useState } from "react";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import Headroom from 'react-headroom';
-import Hamburger from 'hamburger-react'
-import useWindowSize from './hooks/useWindowSize';
+import Headroom from "react-headroom";
+import Hamburger from "hamburger-react";
+import useWindowSize from "./hooks/useWindowSize";
+import { action as toggleMenu } from "redux-burger-menu";
+import { useDispatch } from "react-redux";
+import ViewQuiltIcon from "@material-ui/icons/ViewQuilt";
 
 const MyNavBar = () => {
-  const [isOpen, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(false);
 
   const [width, height] = useWindowSize();
-
+  const dispatch = useDispatch();
 
   const renderNavbar = () => {
-    let styles = {}
-    
+    let styles = {};
+
     // if (isOpen) {
     //   styles = {maxHeight: 'none', height: '100vh'}
     // } else {
     //   styles = {maxHeight: 'none'}
     // }
     return (
-      <Navbar sticky="top" bg="light" variant="light" expand="lg" expanded={isOpen}>
-        <Navbar.Toggle><Hamburger toggled={isOpen} toggle={setOpen} /></Navbar.Toggle>
+      <Navbar
+        sticky="top"
+        bg="light"
+        variant="light"
+        expand="lg"
+        expanded={isOpen}
+      >
+        <Navbar.Toggle>
+          <Hamburger toggled={isOpen} toggle={setOpen} />
+        </Navbar.Toggle>
         <Navbar.Collapse>
           <Nav className="mx-md-auto align-items-center mt-2" style={styles}>
             <Navbar.Brand href="/">BDO Craft Profit</Navbar.Brand>
@@ -42,31 +50,42 @@ const MyNavBar = () => {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown> */}
-            <NavLink to="/" className="menu-item nav-link">Home</NavLink>
-            <NavLink to="/login" className="menu-item nav-link">Log In</NavLink>
-            <NavLink to="/logout" className="menu-item nav-link">Log Out</NavLink>
-            <NavLink to="/signup" className="menu-item nav-link">Sign Up</NavLink>
-
-
+            <NavLink to="/" className="menu-item nav-link">
+              Home
+            </NavLink>
+            <NavLink to="/login" className="menu-item nav-link">
+              Log In
+            </NavLink>
+            <NavLink to="/logout" className="menu-item nav-link">
+              Log Out
+            </NavLink>
+            <NavLink to="/signup" className="menu-item nav-link">
+              Sign Up
+            </NavLink>
+          </Nav>
+          <Nav>
+            <Button
+              variant="dark"
+              onClick={() => {
+                dispatch(toggleMenu(true));
+                console.log("OPEN MENU");
+              }}
+            >
+              <ViewQuiltIcon></ViewQuiltIcon>
+            </Button>
           </Nav>
           {/* <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
             <Button variant="outline-success">Search</Button>
           </Form> */}
-
         </Navbar.Collapse>
       </Navbar>
-    )
-  }
+    );
+  };
 
   if (width <= 992) {
-    return renderNavbar()
-  } else 
-    return (
-      <Headroom>
-        {renderNavbar()}
-      </Headroom>
-    )
+    return renderNavbar();
+  } else return <Headroom>{renderNavbar()}</Headroom>;
 };
 
 export default MyNavBar;

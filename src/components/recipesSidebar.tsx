@@ -12,23 +12,23 @@ import {
 } from "react-bootstrap";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "../helpers/secondsToHms";
-import { ProfitCalculator } from 'bdo-shopping-cart-package';
-import { Item } from 'bdo-shopping-cart-package'
-import { withRouter, RouteComponentProps } from 'react-router';
+import { ProfitCalculator } from "bdo-shopping-cart-package";
+import { Item } from "bdo-shopping-cart-package";
+import { withRouter, RouteComponentProps } from "react-router";
 
 type sidebarProps = {
-  recipeTables: Item[],
-  onUpdateCraftCount: (newCraftCount) => void,
-  onUpdateValuePack: (valuePackEnabled) => void,
-  onMarketPriceChange: (newMarketPrice) => void,
-} & RouteComponentProps
+  recipeTables: Item[];
+  onUpdateCraftCount: (newCraftCount) => void;
+  onUpdateValuePack: (valuePackEnabled) => void;
+  onMarketPriceChange: (newMarketPrice) => void;
+} & RouteComponentProps;
 
 type sidebarState = {
-  overrideMarketPrice: number | null
-}
+  overrideMarketPrice: number | null;
+};
 
 class sidebar extends Component<sidebarProps, sidebarState> {
-  state : sidebarState = {
+  state: sidebarState = {
     overrideMarketPrice: null,
   };
 
@@ -42,7 +42,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
 
     if (recipeTables != null) {
       const item = recipeTables[0];
-      if (item == null) return
+      if (item == null) return;
       if (
         this.state.overrideMarketPrice == null ||
         (oldRecipeTables != null &&
@@ -176,9 +176,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip id="tooltip">
-                Total profit / Time spent crafting
-              </Tooltip>
+              <Tooltip id="tooltip">Total profit / Time spent crafting</Tooltip>
             }
           >
             <Form.Label className="text font-weight-bold">
@@ -193,9 +191,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
           <OverlayTrigger
             trigger={["hover", "focus"]}
             overlay={
-              <Tooltip id="tooltip">
-                Total profit / # of items sold
-              </Tooltip>
+              <Tooltip id="tooltip">Total profit / # of items sold</Tooltip>
             }
           >
             <Form.Text className="text-muted">
@@ -288,13 +284,12 @@ class sidebar extends Component<sidebarProps, sidebarState> {
               if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
 
               return Object.keys(item.shoppingCartData).map((key) => {
-
                 const {
                   action,
                   expectedCount,
                   individualPrice,
                 } = item.shoppingCartData[key];
-                if (action !== 'Buy') return null
+                if (action !== "Buy") return null;
                 totalCost += expectedCount * individualPrice;
                 return (
                   <React.Fragment key={key}>
@@ -443,7 +438,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
         <Accordion defaultActiveKey="0">
           {/* Card 3 */}
           <Card>
-            <Card.Header style={{backgroundColor: 'rgb(230, 230, 230'}}>
+            <Card.Header style={{ backgroundColor: "rgb(230, 230, 230" }}>
               <Accordion.Toggle as={Button} variant="link" eventKey="2">
                 Total Profit (Output)
               </Accordion.Toggle>
@@ -457,7 +452,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
         <Accordion defaultActiveKey="0">
           {/* Card 1 */}
           <Card>
-            <Card.Header style={{backgroundColor: 'rgb(230, 230, 230'}}>
+            <Card.Header style={{ backgroundColor: "rgb(230, 230, 230" }}>
               <Accordion.Toggle as={Button} variant="link" eventKey="0">
                 Input
               </Accordion.Toggle>
@@ -479,7 +474,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
           </Card> */}
 
           <Card>
-            <Card.Header style={{backgroundColor: 'rgb(230, 230, 230'}}>
+            <Card.Header style={{ backgroundColor: "rgb(230, 230, 230" }}>
               <Accordion.Toggle as={Button} variant="link" eventKey="2">
                 What you need to buy
               </Accordion.Toggle>

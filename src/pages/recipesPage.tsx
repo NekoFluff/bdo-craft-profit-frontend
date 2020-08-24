@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import SearchBar from "../components/searchbar";
-import RecipesDashboard from "../components/recipesDashboard";
+import SearchBar from "../components/Searchbar";
+import RecipesDashboard from "../components/RecipesDashboard";
 import { Container } from "react-bootstrap";
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter, RouteComponentProps } from "react-router";
 
-type RecipesPageProps = {
-} & RouteComponentProps<{item: string}>
+type RecipesPageProps = {} & RouteComponentProps<{ item: string }>;
 
 type RecipesPageState = {
-  product: string
-}
+  product: string;
+};
 
 class RecipesPage extends Component<RecipesPageProps, RecipesPageState> {
   state = {
@@ -35,10 +34,12 @@ class RecipesPage extends Component<RecipesPageProps, RecipesPageState> {
     return (
       <Container fluid>
         {/* <Row> */}
-        <div className="p-3" style={{textAlign: 'center'}}>
-          <SearchBar onSearch={(newProduct) => {
-            this.setState({ product: newProduct })
-          }}/>
+        <div className="p-3" style={{ textAlign: "center" }}>
+          <SearchBar
+            onSearch={(newProduct) => {
+              this.setState({ product: newProduct });
+            }}
+          />
         </div>
         {/* </Row> */}
         <RecipesDashboard product={this.state.product} />

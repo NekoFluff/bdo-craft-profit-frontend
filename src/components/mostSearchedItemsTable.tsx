@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
 import tableIcons from "../helpers/tableIcons";
-import { Link } from 'react-router-dom';
-import {API_ENDPOINT} from '../helpers/CONSTANTS'
+import { Link } from "react-router-dom";
+import { API_ENDPOINT } from "../helpers/CONSTANTS";
 
 class MostSearchedItemsTable extends Component {
   state = {
@@ -13,11 +13,9 @@ class MostSearchedItemsTable extends Component {
   fetchData = async (pageSize, page) => {
     try {
       let url =
-      API_ENDPOINT + "/searchHistory?page=" + page + "&pageSize=" + pageSize;
-      console.log("Page:", page, pageSize, 'URL:', url);
-      const promise = await axios.get(
-        url
-      );
+        API_ENDPOINT + "/searchHistory?page=" + page + "&pageSize=" + pageSize;
+      console.log("Page:", page, pageSize, "URL:", url);
+      const promise = await axios.get(url);
       console.log("Promise Result: ", promise);
       const { data: mostFrequentSearches } = promise;
       console.log("Most frequent:", mostFrequentSearches);
@@ -42,9 +40,16 @@ class MostSearchedItemsTable extends Component {
       <MaterialTable
         icons={tableIcons}
         columns={[
-          { title: "Name", field: "Name", render: (rowData) => (<Link to={{ pathname: `/recipes/${rowData.Name}` }}>{rowData.Name}</Link>) },
+          {
+            title: "Name",
+            field: "Name",
+            render: (rowData) => (
+              <Link to={{ pathname: `/recipes/${rowData.Name}` }}>
+                {rowData.Name}
+              </Link>
+            ),
+          },
           { title: "Count", field: "Count" },
-          
         ]}
         data={(query) =>
           new Promise(async (resolve, reject) => {

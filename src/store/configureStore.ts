@@ -4,14 +4,14 @@ import reducer from "./reducer";
 import toast from "./middleware/toast";
 import api from "./middleware/api";
 
-export default function() {
+export default function () {
   return configureStore({
     reducer,
     middleware: [
       ...getDefaultMiddleware(),
       // logger({ destination: "console" }),
       toast,
-      api
-    ]
+      api,
+    ],
   });
 }

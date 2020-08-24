@@ -17,9 +17,9 @@ describe("bugsSlice", () => {
   const createState = () => ({
     entities: {
       bugs: {
-        list: []
-      }
-    }
+        list: [],
+      },
+    },
   });
 
   describe("loading bugs", () => {
@@ -119,7 +119,7 @@ describe("bugsSlice", () => {
       state.entities.bugs.list = [
         { id: 1, resolved: true },
         { id: 2 },
-        { id: 3 }
+        { id: 3 },
       ];
 
       const result = getUnresolvedBugs(state);

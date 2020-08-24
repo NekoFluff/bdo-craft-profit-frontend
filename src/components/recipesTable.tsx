@@ -8,19 +8,23 @@ import { Link, Element } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
-import secondsToHms from '../helpers/secondsToHms';
-import { Item } from 'bdo-shopping-cart-package'
+import secondsToHms from "../helpers/secondsToHms";
+import { Item } from "bdo-shopping-cart-package";
 
 type TableProps = {
-  key: string,
-  productName: string,
-  item: Item,
-  onRecipeClick: (itemName: string, recipeId:string, recipePaths: string[]) => void,
-  onBuyClick: (itemName: string, recipePaths: string[]) => void,
-  detailsShown: boolean,
-  onProfitDetailsButtonPressed: (itemName: string) => void,
-  itemHasMarketData: (itemName: string) => boolean
-}
+  key: string;
+  productName: string;
+  item: Item;
+  onRecipeClick: (
+    itemName: string,
+    recipeId: string,
+    recipePaths: string[]
+  ) => void;
+  onBuyClick: (itemName: string, recipePaths: string[]) => void;
+  detailsShown: boolean;
+  onProfitDetailsButtonPressed: (itemName: string) => void;
+  itemHasMarketData: (itemName: string) => boolean;
+};
 
 class RecipesTable extends Component<TableProps, {}> {
   state = {};
@@ -74,12 +78,12 @@ class RecipesTable extends Component<TableProps, {}> {
     let individualPrice = -1;
     let cumulativeTimeSpent = -1;
     for (const val of Object.values(this.props.item.shoppingCartData)) {
-      if (this.props.item.activeRecipeId !== '' && val.action === "Craft") {
+      if (this.props.item.activeRecipeId !== "" && val.action === "Craft") {
         individualPrice = val.individualPrice;
         cumulativeTimeSpent = val.cumulativeTimeSpent;
         break;
       } else if (
-        this.props.item.activeRecipeId === '' &&
+        this.props.item.activeRecipeId === "" &&
         val.action === "Buy"
       ) {
         individualPrice = val.individualPrice;
@@ -88,15 +92,17 @@ class RecipesTable extends Component<TableProps, {}> {
       }
     }
 
-    for (const { expectedCount, action, craftCount: repeatCount } of Object.values(
-      this.props.item.shoppingCartData
-    )) {
+    for (const {
+      expectedCount,
+      action,
+      craftCount: repeatCount,
+    } of Object.values(this.props.item.shoppingCartData)) {
       if (action === "Buy") {
         // buyCount += expectedCount;
         timesBought += repeatCount;
       } else if (action === "Craft") {
         craftCount += expectedCount;
-        timesCrafted += repeatCount
+        timesCrafted += repeatCount;
       }
     }
 
@@ -198,7 +204,7 @@ class RecipesTable extends Component<TableProps, {}> {
             className="recipeChip"
             clickable
             label="Buy"
-            color={selectedRecipeId === '' ? "primary" : "secondary"}
+            color={selectedRecipeId === "" ? "primary" : "secondary"}
             style={{ marginRight: 5 }}
             onClick={() => {
               console.log(`Clicked buy | id: ${productName}`);
@@ -211,7 +217,11 @@ class RecipesTable extends Component<TableProps, {}> {
         )}
 
         {Object.keys(allRecipes).map((recipe_id, index) => {
-          if (allRecipes[recipe_id].quantityProduced == null || allRecipes[recipe_id].quantityProduced === 0) return null;
+          if (
+            allRecipes[recipe_id].quantityProduced == null ||
+            allRecipes[recipe_id].quantityProduced === 0
+          )
+            return null;
           const isSelected = selectedRecipeId === recipe_id;
           let isDisabled = false;
 
@@ -295,23 +305,23 @@ class RecipesTable extends Component<TableProps, {}> {
       recipes: allRecipes,
       activeRecipeId: selectedRecipeId,
     } = item;
-    const action = selectedRecipeId !== '' ? "Craft" : "Buy";
+    const action = selectedRecipeId !== "" ? "Craft" : "Buy";
     const selectedRecipe =
-      selectedRecipeId !== '' ? allRecipes[selectedRecipeId] : null;
-    let selectedRecipeAction = '';
-    let quantityProduced = 0
+      selectedRecipeId !== "" ? allRecipes[selectedRecipeId] : null;
+    let selectedRecipeAction = "";
+    let quantityProduced = 0;
     let rowData = [];
 
     if (selectedRecipe != null) {
-      rowData = [...selectedRecipe.ingredients]
-      selectedRecipeAction = selectedRecipe["action"]
-      quantityProduced = selectedRecipe["quantityProduced"]
+      rowData = [...selectedRecipe.ingredients];
+      selectedRecipeAction = selectedRecipe["action"];
+      quantityProduced = selectedRecipe["quantityProduced"];
     }
 
     let parentPaths = [];
     let totalItemCount = 0;
     let craftCount = 0;
-    let totalTimeSpent = 0
+    let totalTimeSpent = 0;
     for (let ingredient of rowData) {
       ingredient["Total Needed"] = 0;
     }
@@ -324,7 +334,8 @@ class RecipesTable extends Component<TableProps, {}> {
       const containsLoop = new Set(recipePathArr).size !== recipePathArr.length;
       if (containsLoop) continue;
       craftCount += shoppingCart.craftCount; //Counts for crafting and buying
-      totalTimeSpent += shoppingCart.expectedCount * shoppingCart.cumulativeTimeSpent
+      totalTimeSpent +=
+        shoppingCart.expectedCount * shoppingCart.cumulativeTimeSpent;
 
       for (let ingredient of rowData) {
         ingredient["Total Needed"] =
@@ -388,38 +399,46 @@ class RecipesTable extends Component<TableProps, {}> {
 
                   {this.renderParentLinks(parentPaths)}
 
-                  {selectedRecipeAction !== 'Symbolic' && <div
-                    id="toolbar-subtitle-action "
-                    style={{ fontSize: "0.8em", paddingLeft: "25px" }}
-                  >
-                    <span className="font-weight-bold">
-                      {action === "Buy"
-                        ? "Buy or Gather"
-                        : selectedRecipeAction +
-                          ` [Craft ${craftCount} times] (${secondsToHms(
-                            totalTimeSpent
-                          )})`}
-                    </span>
-                  </div>}
-                  {action !== "Buy" && selectedRecipeAction !== 'Symbolic' && (
+                  {selectedRecipeAction !== "Symbolic" && (
+                    <div
+                      id="toolbar-subtitle-action "
+                      style={{ fontSize: "0.8em", paddingLeft: "25px" }}
+                    >
+                      <span className="font-weight-bold">
+                        {action === "Buy"
+                          ? "Buy or Gather"
+                          : selectedRecipeAction +
+                            ` [Craft ${craftCount} times] (${secondsToHms(
+                              totalTimeSpent
+                            )})`}
+                      </span>
+                    </div>
+                  )}
+                  {action !== "Buy" && selectedRecipeAction !== "Symbolic" && (
                     <div
                       id="toolbar-subtitle-items-per-craft"
                       style={{ fontSize: "0.8em", paddingLeft: "25px" }}
                     >
                       <span className="font-weight-bold">
-                        {
-                          `${quantityProduced} ${quantityProduced === 1 ? "item" : "items"} per craft`}
+                        {`${quantityProduced} ${
+                          quantityProduced === 1 ? "item" : "items"
+                        } per craft`}
                       </span>
                     </div>
                   )}
                   <div
-                      id="toolbar-subtitle-items-per-craft"
-                      style={{ fontSize: "0.8em", paddingLeft: "25px", paddingTop: "1rem" }}
-                    >
-                      <span className="text-muted">
-                        Pick one of the options below (Blue color = currently selected):
-                      </span>
-                    </div>
+                    id="toolbar-subtitle-items-per-craft"
+                    style={{
+                      fontSize: "0.8em",
+                      paddingLeft: "25px",
+                      paddingTop: "1rem",
+                    }}
+                  >
+                    <span className="text-muted">
+                      Pick one of the options below (Blue color = currently
+                      selected):
+                    </span>
+                  </div>
                   {this.renderChips(allRecipes, selectedRecipeId, productName)}
                   {this.renderDetailsButton()}
                 </div>

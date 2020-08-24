@@ -17,6 +17,7 @@
     "@types/react-bootstrap": "^0.32.22",
     "@types/react-burger-menu": "^2.6.1",
     "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-scroll": "^1.5.5",
     "axios": "^0.19.2",
@@ -45,6 +46,7 @@
     "react-skylight": "^0.5.1",
     "react-stickynode": "^3.0.3",
     "redux": "^4.0.5",
+    "redux-burger-menu": "^0.2.8",
     "typescript": "^3.9.7"
   },
   "scripts": {

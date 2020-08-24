@@ -1,4 +1,4 @@
-import '../scss/SearchBar.scss'
+import "../scss/SearchBar.scss";
 import "../scss/AutosuggestTheme.scss";
 
 // https://github.com/moroshko/react-autosuggest
@@ -6,8 +6,8 @@ import React from "react";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
-import { Form } from 'react-bootstrap';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { Form } from "react-bootstrap";
+import { withRouter, RouteComponentProps } from "react-router";
 
 let recipeNames = [];
 
@@ -18,17 +18,17 @@ const getSuggestions = (value) => {
 
   return inputLength === 0
     ? []
-    // : recipeNames.filter((sampleName) => {
-    //     if (sampleName == null) return null;
-    //     else
-    //       return sampleName.toLowerCase().slice(0, inputLength) === inputValue;
-    //   });
-    : recipeNames.filter((sampleName) => {
+    : // : recipeNames.filter((sampleName) => {
+      //     if (sampleName == null) return null;
+      //     else
+      //       return sampleName.toLowerCase().slice(0, inputLength) === inputValue;
+      //   });
+      recipeNames.filter((sampleName) => {
         if (sampleName == null) return null;
         else {
-          const matches = sampleName.toLowerCase().match(inputValue)
-          if (matches == null) return null
-          else return matches.length > 0
+          const matches = sampleName.toLowerCase().match(inputValue);
+          if (matches == null) return null;
+          else return matches.length > 0;
         }
       });
 };
@@ -42,20 +42,20 @@ const getSuggestionValue = (suggestion) => suggestion;
 const renderSuggestion = (suggestion) => <span>{suggestion}</span>;
 
 type SearchBarProps = {
-  onSearch: (newProduct) => void
-} & RouteComponentProps
+  onSearch: (newProduct) => void;
+} & RouteComponentProps;
 
 type SearchBarState = {
-  value: string
-  suggestions: string[]
-  product: string
-}
+  value: string;
+  suggestions: string[];
+  product: string;
+};
 
 class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
-  state : SearchBarState = {
+  state: SearchBarState = {
     value: "",
     suggestions: [],
-    product: ""
+    product: "",
   };
 
   async componentDidMount() {
@@ -93,16 +93,16 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
 
   onSearch = (event, data) => {
     this.setState({ product: data.suggestionValue });
-    this.goToRecipe(data.suggestionValue)
+    this.goToRecipe(data.suggestionValue);
 
     if (this.props.onSearch) {
-      this.props.onSearch(data.suggestionValue)
+      this.props.onSearch(data.suggestionValue);
     }
   };
 
   goToRecipe = (itemName) => {
-    this.props.history.push('/recipes/' + itemName)
-  }
+    this.props.history.push("/recipes/" + itemName);
+  };
 
   render() {
     const { value, suggestions } = this.state;
@@ -116,11 +116,12 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
 
     // Finally, render it!
     return (
-      <Form onSubmit={(e) => {
-        e.preventDefault()
-        this.goToRecipe(this.state.value)
-        
-      }}>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.goToRecipe(this.state.value);
+        }}
+      >
         <Autosuggest
           // theme={AutosuggestTheme}
           // className="d-flex p-2 justify-content-center"

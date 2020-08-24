@@ -1,9 +1,9 @@
 import axios from "axios";
 import * as actions from "../api";
-import { API_ENDPOINT } from '../../helpers/CONSTANTS';
+import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 import { Middleware } from "redux";
 
-const api: Middleware = ({ dispatch }) => next => async action => {
+const api: Middleware = ({ dispatch }) => (next) => async (action) => {
   if (action.type !== actions.apiCallBegan.type) return next(action);
 
   const { url, method, data, onStart, onSuccess, onError } = action.payload;
@@ -17,7 +17,7 @@ const api: Middleware = ({ dispatch }) => next => async action => {
       baseURL: API_ENDPOINT,
       url,
       method,
-      data
+      data,
     });
     // General
     dispatch(actions.apiCallSuccess(response.data));

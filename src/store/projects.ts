@@ -10,10 +10,10 @@ const slice = createSlice({
     projectAdded: (projects, action) => {
       projects.push({
         id: ++lastId,
-        name: action.payload.name
+        name: action.payload.name,
       });
-    }
-  }
+    },
+  },
 });
 
 export const { projectAdded } = slice.actions;
