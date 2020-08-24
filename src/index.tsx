@@ -1,15 +1,14 @@
+import './scss/BootstrapOverride.scss'
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './css/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import './css/BootstrapOverride.scss'
-// import 'bootstrap/dist/css/bootstrap.css'
 import 'react-awesome-button/dist/themes/theme-c137.css';
-// import "react-awesome-button/dist/styles.css";
 import "font-awesome/css/font-awesome.css";
+
 require('dotenv').config()
-console.log('ENV', process.env)
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

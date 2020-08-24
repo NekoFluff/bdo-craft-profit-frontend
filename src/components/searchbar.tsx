@@ -1,7 +1,9 @@
+import '../scss/SearchBar.scss'
+import "../scss/AutosuggestTheme.scss";
+
 // https://github.com/moroshko/react-autosuggest
 import React from "react";
 import Autosuggest from "react-autosuggest";
-import "../css/AutosuggestTheme.css";
 import axios from "axios";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
 import { Form } from 'react-bootstrap';

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
-import axios from "axios";
 import { apiCallBegan } from "./api";
 import moment from "moment";
 

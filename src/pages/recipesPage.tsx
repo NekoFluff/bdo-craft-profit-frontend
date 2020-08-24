@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import SearchBar from "../components/searchbar";
 import RecipesDashboard from "../components/recipesDashboard";
 import { Container } from "react-bootstrap";
-import "../css/Dashboard.css";
 import { withRouter, RouteComponentProps } from 'react-router';
 
 type RecipesPageProps = {

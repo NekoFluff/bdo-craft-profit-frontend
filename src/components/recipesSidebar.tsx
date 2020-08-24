@@ -10,7 +10,6 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import "../css/Dashboard.css";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "../helpers/secondsToHms";
 import { ProfitCalculator } from 'bdo-shopping-cart-package';

@@ -1,8 +1,9 @@
+import "../scss/RecipeTable.scss";
+
 import React, { Component } from "react";
 import MaterialTable, { MTableToolbar } from "material-table"; // https://material-table.com/#/
 import tableIcons from "../helpers/tableIcons";
 import { Chip } from "@material-ui/core";
-import "../css/RecipeTable.css";
 import { Link, Element } from "react-scroll";
 import { Button, Badge, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";

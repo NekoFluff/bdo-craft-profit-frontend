@@ -41,6 +41,7 @@ class PPSTable extends Component {
   render() {
     return (
       <MaterialTable
+        style={{marginBottom: "20px"}}
         icons={tableIcons}
         columns={[
           {

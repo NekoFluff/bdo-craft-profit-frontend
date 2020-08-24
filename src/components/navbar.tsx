@@ -1,17 +1,14 @@
+import '../scss/Navbar.scss'
+
 import React, {useState} from "react";
 import {
   Navbar,
-  NavDropdown,
   Nav,
-  Form,
-  FormControl,
-  Button,
 } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import Headroom from 'react-headroom';
 import Hamburger from 'hamburger-react'
 import useWindowSize from './hooks/useWindowSize';
-import '../css/Navbar.css'
 
 const MyNavBar = () => {
   const [isOpen, setOpen] = useState(false)
@@ -34,7 +31,6 @@ const MyNavBar = () => {
           <Nav className="mx-md-auto align-items-center mt-2" style={styles}>
             <Navbar.Brand href="/">BDO Craft Profit</Navbar.Brand>
 
-            {/* <Nav.Link href="#link">Link</Nav.Link> */}
             {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -46,17 +42,11 @@ const MyNavBar = () => {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown> */}
-        
-            <Nav.Link href="#deets">Log In</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              Log Out
-            </Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              Log Out
-            </Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              Log Out
-            </Nav.Link>
+            <NavLink to="/" className="menu-item nav-link">Home</NavLink>
+            <NavLink to="/login" className="menu-item nav-link">Log In</NavLink>
+            <NavLink to="/logout" className="menu-item nav-link">Log Out</NavLink>
+            <NavLink to="/signup" className="menu-item nav-link">Sign Up</NavLink>
+
 
           </Nav>
           {/* <Form inline>
