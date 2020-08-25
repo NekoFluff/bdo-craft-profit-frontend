@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SearchBar from "../components/Searchbar";
+import SearchBar from "../components/SearchBar";
 import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
 import { withRouter, RouteComponentProps } from "react-router";
 import PPSTable from "../components/PPSTable";

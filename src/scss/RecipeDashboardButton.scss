@@ -1,0 +1,14 @@
+@import "config";
+
+.recipeDashboard__button {
+  position: fixed !important;
+  right: -5rem;
+  top: 1rem;
+  z-index: 1021;
+  @include transition-ease-in-out;
+
+  &.open {
+    right: 1rem;
+    transition-delay: 0.25s;
+  }
+}
