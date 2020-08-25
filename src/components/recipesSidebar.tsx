@@ -7,14 +7,13 @@ import {
   Accordion,
   Card,
   ButtonGroup,
-  OverlayTrigger,
-  Tooltip,
 } from "react-bootstrap";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "../helpers/secondsToHms";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import { Item } from "bdo-shopping-cart-package";
 import { withRouter, RouteComponentProps } from "react-router";
+import WithTooltip from "./hoc/WithTooltip";
 
 type sidebarProps = {
   recipeTables: Item[];
@@ -142,75 +141,44 @@ class sidebar extends Component<sidebarProps, sidebarState> {
       <Form onSubmit={this.handleMarketPriceFormSubmit}>
         {/* Total Profit */}
         <Form.Group>
-          <OverlayTrigger
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip">
-                Profit = Silver spent - Silver earned from market
-              </Tooltip>
-            }
-          >
+          <WithTooltip tooltip="Profit = Silver spent - Silver earned from market">
             <Form.Label className="text">
               Total Profit: {numberWithCommas(Math.round(totalProfit))} silver
             </Form.Label>
-          </OverlayTrigger>
-          {/* </Form.Group> */}
+          </WithTooltip>
           <br></br>
 
           {/* Total Profit */}
-          {/* <Form.Group> */}
-          <OverlayTrigger
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip">
-                Total amount of time spent crafting everything
-              </Tooltip>
-            }
-          >
+          <WithTooltip tooltip="Total amount of time spent crafting everything">
             <Form.Label className="text">
               Total Crafting Time: {secondsToHms(totalTime)}
             </Form.Label>
-          </OverlayTrigger>
+          </WithTooltip>
+
           {/* PPS */}
           <br></br>
-          <OverlayTrigger
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip">Total profit / Time spent crafting</Tooltip>
-            }
-          >
+          <WithTooltip tooltip="Total profit / Time spent crafting">
             <Form.Label className="text font-weight-bold">
               Profit per second (PPS): {numberWithCommas(pps.toFixed(2))}
               silver/sec
             </Form.Label>
-          </OverlayTrigger>
+          </WithTooltip>
         </Form.Group>
 
         <Form.Group>
           {/* Profit per Item */}
-          <OverlayTrigger
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip">Total profit / # of items sold</Tooltip>
-            }
-          >
+          <WithTooltip tooltip="Total profit / # of items sold">
             <Form.Text className="text-muted">
               Profit per item: {numberWithCommas(profitPerItem.toFixed(2))}
               silver
             </Form.Text>
-          </OverlayTrigger>
+          </WithTooltip>
 
           <br></br>
 
           {/* Market Price */}
-          <OverlayTrigger
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip">
-                How much it can be sold for... Last Updated:{" "}
-                {marketPriceLastUpdated}
-              </Tooltip>
-            }
+          <WithTooltip
+            tooltip={`How much it can be sold for... Last Updated: ${marketPriceLastUpdated}`}
           >
             <InputGroup>
               <InputGroup.Prepend>
@@ -232,7 +200,7 @@ class sidebar extends Component<sidebarProps, sidebarState> {
                 costs.
               </Form.Text>
             </InputGroup>
-          </OverlayTrigger>
+          </WithTooltip>
         </Form.Group>
       </Form>
     );
@@ -264,18 +232,11 @@ class sidebar extends Component<sidebarProps, sidebarState> {
           </Button>
         </Form.Group>
         <Form.Group>
-          <OverlayTrigger
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip">
-                What the optimizer suggests you buy to craft the items.
-              </Tooltip>
-            }
-          >
+          <WithTooltip tooltip="What the optimizer suggests you buy to craft the items.">
             <Form.Label className={"text font-italic"}>
               Shopping List:
             </Form.Label>
-          </OverlayTrigger>{" "}
+          </WithTooltip>
         </Form.Group>
         <Form.Group>
           {this.props.recipeTables != null &&
@@ -357,44 +318,21 @@ class sidebar extends Component<sidebarProps, sidebarState> {
         <Form.Label>Choose an optimizer:</Form.Label>
         <Form.Group>
           <ButtonGroup aria-label="Basic example">
-            <OverlayTrigger
-              trigger={["hover", "focus"]}
-              overlay={
-                <Tooltip id="tooltip">
-                  Maximize the silver earned per second (a.k.a Profit Per
-                  Second)!
-                </Tooltip>
-              }
-            >
+            <WithTooltip tooltip="Maximize the silver earned per second (a.k.a Profit Per Second)!">
               <Button variant="primary">PPS</Button>
-            </OverlayTrigger>
+            </WithTooltip>
 
-            <OverlayTrigger
-              trigger={["hover", "focus"]}
-              overlay={
-                <Tooltip id="tooltip">
-                  (Not implemented) Maximize the total amount of profit (at the
-                  cost of time)!
-                </Tooltip>
-              }
-            >
+            <WithTooltip tooltip="(Not implemented) Maximize the total amount of profit (at thecost of time)!">
               <Button disabled variant="secondary">
                 Total Profit
               </Button>
-            </OverlayTrigger>
+            </WithTooltip>
 
-            <OverlayTrigger
-              trigger={["hover", "focus"]}
-              overlay={
-                <Tooltip id="tooltip">
-                  (Not implemented) Maximize the total amount of EXP generated!
-                </Tooltip>
-              }
-            >
+            <WithTooltip tooltip="(Not implemented) Maximize the total amount of EXP generated!">
               <Button disabled variant="secondary">
                 EXP
               </Button>
-            </OverlayTrigger>
+            </WithTooltip>
           </ButtonGroup>
         </Form.Group>
       </Form>
