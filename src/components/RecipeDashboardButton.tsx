@@ -6,20 +6,20 @@ import { Button } from "react-bootstrap";
 import "../scss/RecipeDashboardButton.scss";
 
 const RecipeDashboardButton = () => {
-  const [isOpen, setOpen] = useState(false);
+  const [isVisible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setOpen(true);
+    setVisible(true);
     return () => {
       console.log("End animation");
-      setOpen(false);
+      setVisible(false);
     };
   }, []);
 
   return (
     <Button
-      className={`recipeDashboard__button ${isOpen ? "open" : ""}`}
+      className={`recipeDashboard__button ${isVisible ? "visible" : ""}`}
       variant="primary"
       onClick={() => {
         dispatch(toggleMenu(true));

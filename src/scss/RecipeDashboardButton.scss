@@ -7,7 +7,7 @@
   z-index: 1021;
   @include transition-ease-in-out;
 
-  &.open {
+  &.visible {
     right: 1rem;
     transition-delay: 0.25s;
   }
