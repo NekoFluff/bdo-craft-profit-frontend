@@ -1,6 +1,9 @@
 .react-autosuggest {
   &__container {
+    display: flex;
     position: relative;
+    justify-content: center;
+    margin-bottom: 2rem;
   }
 
   &__input {

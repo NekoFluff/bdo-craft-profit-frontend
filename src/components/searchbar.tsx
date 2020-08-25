@@ -42,7 +42,7 @@ const getSuggestionValue = (suggestion) => suggestion;
 const renderSuggestion = (suggestion) => <span>{suggestion}</span>;
 
 type SearchBarProps = {
-  onSearch: (newProduct) => void;
+  onSearch?: (newProduct) => void;
 } & RouteComponentProps;
 
 type SearchBarState = {

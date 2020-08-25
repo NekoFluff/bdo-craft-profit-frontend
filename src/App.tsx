@@ -26,9 +26,7 @@ class App extends Component {
               </h1>
               <Switch>
                 <Route path="/recipes/:item" component={RecipesPage} />
-                <Route path="/">
-                  <HomePage></HomePage>
-                </Route>
+                <Route path="/" component={HomePage} />
               </Switch>
             </main>
           </Router>

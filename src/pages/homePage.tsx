@@ -3,7 +3,7 @@ import SearchBar from "../components/SearchBar";
 import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
 import { withRouter, RouteComponentProps } from "react-router";
 import PPSTable from "../components/PPSTable";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 type HomePageProps = {} & RouteComponentProps<{ item: string }>;
 
@@ -13,11 +13,21 @@ class HomePage extends Component<HomePageProps, HomePageState> {
   render() {
     return (
       <Container>
-        <div className="p-3">
-          <SearchBar onSearch={() => {}} />
-        </div>
-        <PPSTable></PPSTable>
-        <MostSearchedItemsTable></MostSearchedItemsTable>
+        <Row className="justify-content-center">
+          <Col>
+            <SearchBar />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <PPSTable />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <MostSearchedItemsTable></MostSearchedItemsTable>
+          </Col>
+        </Row>
       </Container>
     );
   }
