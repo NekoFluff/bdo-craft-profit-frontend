@@ -1,17 +1,24 @@
 import "../scss/RecipeTable.scss";
 
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
 import MaterialTable, { MTableToolbar } from "material-table"; // https://material-table.com/#/
 import tableIcons from "../helpers/tableIcons";
 import { Chip } from "@material-ui/core";
 import { Link, Element } from "react-scroll";
-import { Button, Badge, Accordion, Card } from "react-bootstrap";
+import {
+  Button,
+  Badge,
+  Accordion,
+  AccordionContext,
+  Card,
+  useAccordionToggle,
+} from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "../helpers/secondsToHms";
 import { Item } from "bdo-shopping-cart-package";
 
-type TableProps = {
+type RecipesTableProps = {
   key: string;
   productName: string;
   item: Item;
@@ -21,31 +28,50 @@ type TableProps = {
     recipePaths: string[]
   ) => void;
   onBuyClick: (itemName: string, recipePaths: string[]) => void;
-  detailsShown: boolean;
-  onProfitDetailsButtonPressed: (itemName: string) => void;
+  // detailsShown: boolean;
   itemHasMarketData: (itemName: string) => boolean;
 };
 
-class RecipesTable extends Component<TableProps, {}> {
-  state = {};
+type RecipesTableState = {
+  detailsVisible: boolean;
+};
+
+function ContextAwareToggle({ eventKey, callback }) {
+  const currentEventKey = useContext(AccordionContext);
+
+  const decoratedOnClick = useAccordionToggle(
+    eventKey,
+    () => callback && callback(eventKey)
+  );
+
+  const isCurrentEventKey = currentEventKey === eventKey;
+
+  return (
+    <Button onClick={decoratedOnClick}>
+      {isCurrentEventKey ? "Hide Profit Details" : "Show Profit Details"}
+    </Button>
+  );
+}
+
+class RecipesTable extends Component<RecipesTableProps, RecipesTableState> {
+  state: RecipesTableState = {
+    detailsVisible: true,
+  };
 
   renderDetailsButton() {
     if (this.props.item.isSymbolic) return null;
-    let active = this.props.detailsShown ? "0" : null;
+    // let active = this.props.detailsShown ? "0" : null;
     return (
-      <Accordion defaultActiveKey={active}>
+      // <Accordion defaultActiveKey={active}>
+      <Accordion
+        onSelect={(e, b) => {
+          // this.setState({ detailsVisible: !this.state.detailsVisible });
+          console.log("Selected", e, b);
+        }}
+      >
         <Card>
           <Card.Header>
-            <Accordion.Toggle
-              as={Button}
-              onClick={(e) => {
-                this.props.onProfitDetailsButtonPressed(this.props.item.name);
-              }}
-              variant="link"
-              eventKey="0"
-            >
-              {active ? "Hide Profit Details" : "Show Profit Details"}
-            </Accordion.Toggle>
+            <ContextAwareToggle eventKey="0" callback={(e) => {}} />
           </Card.Header>
           <Accordion.Collapse eventKey="0">
             <Card.Body>{this.renderBadges()}</Card.Body>

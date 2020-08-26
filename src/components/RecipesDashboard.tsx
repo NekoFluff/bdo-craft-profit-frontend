@@ -23,7 +23,7 @@ type DashboardProps = {
 };
 type DashboardState = {
   recipeTables: Item[];
-  openProfitDetails: any;
+  // openProfitDetails: any;
   craftCount: number;
 };
 class RecipesDashboard extends Component<DashboardProps, DashboardState> {
@@ -31,7 +31,7 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
 
   state: DashboardState = {
     recipeTables: null,
-    openProfitDetails: {},
+    // openProfitDetails: {},
     craftCount: 100,
   };
 
@@ -60,7 +60,7 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
     // Only update if the props changed
     if (nextProps.product !== productName) {
       console.log("New product name:", productName);
-      this.setState({ openProfitDetails: {} });
+      // this.setState({ openProfitDetails: {} });
       await this.getData(productName);
     }
   }
@@ -160,15 +160,15 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
                   }
                   this.updateTables();
                 }}
-                detailsShown={this.state.openProfitDetails[item.name]}
-                onProfitDetailsButtonPressed={(itemName) => {
-                  const temp = { ...this.state.openProfitDetails };
-                  temp[itemName] =
-                    temp[itemName] == null || temp[itemName] === false
-                      ? true
-                      : false;
-                  this.setState({ openProfitDetails: temp });
-                }}
+                // detailsShown={this.state.openProfitDetails[item.name]}
+                // onProfitDetailsButtonPressed={(itemName) => {
+                //   const temp = { ...this.state.openProfitDetails };
+                //   temp[itemName] =
+                //     temp[itemName] == null || temp[itemName] === false
+                //       ? true
+                //       : false;
+                //   this.setState({ openProfitDetails: temp });
+                // }}
                 itemHasMarketData={(itemName) => {
                   return (
                     this.itemManager.items[itemName].marketData != null ||
