@@ -1,13 +1,10 @@
-// Other packages
 import React, { Component } from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import { withRouter, RouteComponentProps } from "react-router";
-
-// My components
-import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
 import SearchBar from "../components/SearchBar";
+import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
+import { withRouter, RouteComponentProps } from "react-router";
 import PPSTable from "../components/PPSTable";
-import MyNavBar from "../components/Navbar";
+import { Container, Row, Col } from "react-bootstrap";
+import MyNavBar from "./../components/Navbar";
 
 type HomePageProps = {} & RouteComponentProps<{ item: string }>;
 
