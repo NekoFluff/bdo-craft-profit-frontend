@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 // function withTooltip(WrappedComponent, tooltip) {
@@ -16,7 +16,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 //   };
 // }
 
-const withTooltip = (props) => {
+const WithTooltip = (props) => {
   return (
     <OverlayTrigger
       trigger={["hover", "focus"]}
@@ -27,4 +27,4 @@ const withTooltip = (props) => {
   );
 };
 
-export default withTooltip;
+export default WithTooltip;

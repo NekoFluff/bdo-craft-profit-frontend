@@ -1,33 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto&display=swap");
 
-body {
-  font-family: "Roboto", sans-serif;
-}
-
-h1 {
-  font-family: "Bebas Neue", sans-serif;
-}
-
-h6 {
-  font-family: "Bebas Neue", sans-serif;
-}
-
-a {
-  font-family: "Roboto", sans-serif;
-}
-
-td {
-  font-family: "Roboto", sans-serif;
-}
-
-div {
-  font-family: "Roboto", sans-serif;
-}
-
-span {
-  font-family: "Roboto", sans-serif;
-}
-
+body,
+a,
+td,
+div,
+span,
 input {
   font-family: "Roboto", sans-serif;
+}
+
+h1,
+h6 {
+  font-family: "Bebas Neue", sans-serif;
 }

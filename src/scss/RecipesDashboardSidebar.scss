@@ -1,3 +1,4 @@
+@import "config";
 
 /* Position and sizing of burger button */
 .bm-burger-button {
@@ -19,9 +20,11 @@
 }
 
 /* Position and sizing of clickable cross button */
-.bm-cross-button {
-  height: 24px;
-  width: 24px;
+div.bm-cross-button {
+  right: 1.25rem !important;
+  top: 1.25rem !important;
+  height: 2rem !important;
+  width: 2rem !important;
 }
 
 /* Color/shape of close button cross */
@@ -38,6 +41,30 @@ Note: Beware of modifying this element as it can break the animations - you shou
   height: 100%;
 }
 
+@include media-sm {
+  .bm-menu-wrap {
+    width: 100% !important;
+  }
+}
+
+@include media-md {
+  .bm-menu-wrap {
+    width: 75% !important;
+  }
+}
+
+@include media-lg {
+  .bm-menu-wrap {
+    width: 55% !important;
+  }
+}
+
+@include media-xl {
+  .bm-menu-wrap {
+    width: 45% !important;
+  }
+}
+
 /* General sidebar styles */
 .bm-menu {
   background: #373a47;
@@ -52,28 +79,24 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* Wrapper for item list */
 .bm-item-list {
-  color: #b8b7ad;
+  color: black;
   padding: 0.8em;
 }
 
 /* Individual item */
 .bm-item {
   display: inline-block;
-  color:#ffffff;
+  color: #ffffff;
   padding: 0.75em 0em;
 }
 
 .bm-item:hover {
   display: inline-block;
-  color:#ffffff;
+  color: #ffffff;
   padding: 0.75em 0em;
 }
 
 /* Styling of overlay */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
-}
-
-.cardHeader {
-  background-color: 'rgb(220, 220, 220' !important;
 }

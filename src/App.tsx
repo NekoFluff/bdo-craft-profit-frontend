@@ -8,7 +8,7 @@ import HomePage from "./pages/homePage";
 import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
 import MyNavBar from "./components/Navbar";
-import RecipesDashboardSidebar from "./components/RecipesDashboardSidebar";
+// import RecipesDashboardSidebar from "./components/RecipesDashboardSidebar";
 
 const store = configureStore();
 
@@ -16,21 +16,18 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <div id="outer-container container">
-          <Router>
-            <RecipesDashboardSidebar></RecipesDashboardSidebar>
-            <MyNavBar></MyNavBar>
-            <main className="container-fluid main" id="page-wrap">
-              <h1 className="p-3" style={{ textAlign: "center" }}>
-                Craft Profit v0.2.0
-              </h1>
-              <Switch>
-                <Route path="/recipes/:item" component={RecipesPage} />
-                <Route path="/" component={HomePage} />
-              </Switch>
-            </main>
-          </Router>
-        </div>
+        {/* <div id="outer-container container"> */}
+        <Router>
+          {/* <RecipesDashboardSidebar></RecipesDashboardSidebar> */}
+
+          <main className="container-fluid main">
+            <Switch>
+              <Route path="/recipes/:item" component={RecipesPage} />
+              <Route path="/" component={HomePage} />
+            </Switch>
+          </main>
+        </Router>
+        {/* </div> */}
       </Provider>
     );
   }

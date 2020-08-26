@@ -3,14 +3,17 @@ import { useDispatch } from "react-redux";
 import { action as toggleMenu } from "redux-burger-menu";
 import ViewQuiltIcon from "@material-ui/icons/ViewQuilt";
 import { Button } from "react-bootstrap";
-import "../scss/RecipeDashboardButton.scss";
+import "../scss/RecipesDashboardButton.scss";
 
-const RecipeDashboardButton = () => {
+const RecipesDashboardButton = () => {
   const [isVisible, setVisible] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setVisible(true);
+    setTimeout(() => {
+      setVisible(true);
+    }, 500);
+
     return () => {
       console.log("End animation");
       setVisible(false);
@@ -30,4 +33,4 @@ const RecipeDashboardButton = () => {
   );
 };
 
-export default RecipeDashboardButton;
+export default RecipesDashboardButton;

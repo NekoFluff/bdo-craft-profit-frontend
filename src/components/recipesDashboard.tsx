@@ -1,17 +1,25 @@
+// Main packages
 import React, { Component } from "react";
-
-import axios from "axios";
-import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
-import RecipesTable from "./RecipesTable";
 import { Events, scrollSpy } from "react-scroll";
-import { Row, Col } from "react-bootstrap";
-import RecipesSidebar from "./RecipesSidebar";
-import Sticky from "react-stickynode";
-import { API_ENDPOINT } from "../helpers/CONSTANTS";
+import axios from "axios";
+
+// My package
+import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
 import { Item } from "bdo-shopping-cart-package";
+
+// Helpers
+import { API_ENDPOINT } from "../helpers/CONSTANTS";
+
+// Other omponents
+import RecipesDashboardButton from "./RecipesDashboardButton";
+import RecipesDashboardSidebar from "./RecipesDashboardSidebar";
+import RecipesTable from "./RecipesTable";
+import MyNavBar from "./Navbar";
+import SearchBar from "./SearchBar";
 
 type DashboardProps = {
   product: string;
+  setProduct: any;
 };
 type DashboardState = {
   recipeTables: Item[];
@@ -176,41 +184,52 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
 
   renderSidebar() {
     return (
-      <Sticky className="mt-4" enabled={true} top={50}>
-        <RecipesSidebar
-          recipeTables={this.state.recipeTables}
-          onUpdateCraftCount={(newCraftCount) => {
-            this.setState({ craftCount: newCraftCount });
-            this.itemManager.recalculate({ craftCount: newCraftCount });
-            this.updateTables();
-          }}
-          onUpdateValuePack={(valuePackEnabled) => {
-            ProfitCalculator.valuePackEnabled = valuePackEnabled;
-            this.itemManager.resetToOptimal();
-            this.updateTables();
-          }}
-          onMarketPriceChange={(newMarketPrice) => {
-            this.itemManager.items[this.itemManager.officialProductName][
-              "overrideMarketPrice"
-            ] = newMarketPrice;
-            this.itemManager.resetToOptimal();
-            this.updateTables();
-          }}
-        ></RecipesSidebar>
-      </Sticky>
+      // <Sticky className="mt-4" enabled={true} top={50}>
+      <RecipesDashboardSidebar
+        recipeTables={this.state.recipeTables}
+        onUpdateCraftCount={(newCraftCount) => {
+          this.setState({ craftCount: newCraftCount });
+          this.itemManager.recalculate({ craftCount: newCraftCount });
+          this.updateTables();
+        }}
+        onUpdateValuePack={(valuePackEnabled) => {
+          ProfitCalculator.valuePackEnabled = valuePackEnabled;
+          this.itemManager.resetToOptimal();
+          this.updateTables();
+        }}
+        onMarketPriceChange={(newMarketPrice) => {
+          this.itemManager.items[this.itemManager.officialProductName][
+            "overrideMarketPrice"
+          ] = newMarketPrice;
+          this.itemManager.resetToOptimal();
+          this.updateTables();
+        }}
+      ></RecipesDashboardSidebar>
+      // </Sticky>
     );
   }
 
   render() {
     return (
-      <Row>
-        <Col xs={8} md={9} style={{ paddingLeft: 0, paddingRight: 0 }}>
+      <>
+        {this.renderSidebar()}
+        <div id="page-wrap">
+          <MyNavBar></MyNavBar>
+          <h1 className="p-3" style={{ textAlign: "center" }}>
+            Craft Profit v0.2.0
+          </h1>
+          <RecipesDashboardButton />
+
+          <div className="p-3" style={{ textAlign: "center" }}>
+            <SearchBar
+              onSearch={(newProduct) => {
+                this.props.setProduct(newProduct);
+              }}
+            />
+          </div>
           {this.renderTables()}
-        </Col>
-        <Col xs={4} md={3} style={{ paddingLeft: 0, paddingRight: 0 }}>
-          {this.renderSidebar()}
-        </Col>
-      </Row>
+        </div>
+      </>
     );
   }
 }
