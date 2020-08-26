@@ -36,7 +36,15 @@ type RecipesTableState = {
   detailsVisible: boolean;
 };
 
-function ContextAwareToggle({ eventKey, callback }) {
+type ContextAwareToggleProps = {
+  eventKey: string;
+  callback?: any;
+};
+
+const ContextAwareToggle: React.FC<ContextAwareToggleProps> = ({
+  eventKey,
+  callback,
+}) => {
   const currentEventKey = useContext(AccordionContext);
 
   const decoratedOnClick = useAccordionToggle(
@@ -51,7 +59,7 @@ function ContextAwareToggle({ eventKey, callback }) {
       {isCurrentEventKey ? "Hide Profit Details" : "Show Profit Details"}
     </Button>
   );
-}
+};
 
 class RecipesTable extends Component<RecipesTableProps, RecipesTableState> {
   state: RecipesTableState = {
@@ -71,7 +79,7 @@ class RecipesTable extends Component<RecipesTableProps, RecipesTableState> {
       >
         <Card>
           <Card.Header>
-            <ContextAwareToggle eventKey="0" callback={(e) => {}} />
+            <ContextAwareToggle eventKey="0" />
           </Card.Header>
           <Accordion.Collapse eventKey="0">
             <Card.Body>{this.renderBadges()}</Card.Body>
