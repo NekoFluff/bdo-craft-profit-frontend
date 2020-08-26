@@ -68,15 +68,8 @@ class RecipesTable extends Component<RecipesTableProps, RecipesTableState> {
 
   renderDetailsButton() {
     if (this.props.item.isSymbolic) return null;
-    // let active = this.props.detailsShown ? "0" : null;
     return (
-      // <Accordion defaultActiveKey={active}>
-      <Accordion
-        onSelect={(e, b) => {
-          // this.setState({ detailsVisible: !this.state.detailsVisible });
-          console.log("Selected", e, b);
-        }}
-      >
+      <Accordion>
         <Card>
           <Card.Header>
             <ContextAwareToggle eventKey="0" />

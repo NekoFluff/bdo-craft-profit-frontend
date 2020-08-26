@@ -26,11 +26,11 @@ class sidebar extends Component<sidebarProps, sidebarState> {
     const { recipeTables } = newProps;
     const { recipeTables: oldRecipeTables } = this.props;
 
-    if (recipeTables != null) {
+    if (recipeTables.length !== 0) {
       const item = recipeTables[0];
       if (item == null) return;
       if (
-        oldRecipeTables != null &&
+        oldRecipeTables.length !== 0 &&
         oldRecipeTables[0].name !== recipeTables[0].name
       ) {
         this.setState({ overrideMarketPrice: item.getMarketPrice() });

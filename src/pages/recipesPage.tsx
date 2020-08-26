@@ -20,10 +20,6 @@ const RecipesPage = (props) => {
     };
   }, [dispatch, props.match.params.item]);
 
-  useEffect(() => {
-    setProduct(props.match.params.item);
-  }, [props.location, props.match.params.item]);
-
   return (
     <Container fluid id="outer-container">
       <RecipesDashboard product={product} setProduct={setProduct} />

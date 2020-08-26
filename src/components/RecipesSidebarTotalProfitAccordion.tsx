@@ -34,7 +34,7 @@ const RecipesSidebarTotalProfitAccordion = (props) => {
     let totalTime = 0;
     let marketPrice = 0;
     let marketPriceLastUpdated = 0;
-    if (recipeTables != null) {
+    if (recipeTables.length !== 0) {
       const item = recipeTables[0];
       marketPrice = item.getMarketPrice();
 

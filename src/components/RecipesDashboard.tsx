@@ -1,5 +1,6 @@
 // Main packages
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Events, scrollSpy } from "react-scroll";
 import axios from "axios";
 
@@ -21,24 +22,29 @@ type DashboardProps = {
   product: string;
   setProduct: any;
 };
+
+/**
+ * @deprecated
+ */
 type DashboardState = {
   recipeTables: Item[];
   // openProfitDetails: any;
   craftCount: number;
 };
-class RecipesDashboard extends Component<DashboardProps, DashboardState> {
-  itemManager: ItemManager;
 
-  state: DashboardState = {
-    recipeTables: null,
-    // openProfitDetails: {},
-    craftCount: 100,
-  };
+let itemManager: ItemManager = new ItemManager();
 
-  componentDidMount() {
-    this.itemManager = new ItemManager();
-    console.log("Item Manager", this.itemManager);
+const RecipesDashboard: React.FC<DashboardProps> = ({
+  product,
+  setProduct,
+}) => {
+  const dispatch = useDispatch();
+  const [recipeTables, setRecipeTables] = useState([]);
+  const [craftCount, setCraftCount] = useState(0);
 
+  scrollSpy.update();
+
+  useEffect(() => {
     Events.scrollEvent.register("begin", function (to, element) {
       console.log("Begin Scroll", arguments);
     });
@@ -47,52 +53,45 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
       console.log("End Scroll", arguments);
     });
 
-    scrollSpy.update();
-  }
+    return () => {
+      Events.scrollEvent.remove("begin");
+      Events.scrollEvent.remove("end");
+    };
+  }, []);
 
-  componentWillUnmount() {
-    Events.scrollEvent.remove("begin");
-    Events.scrollEvent.remove("end");
-  }
-
-  async componentDidUpdate(nextProps) {
-    const { product: productName } = this.props;
-    // Only update if the props changed
-    if (nextProps.product !== productName) {
-      console.log("New product name:", productName);
-      // this.setState({ openProfitDetails: {} });
-      await this.getData(productName);
-    }
-  }
+  useEffect(() => {
+    getData(product);
+  }, [product]);
 
   /**
    * Call back-end API to retrives all recipes associated
    * @param {string} productName
    */
-  async getData(productName) {
+  const getData = async (productName) => {
     try {
+      console.log("TEMP - GET DATA", productName);
       // Get the data
       const { data: recipes } = await axios.get(
         API_ENDPOINT + "/recipes?item=" + productName
       );
       console.log("Original Recipes", recipes);
-      const items = this.itemManager.parseRecipes(recipes);
-      this.itemManager.resetToOptimal();
+      const items = itemManager.parseRecipes(recipes);
+      itemManager.resetToOptimal();
       console.log("Final Items", items);
-      this.updateTables();
+      updateTables();
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  updateTables() {
+  const updateTables = () => {
     console.log(
-      "Update Tables using data... | (this.itemManager.items): ",
-      this.itemManager.items
+      "Update Tables using data... | (itemManager.items): ",
+      itemManager.items
     );
 
-    // Convert this.itemManager.items into array
-    let recipeTables = Object.values(this.itemManager.items);
+    // Convert itemManager.items into array
+    let recipeTables = Object.values(itemManager.items);
     recipeTables = recipeTables.filter(function (item) {
       return (
         Object.keys(item.shoppingCartData).length > 0 ||
@@ -103,12 +102,12 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
       return a.depth - b.depth;
     });
 
-    this.setState({ recipeTables });
-  }
+    setRecipeTables(recipeTables);
+  };
 
-  renderTables() {
-    if (this.state.recipeTables == null && this.itemManager != null) {
-      if (this.itemManager.officialProductName == null) {
+  const renderTables = () => {
+    if (recipeTables.length === 0 && itemManager != null) {
+      if (itemManager.officialProductName == null) {
         return (
           <React.Fragment>
             <h2 style={{ textAlign: "center" }}>
@@ -116,8 +115,8 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
             </h2>
             <p style={{ textAlign: "center" }}>
               It seems as if{" "}
-              <span className={"font-weight-bold"}>'{this.props.product}'</span>{" "}
-              doesn't exist in our database. Please contact me on discord{" "}
+              <span className={"font-weight-bold"}>'{product}'</span> doesn't
+              exist in our database. Please contact me on discord{" "}
               <span className={"font-weight-bold"}>@Kitsune#1040 </span>and let
               me know if you want this item added to the database.
             </p>
@@ -134,9 +133,8 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
 
     return (
       <div>
-        {this.itemManager &&
-          this.itemManager.officialProductName &&
-          this.state.recipeTables.map((item, index) => {
+        {itemManager != null &&
+          recipeTables.map((item, index) => {
             return (
               <RecipesTable
                 key={`${item.name}`}
@@ -144,23 +142,23 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
                 item={item}
                 onRecipeClick={(itemName, recipeId, recipePaths) => {
                   for (const path of recipePaths) {
-                    this.itemManager.resetRecipePath(itemName, path);
+                    itemManager.resetRecipePath(itemName, path);
                   }
                   for (const path of recipePaths) {
-                    this.itemManager.selectRecipe(itemName, recipeId, path);
+                    itemManager.selectRecipe(itemName, recipeId, path);
                   }
-                  this.updateTables();
+                  updateTables();
                 }}
                 onBuyClick={(itemName, recipePaths) => {
                   for (const path of recipePaths) {
-                    this.itemManager.resetRecipePath(itemName, path);
+                    itemManager.resetRecipePath(itemName, path);
                   }
                   for (const path of recipePaths) {
-                    this.itemManager.selectRecipe(itemName, "", path);
+                    itemManager.selectRecipe(itemName, "", path);
                   }
-                  this.updateTables();
+                  updateTables();
                 }}
-                // detailsShown={this.state.openProfitDetails[item.name]}
+                // detailsShown={openProfitDetails[item.name]}
                 // onProfitDetailsButtonPressed={(itemName) => {
                 //   const temp = { ...this.state.openProfitDetails };
                 //   temp[itemName] =
@@ -171,8 +169,9 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
                 // }}
                 itemHasMarketData={(itemName) => {
                   return (
-                    this.itemManager.items[itemName].marketData != null ||
-                    this.itemManager.items[itemName].isSymbolic
+                    itemManager.items[itemName] != null &&
+                    (itemManager.items[itemName].marketData != null ||
+                      itemManager.items[itemName].isSymbolic)
                   );
                 }}
               ></RecipesTable>
@@ -180,58 +179,56 @@ class RecipesDashboard extends Component<DashboardProps, DashboardState> {
           })}
       </div>
     );
-  }
+  };
 
-  renderSidebar() {
+  const renderSidebar = () => {
     return (
       // <Sticky className="mt-4" enabled={true} top={50}>
       <RecipesDashboardSidebar
-        recipeTables={this.state.recipeTables}
+        recipeTables={recipeTables}
         onUpdateCraftCount={(newCraftCount) => {
-          this.setState({ craftCount: newCraftCount });
-          this.itemManager.recalculate({ craftCount: newCraftCount });
-          this.updateTables();
+          setCraftCount(newCraftCount);
+          itemManager.recalculate({ craftCount: newCraftCount });
+          updateTables();
         }}
         onUpdateValuePack={(valuePackEnabled) => {
           ProfitCalculator.valuePackEnabled = valuePackEnabled;
-          this.itemManager.resetToOptimal();
-          this.updateTables();
+          itemManager.resetToOptimal();
+          updateTables();
         }}
         onMarketPriceChange={(newMarketPrice) => {
-          this.itemManager.items[this.itemManager.officialProductName][
+          itemManager.items[itemManager.officialProductName][
             "overrideMarketPrice"
           ] = newMarketPrice;
-          this.itemManager.resetToOptimal();
-          this.updateTables();
+          itemManager.resetToOptimal();
+          updateTables();
         }}
       ></RecipesDashboardSidebar>
       // </Sticky>
     );
-  }
+  };
 
-  render() {
-    return (
-      <>
-        {this.renderSidebar()}
-        <div id="page-wrap">
-          <MyNavBar></MyNavBar>
-          <h1 className="p-3" style={{ textAlign: "center" }}>
-            Craft Profit v0.2.0
-          </h1>
-          <RecipesDashboardButton />
+  return (
+    <>
+      {renderSidebar()}
+      <div id="page-wrap">
+        <MyNavBar></MyNavBar>
+        <h1 className="p-3" style={{ textAlign: "center" }}>
+          Craft Profit v0.2.0
+        </h1>
+        <RecipesDashboardButton />
 
-          <div className="p-3" style={{ textAlign: "center" }}>
-            <SearchBar
-              onSearch={(newProduct) => {
-                this.props.setProduct(newProduct);
-              }}
-            />
-          </div>
-          {this.renderTables()}
+        <div className="p-3" style={{ textAlign: "center" }}>
+          <SearchBar
+            onSearch={(newProduct) => {
+              setProduct(newProduct);
+            }}
+          />
         </div>
-      </>
-    );
-  }
-}
+        {renderTables()}
+      </div>
+    </>
+  );
+};
 
 export default RecipesDashboard;
