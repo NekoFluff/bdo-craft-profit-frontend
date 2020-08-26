@@ -14,8 +14,8 @@ import { API_ENDPOINT } from "../helpers/CONSTANTS";
 import RecipesDashboardButton from "./RecipesDashboardButton";
 import RecipesDashboardSidebar from "./RecipesDashboardSidebar";
 import RecipesTable from "./RecipesTable";
-import MyNavBar from "./Navbar";
-import SearchBar from "./SearchBar";
+import MyNavBar from "./navbar";
+import SearchBar from "./searchBar";
 
 type DashboardProps = {
   product: string;

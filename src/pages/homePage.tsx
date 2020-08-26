@@ -4,10 +4,10 @@ import { Container, Row, Col } from "react-bootstrap";
 import { withRouter, RouteComponentProps } from "react-router";
 
 // My components
-import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
-import SearchBar from "../components/SearchBar";
-import PPSTable from "../components/PPSTable";
-import MyNavBar from "../components/Navbar";
+import MostSearchedItemsTable from "../components/mostSearchedItemsTable";
+import SearchBar from "../components/searchBar";
+import PPSTable from "../components/ppsTable";
+import MyNavBar from "../components/navbar";
 
 type HomePageProps = {} & RouteComponentProps<{ item: string }>;
 
