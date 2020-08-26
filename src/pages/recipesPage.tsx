@@ -1,10 +1,12 @@
+// Other packages
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import SearchBar from "../components/SearchBar";
-import RecipesDashboard from "../components/RecipesDashboard";
 import { Container } from "react-bootstrap";
 import { withRouter } from "react-router";
 import { action as toggleMenu } from "redux-burger-menu";
+
+// My components
+import RecipesDashboard from "./../components/RecipesDashboard";
 
 const RecipesPage = (props) => {
   const [product, setProduct] = useState("");
