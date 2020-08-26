@@ -7,7 +7,7 @@ import HomePage from "./pages/homePage";
 // import Headroom from "react-headroom"
 import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
-import MyNavBar from "./components/navbar";
+import MyNavBar from "./components/Navbar";
 // import RecipesDashboardSidebar from "./components/RecipesDashboardSidebar";
 
 const store = configureStore();
