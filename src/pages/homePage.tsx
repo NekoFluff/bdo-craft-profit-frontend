@@ -7,7 +7,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import MyNavBar from "./../components/Navbar";
 
 type HomePageProps = {} & RouteComponentProps<{ item: string }>;
-
 type HomePageState = {};
 
 class HomePage extends Component<HomePageProps, HomePageState> {
