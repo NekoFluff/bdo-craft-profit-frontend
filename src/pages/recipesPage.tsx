@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 import { action as toggleMenu } from "redux-burger-menu";
 
 // My components
-import RecipesDashboard from "./../components/RecipesDashboard";
+// import RecipesDashboard from "./../components/RecipesDashboard";
 
 const RecipesPage = (props) => {
   const [product, setProduct] = useState("");
@@ -26,7 +26,7 @@ const RecipesPage = (props) => {
 
   return (
     <Container fluid id="outer-container">
-      <RecipesDashboard product={product} setProduct={setProduct} />
+      {/* <RecipesDashboard product={product} setProduct={setProduct} /> */}
     </Container>
   );
 };
