@@ -23,6 +23,7 @@ import SearchBar from "./SearchBar";
 import { itemsSet, itemsOrderSet, rootItemSet } from "../store/items";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/reducer";
+import { marketPriceOverrided } from "../store/calculator";
 
 const cloneItems = (items: { [key: string]: Item }) => {
   const newItems = {};
@@ -201,9 +202,15 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
           updateTables();
         }}
         onMarketPriceChange={(newMarketPrice) => {
-          itemManager.items[itemManager.officialProductName][
-            "overrideMarketPrice"
-          ] = newMarketPrice;
+          itemManager.items[
+            itemManager.officialProductName
+          ].overrideMarketPrice = newMarketPrice;
+          dispatch(
+            marketPriceOverrided({
+              itemName: itemManager.officialProductName,
+              marketPrice: newMarketPrice,
+            })
+          );
           itemManager.resetToOptimal();
           updateTables();
         }}
