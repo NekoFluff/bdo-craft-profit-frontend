@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
-import { apiCallBegan } from "./api";
-import moment from "moment";
 import { Item } from "bdo-shopping-cart-package";
 import update from "react-addons-update";
 

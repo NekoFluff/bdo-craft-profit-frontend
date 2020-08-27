@@ -2,8 +2,7 @@
 import "../scss/RecipesDashboardSidebar.scss";
 
 // Other packages
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import { withRouter } from "react-router";
 import CloseIcon from "@material-ui/icons/Close";
 
@@ -26,7 +25,5 @@ const RecipesDashboardSidebar: React.FC<SidebarProps> = (props) => {
     </Menu>
   );
 };
-
-// RecipesDashboardSidebar.propTypes = {};
 
 export default withRouter(RecipesDashboardSidebar);

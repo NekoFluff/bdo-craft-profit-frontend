@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import WithTooltip from "./hoc/WithTooltip";
 import { Form, Button, Accordion, Card, ButtonGroup } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
@@ -186,7 +185,5 @@ const RecipesSidebarUserInputAccordion = (props) => {
     </Accordion>
   );
 };
-
-RecipesSidebarUserInputAccordion.propTypes = {};
 
 export default RecipesSidebarUserInputAccordion;

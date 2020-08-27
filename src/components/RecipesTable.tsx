@@ -64,7 +64,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
   });
 
   if (item == null) return null;
-  if (Object.values(item.usedInRecipes).length == 0) return null;
+  if (Object.values(item.usedInRecipes).length === 0) return null;
 
   const renderDetailsButton = () => {
     return (
@@ -82,24 +82,12 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
             <Card.Body>{renderBadges()}</Card.Body>
           </Accordion.Collapse>
         </Card>
-        {/* <Card>
-          <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey="1">
-              Click me!
-            </Accordion.Toggle>
-          </Card.Header>
-          <Accordion.Collapse eventKey="1">
-            <Card.Body>Hello! I'm another body</Card.Body>
-          </Accordion.Collapse>
-        </Card> */}
       </Accordion>
     );
   };
 
   const renderBadges = () => {
     if (item == null) return;
-    // const { shoppingCartData, marketData, valuePackEnabled } = item;
-    // if (item.shoppingCartData.length == null || item.shoppingCartData.length == 0) return <h2>No shopping cart data available</h2>
     const marketPrice = getMarketPriceForItem(item);
 
     // let buyCount = 0; // Total number of items

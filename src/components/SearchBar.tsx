@@ -18,12 +18,7 @@ const getSuggestions = (value) => {
 
   return inputLength === 0
     ? []
-    : // : recipeNames.filter((sampleName) => {
-      //     if (sampleName == null) return null;
-      //     else
-      //       return sampleName.toLowerCase().slice(0, inputLength) === inputValue;
-      //   });
-      recipeNames.filter((sampleName) => {
+    : recipeNames.filter((sampleName) => {
         if (sampleName == null) return null;
         else {
           const matches = sampleName.toLowerCase().match(inputValue);

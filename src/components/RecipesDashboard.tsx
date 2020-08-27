@@ -1,17 +1,13 @@
 // Main packages
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { Events, scrollSpy } from "react-scroll";
 import axios from "axios";
 import _ from "lodash";
 
 // My package
-import {
-  ProfitCalculator,
-  ItemManager,
-  CartEntry,
-} from "bdo-shopping-cart-package";
-import { Item, Recipe } from "bdo-shopping-cart-package";
+import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
+import { Item } from "bdo-shopping-cart-package";
 
 // Helpers
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
@@ -27,6 +23,24 @@ import SearchBar from "./SearchBar";
 import { itemsSet, itemsOrderSet, rootItemSet } from "../store/items";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/reducer";
+
+const cloneItems = (items: { [key: string]: Item }) => {
+  const newItems = {};
+  for (const item of Object.values(items)) {
+    const newItem = cloneItem(item);
+    newItems[item.name] = newItem;
+  }
+  return newItems;
+};
+
+const cloneItem = (item: Item) => {
+  const newItem = classToObject(item);
+  return newItem;
+};
+
+const classToObject = (theClass: any): any => {
+  return JSON.parse(JSON.stringify(theClass));
+};
 
 type DashboardProps = {
   product: string;
@@ -47,8 +61,6 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
   setProduct,
 }) => {
   const dispatch = useDispatch();
-  const [, set] = useState([]);
-  const [craftCount, setCraftCount] = useState(0);
 
   const orderedItems = useSelector(
     (state: RootState) => state.entities.items.order
@@ -71,50 +83,7 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    getData(product);
-  }, [product]);
-
-  /**
-   * Call back-end API to retrives all recipes associated
-   * @param {string} productName
-   */
-  const getData = async (productName) => {
-    try {
-      // Get the data
-      const { data: recipes } = await axios.get(
-        API_ENDPOINT + "/recipes?item=" + productName
-      );
-      console.log("Original Recipes", recipes);
-      const items = itemManager.parseRecipes(recipes);
-      dispatch(rootItemSet(itemManager.officialProductName));
-      itemManager.resetToOptimal();
-      console.log("Final Items", items);
-      updateTables();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const cloneItems = (items: { [key: string]: Item }) => {
-    const newItems = {};
-    for (const item of Object.values(items)) {
-      const newItem = cloneItem(item);
-      newItems[item.name] = newItem;
-    }
-    return newItems;
-  };
-
-  const classToObject = (theClass: any): any => {
-    return JSON.parse(JSON.stringify(theClass));
-  };
-
-  const cloneItem = (item: Item) => {
-    const newItem = classToObject(item);
-    return newItem;
-  };
-
-  const updateTables = () => {
+  const updateTables = useCallback(() => {
     console.log(
       "Update Tables using data... | (itemManager.items): ",
       itemManager.items
@@ -132,12 +101,39 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
     });
     newOrderedItems = _.map(newOrderedItems, "name");
     dispatch(itemsOrderSet(newOrderedItems));
-  };
+  }, [dispatch]);
+  /**
+   * Call back-end API to retrives all recipes associated
+   * @param {string} productName
+   */
+  const getData = useCallback(
+    async (productName) => {
+      try {
+        // Get the data
+        const { data: recipes } = await axios.get(
+          API_ENDPOINT + "/recipes?item=" + productName
+        );
+        console.log("Original Recipes", recipes);
+        const items = itemManager.parseRecipes(recipes);
+        dispatch(rootItemSet(itemManager.officialProductName));
+        itemManager.resetToOptimal();
+        console.log("Final Items", items);
+        updateTables();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [dispatch, updateTables]
+  );
+
+  useEffect(() => {
+    getData(product);
+  }, [product, getData]);
 
   const renderTables = () => {
     if (itemManager == null) return;
 
-    if (itemManager.officialProductName == null) {
+    if (itemManager.officialProductName === "") {
       return (
         <React.Fragment>
           <h2 style={{ textAlign: "center" }}>An unexpected error occured.</h2>
@@ -151,13 +147,6 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
         </React.Fragment>
       );
     }
-    // else {
-    //   return (
-    //     <h2 style={{ textAlign: "center" }}>
-    //       Use the search bar to select a recipe
-    //     </h2>
-    //   );
-    // }
 
     return (
       <div>
@@ -203,7 +192,6 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
       // <Sticky className="mt-4" enabled={true} top={50}>
       <RecipesDashboardSidebar
         onUpdateCraftCount={(newCraftCount) => {
-          setCraftCount(newCraftCount);
           itemManager.recalculate({ craftCount: newCraftCount });
           updateTables();
         }}

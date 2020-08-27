@@ -1,14 +1,8 @@
 import React, { useEffect } from "react";
-import { InputGroup, FormControl, Form } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import { Item } from "bdo-shopping-cart-package";
 import { withRouter, RouteComponentProps } from "react-router";
 import RecipesSidebarTotalProfitAccordion from "./RecipesSidebarTotalProfitAccordion";
 import RecipesSidebarUserInputAccordion from "./RecipesSidebarUserInputAccordion";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/reducer";
-import { useDispatch } from "react-redux";
-import { marketPriceOverrided } from "../store/calculator";
 
 export type SidebarProps = {
   onUpdateCraftCount: (newCraftCount) => void;
@@ -17,37 +11,36 @@ export type SidebarProps = {
 } & RouteComponentProps;
 
 const Sidebar: React.FC<SidebarProps> = (props) => {
-  const dispatch = useDispatch();
   useEffect(() => {
     ProfitCalculator.valuePackEnabled = true;
   }, []);
 
-  const onUpdateOptimizerChoice = (e) => {};
+  // const onUpdateOptimizerChoice = (e) => {};
 
-  const onUpdateBuffs = (e) => {};
+  // const onUpdateBuffs = (e) => {};
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  // };
 
-  const renderBuffsInput = () => {
-    return (
-      <Form onSubmit={handleSubmit}>
-        <InputGroup className="mb-3">
-          <InputGroup.Prepend>
-            <InputGroup.Text id="basic-addon2">
-              Cooking Time Reduction
-            </InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl
-            placeholder="Recipient's username"
-            aria-label="Recipient's username"
-            aria-describedby="basic-addon2"
-          />
-        </InputGroup>
-      </Form>
-    );
-  };
+  // const renderBuffsInput = () => {
+  //   return (
+  //     <Form onSubmit={handleSubmit}>
+  //       <InputGroup className="mb-3">
+  //         <InputGroup.Prepend>
+  //           <InputGroup.Text id="basic-addon2">
+  //             Cooking Time Reduction
+  //           </InputGroup.Text>
+  //         </InputGroup.Prepend>
+  //         <FormControl
+  //           placeholder="Recipient's username"
+  //           aria-label="Recipient's username"
+  //           aria-describedby="basic-addon2"
+  //         />
+  //       </InputGroup>
+  //     </Form>
+  //   );
+  // };
 
   return (
     /**
