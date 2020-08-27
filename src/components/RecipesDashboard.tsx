@@ -3,10 +3,15 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Events, scrollSpy } from "react-scroll";
 import axios from "axios";
+import _ from "lodash";
 
 // My package
-import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
-import { Item } from "bdo-shopping-cart-package";
+import {
+  ProfitCalculator,
+  ItemManager,
+  CartEntry,
+} from "bdo-shopping-cart-package";
+import { Item, Recipe } from "bdo-shopping-cart-package";
 
 // Helpers
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
@@ -18,6 +23,11 @@ import RecipesTable from "./RecipesTable";
 import MyNavBar from "./Navbar";
 import SearchBar from "./SearchBar";
 
+// Redux
+import { itemsSet, itemsOrderSet, rootItemSet } from "../store/items";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
+
 type DashboardProps = {
   product: string;
   setProduct: any;
@@ -27,8 +37,6 @@ type DashboardProps = {
  * @deprecated
  */
 type DashboardState = {
-  recipeTables: Item[];
-  // openProfitDetails: any;
   craftCount: number;
 };
 
@@ -39,8 +47,12 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
   setProduct,
 }) => {
   const dispatch = useDispatch();
-  const [recipeTables, setRecipeTables] = useState([]);
+  const [, set] = useState([]);
   const [craftCount, setCraftCount] = useState(0);
+
+  const orderedItems = useSelector(
+    (state: RootState) => state.entities.items.order
+  );
 
   scrollSpy.update();
 
@@ -69,13 +81,13 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
    */
   const getData = async (productName) => {
     try {
-      console.log("TEMP - GET DATA", productName);
       // Get the data
       const { data: recipes } = await axios.get(
         API_ENDPOINT + "/recipes?item=" + productName
       );
       console.log("Original Recipes", recipes);
       const items = itemManager.parseRecipes(recipes);
+      dispatch(rootItemSet(itemManager.officialProductName));
       itemManager.resetToOptimal();
       console.log("Final Items", items);
       updateTables();
@@ -84,99 +96,104 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
     }
   };
 
+  const cloneItems = (items: { [key: string]: Item }) => {
+    const newItems = {};
+    for (const item of Object.values(items)) {
+      const newItem = cloneItem(item);
+      newItems[item.name] = newItem;
+    }
+    return newItems;
+  };
+
+  const classToObject = (theClass: any): any => {
+    return JSON.parse(JSON.stringify(theClass));
+  };
+
+  const cloneItem = (item: Item) => {
+    const newItem = classToObject(item);
+    return newItem;
+  };
+
   const updateTables = () => {
     console.log(
       "Update Tables using data... | (itemManager.items): ",
       itemManager.items
     );
 
-    // Convert itemManager.items into array
-    let recipeTables = Object.values(itemManager.items);
-    recipeTables = recipeTables.filter(function (item) {
-      return (
-        Object.keys(item.shoppingCartData).length > 0 ||
-        item.activeRecipeId !== ""
-      );
-    });
-    recipeTables = recipeTables.sort(function (a, b) {
+    // Dispatch a setItems action
+    const newItems = cloneItems(itemManager.items);
+    dispatch(itemsSet(newItems));
+
+    // Order array
+    let newOrderedItems = Object.values(newItems) as [Item];
+
+    newOrderedItems = newOrderedItems.sort(function (a, b) {
       return a.depth - b.depth;
     });
-
-    setRecipeTables(recipeTables);
+    newOrderedItems = _.map(newOrderedItems, "name");
+    dispatch(itemsOrderSet(newOrderedItems));
   };
 
   const renderTables = () => {
-    if (recipeTables.length === 0 && itemManager != null) {
-      if (itemManager.officialProductName == null) {
-        return (
-          <React.Fragment>
-            <h2 style={{ textAlign: "center" }}>
-              An unexpected error occured.
-            </h2>
-            <p style={{ textAlign: "center" }}>
-              It seems as if{" "}
-              <span className={"font-weight-bold"}>'{product}'</span> doesn't
-              exist in our database. Please contact me on discord{" "}
-              <span className={"font-weight-bold"}>@Kitsune#1040 </span>and let
-              me know if you want this item added to the database.
-            </p>
-          </React.Fragment>
-        );
-      } else {
-        return (
-          <h2 style={{ textAlign: "center" }}>
-            Use the search bar to select a recipe
-          </h2>
-        );
-      }
+    if (itemManager == null) return;
+
+    if (itemManager.officialProductName == null) {
+      return (
+        <React.Fragment>
+          <h2 style={{ textAlign: "center" }}>An unexpected error occured.</h2>
+          <p style={{ textAlign: "center" }}>
+            It seems as if{" "}
+            <span className={"font-weight-bold"}>'{product}'</span> doesn't
+            exist in our database. Please contact me on discord{" "}
+            <span className={"font-weight-bold"}>@Kitsune#1040 </span>and let me
+            know if you want this item added to the database.
+          </p>
+        </React.Fragment>
+      );
     }
+    // else {
+    //   return (
+    //     <h2 style={{ textAlign: "center" }}>
+    //       Use the search bar to select a recipe
+    //     </h2>
+    //   );
+    // }
 
     return (
       <div>
-        {itemManager != null &&
-          recipeTables.map((item, index) => {
-            return (
-              <RecipesTable
-                key={`${item.name}`}
-                productName={item.name}
-                item={item}
-                onRecipeClick={(itemName, recipeId, recipePaths) => {
-                  for (const path of recipePaths) {
-                    itemManager.resetRecipePath(itemName, path);
-                  }
-                  for (const path of recipePaths) {
-                    itemManager.selectRecipe(itemName, recipeId, path);
-                  }
-                  updateTables();
-                }}
-                onBuyClick={(itemName, recipePaths) => {
-                  for (const path of recipePaths) {
-                    itemManager.resetRecipePath(itemName, path);
-                  }
-                  for (const path of recipePaths) {
-                    itemManager.selectRecipe(itemName, "", path);
-                  }
-                  updateTables();
-                }}
-                // detailsShown={openProfitDetails[item.name]}
-                // onProfitDetailsButtonPressed={(itemName) => {
-                //   const temp = { ...this.state.openProfitDetails };
-                //   temp[itemName] =
-                //     temp[itemName] == null || temp[itemName] === false
-                //       ? true
-                //       : false;
-                //   this.setState({ openProfitDetails: temp });
-                // }}
-                itemHasMarketData={(itemName) => {
-                  return (
-                    itemManager.items[itemName] != null &&
-                    (itemManager.items[itemName].marketData != null ||
-                      itemManager.items[itemName].isSymbolic)
-                  );
-                }}
-              ></RecipesTable>
-            );
-          })}
+        {orderedItems.map((currentItemName) => {
+          return (
+            <RecipesTable
+              key={`${currentItemName}`}
+              productName={currentItemName}
+              onRecipeClick={(itemName, recipeId, recipePaths) => {
+                for (const path of recipePaths) {
+                  itemManager.resetRecipePath(itemName, path);
+                }
+                for (const path of recipePaths) {
+                  itemManager.selectRecipe(itemName, recipeId, path);
+                }
+                updateTables();
+              }}
+              onBuyClick={(itemName, recipePaths) => {
+                for (const path of recipePaths) {
+                  itemManager.resetRecipePath(itemName, path);
+                }
+                for (const path of recipePaths) {
+                  itemManager.selectRecipe(itemName, "", path);
+                }
+                updateTables();
+              }}
+              itemHasMarketData={(itemName) => {
+                return (
+                  itemManager.items[itemName] != null &&
+                  (itemManager.items[itemName].marketData != null ||
+                    itemManager.items[itemName].isSymbolic)
+                );
+              }}
+            ></RecipesTable>
+          );
+        })}
       </div>
     );
   };
@@ -185,7 +202,6 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
     return (
       // <Sticky className="mt-4" enabled={true} top={50}>
       <RecipesDashboardSidebar
-        recipeTables={recipeTables}
         onUpdateCraftCount={(newCraftCount) => {
           setCraftCount(newCraftCount);
           itemManager.recalculate({ craftCount: newCraftCount });

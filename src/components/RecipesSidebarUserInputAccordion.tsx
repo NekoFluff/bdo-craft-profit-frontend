@@ -4,8 +4,12 @@ import WithTooltip from "./hoc/WithTooltip";
 import { Form, Button, Accordion, Card, ButtonGroup } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
 
 const RecipesSidebarUserInputAccordion = (props) => {
+  const items = useSelector((state: RootState) => state.entities.items.data);
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -27,13 +31,10 @@ const RecipesSidebarUserInputAccordion = (props) => {
   };
 
   const renderShoppingCart = () => {
-    console.log(
-      "Render shopping cart (what you need to buy)",
-      props.recipeTables
-    );
+    // console.log("Render shopping cart (what you need to buy)");
 
     // Handle null case
-    if (props.recipeTables == null) {
+    if (Object.values(items).length == null) {
       return (
         <p>
           Please select a recipe using the search bar. There is no shopping cart
@@ -59,40 +60,39 @@ const RecipesSidebarUserInputAccordion = (props) => {
           </WithTooltip>
         </Form.Group>
         <Form.Group>
-          {props.recipeTables != null &&
-            props.recipeTables.map((item) => {
-              // if (item.activeRecipeId != null) return null; // Only generate form labels for items being bought
-              if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
+          {Object.values(items).map((item) => {
+            // if (item.activeRecipeId != null) return null; // Only generate form labels for items being bought
+            if (item.shoppingCartData == null) return null; // If there is no shopping cart data for this, skip it
 
-              return Object.keys(item.shoppingCartData).map((key) => {
-                const {
-                  action,
-                  expectedCount,
-                  individualPrice,
-                } = item.shoppingCartData[key];
-                if (action !== "Buy") return null;
-                totalCost += expectedCount * individualPrice;
-                return (
-                  <React.Fragment key={key}>
-                    <Form.Label
-                      key={key}
-                      className={"text"}
-                      style={{ marginBottom: "0px" }}
-                    >{`${item.name} x ${numberWithCommas(
-                      expectedCount
-                    )} = ${numberWithCommas(
-                      expectedCount * individualPrice
-                    )} silver`}</Form.Label>
-                    <Form.Text
-                      className="text-muted"
-                      style={{ marginBottom: "0.5rem" }}
-                    >
-                      {`for ${key}`}
-                    </Form.Text>
-                  </React.Fragment>
-                );
-              });
-            })}
+            return Object.keys(item.shoppingCartData).map((key) => {
+              const {
+                action,
+                expectedCount,
+                individualPrice,
+              } = item.shoppingCartData[key];
+              if (action !== "Buy") return null;
+              totalCost += expectedCount * individualPrice;
+              return (
+                <React.Fragment key={key}>
+                  <Form.Label
+                    key={key}
+                    className={"text"}
+                    style={{ marginBottom: "0px" }}
+                  >{`${item.name} x ${numberWithCommas(
+                    expectedCount
+                  )} = ${numberWithCommas(
+                    expectedCount * individualPrice
+                  )} silver`}</Form.Label>
+                  <Form.Text
+                    className="text-muted"
+                    style={{ marginBottom: "0.5rem" }}
+                  >
+                    {`for ${key}`}
+                  </Form.Text>
+                </React.Fragment>
+              );
+            });
+          })}
         </Form.Group>
 
         <Form.Group>

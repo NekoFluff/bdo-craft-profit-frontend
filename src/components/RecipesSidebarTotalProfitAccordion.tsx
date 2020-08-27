@@ -4,9 +4,20 @@ import { InputGroup, Form, Button, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import numberWithCommas from "../helpers/numberWithCommas";
 import secondsToHms from "../helpers/secondsToHms";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
+import {
+  getMarketPriceForItem,
+  getShoppingCartDataForItem,
+} from "bdo-shopping-cart-package";
 
 const RecipesSidebarTotalProfitAccordion = (props) => {
   const [marketPriceOverride, setMarketPriceOverride] = useState(-1);
+
+  const item = useSelector(
+    (state: RootState) =>
+      state.entities.items.data[state.entities.items.rootItem]
+  );
 
   const handleMarketPriceFormSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +34,6 @@ const RecipesSidebarTotalProfitAccordion = (props) => {
   };
 
   const renderOutput = () => {
-    const { recipeTables } = props;
     // let craftCount = 0
     let cumulativeTimeSpent = 0;
     let expectedCount = 0;
@@ -34,39 +44,41 @@ const RecipesSidebarTotalProfitAccordion = (props) => {
     let totalTime = 0;
     let marketPrice = 0;
     let marketPriceLastUpdated = 0;
-    if (recipeTables.length !== 0) {
-      const item = recipeTables[0];
-      marketPrice = item.getMarketPrice();
+    if (item == null) return;
 
-      if (item.marketData != null)
-        marketPriceLastUpdated = item.marketData["Last Updated"];
-      let correctShoppingCartData = item.getShoppingCartData(`/${item.name}`);
+    marketPrice = getMarketPriceForItem(item);
 
-      if (correctShoppingCartData != null) {
-        // craftCount = correctShoppingCartData.craftCount;
-        cumulativeTimeSpent = correctShoppingCartData.cumulativeTimeSpent;
-        expectedCount = correctShoppingCartData.expectedCount;
-        totalTime = cumulativeTimeSpent * expectedCount;
-        individualPrice = correctShoppingCartData.individualPrice;
-        profitPerItem = ProfitCalculator.calculateProfit(
-          marketPrice,
-          individualPrice
-        );
+    if (item.marketData != null)
+      marketPriceLastUpdated = item.marketData["Last Updated"];
+    let correctShoppingCartData = getShoppingCartDataForItem(
+      item,
+      `/${item.name}`
+    );
 
-        // console.log(
-        //   "Total Profit | ",
-        //   marketPrice,
-        //   profitPerItem,
-        //   expectedCount,
-        //   individualPrice
-        // );
-        totalProfit = profitPerItem * expectedCount;
-        pps = ProfitCalculator.calculateProfitPerSecond(
-          marketPrice,
-          individualPrice,
-          cumulativeTimeSpent
-        );
-      }
+    if (correctShoppingCartData != null) {
+      // craftCount = correctShoppingCartData.craftCount;
+      cumulativeTimeSpent = correctShoppingCartData.cumulativeTimeSpent;
+      expectedCount = correctShoppingCartData.expectedCount;
+      totalTime = cumulativeTimeSpent * expectedCount;
+      individualPrice = correctShoppingCartData.individualPrice;
+      profitPerItem = ProfitCalculator.calculateProfit(
+        marketPrice,
+        individualPrice
+      );
+
+      // console.log(
+      //   "Total Profit | ",
+      //   marketPrice,
+      //   profitPerItem,
+      //   expectedCount,
+      //   individualPrice
+      // );
+      totalProfit = profitPerItem * expectedCount;
+      pps = ProfitCalculator.calculateProfitPerSecond(
+        marketPrice,
+        individualPrice,
+        cumulativeTimeSpent
+      );
     }
 
     return (

@@ -9,9 +9,9 @@ import CloseIcon from "@material-ui/icons/Close";
 
 // My components
 import Menu from "./Menu";
-import RecipesSidebar from "./RecipesSidebar";
+import RecipesSidebar, { SidebarProps } from "./RecipesSidebar";
 
-const RecipesDashboardSidebar = (props) => {
+const RecipesDashboardSidebar: React.FC<SidebarProps> = (props) => {
   return (
     <Menu
       right

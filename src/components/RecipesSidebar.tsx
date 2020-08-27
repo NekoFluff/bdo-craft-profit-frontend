@@ -1,54 +1,38 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { InputGroup, FormControl, Form } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import { Item } from "bdo-shopping-cart-package";
 import { withRouter, RouteComponentProps } from "react-router";
 import RecipesSidebarTotalProfitAccordion from "./RecipesSidebarTotalProfitAccordion";
 import RecipesSidebarUserInputAccordion from "./RecipesSidebarUserInputAccordion";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
+import { useDispatch } from "react-redux";
+import { marketPriceOverrided } from "../store/calculator";
 
-type sidebarProps = {
-  recipeTables: Item[];
+export type SidebarProps = {
   onUpdateCraftCount: (newCraftCount) => void;
   onUpdateValuePack: (valuePackEnabled) => void;
   onMarketPriceChange: (newMarketPrice) => void;
 } & RouteComponentProps;
 
-type sidebarState = {};
-
-class sidebar extends Component<sidebarProps, sidebarState> {
-  state: sidebarState = {};
-
-  componentDidMount() {
+const Sidebar: React.FC<SidebarProps> = (props) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
     ProfitCalculator.valuePackEnabled = true;
-  }
+  }, []);
 
-  componentWillReceiveProps(newProps) {
-    const { recipeTables } = newProps;
-    const { recipeTables: oldRecipeTables } = this.props;
+  const onUpdateOptimizerChoice = (e) => {};
 
-    if (recipeTables.length !== 0) {
-      const item = recipeTables[0];
-      if (item == null) return;
-      if (
-        oldRecipeTables.length !== 0 &&
-        oldRecipeTables[0].name !== recipeTables[0].name
-      ) {
-        this.setState({ overrideMarketPrice: item.getMarketPrice() });
-      }
-    }
-  }
+  const onUpdateBuffs = (e) => {};
 
-  onUpdateOptimizerChoice = (e) => {};
-
-  onUpdateBuffs = (e) => {};
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
   };
 
-  renderBuffsInput = () => {
+  const renderBuffsInput = () => {
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <InputGroup className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="basic-addon2">
@@ -65,28 +49,26 @@ class sidebar extends Component<sidebarProps, sidebarState> {
     );
   };
 
-  render() {
-    return (
-      /**
-       * Input Types:
-       * One of the two are necessary:
-       * - How many you want to make
-       * - How much silver you have
-       *
-       * Switch between the three different types of calculations.
-       * For now only enable PPH (price per hour) calculations.
-       * Disable the other two possible buttons on the switch
-       *
-       * Applied Buffs
-       */
-      <React.Fragment>
-        <RecipesSidebarTotalProfitAccordion {...this.props} />
-        <br></br>
-        <RecipesSidebarUserInputAccordion {...this.props} />
-      </React.Fragment>
-    );
-  }
-}
+  return (
+    /**
+     * Input Types:
+     * One of the two are necessary:
+     * - How many you want to make
+     * - How much silver you have
+     *
+     * Switch between the three different types of calculations.
+     * For now only enable PPH (price per hour) calculations.
+     * Disable the other two possible buttons on the switch
+     *
+     * Applied Buffs
+     */
+    <React.Fragment>
+      <RecipesSidebarTotalProfitAccordion {...props} />
+      <br></br>
+      <RecipesSidebarUserInputAccordion {...props} />
+    </React.Fragment>
+  );
+};
 
-const RecipesSidebar = withRouter(sidebar);
+const RecipesSidebar = withRouter(Sidebar);
 export default RecipesSidebar;
