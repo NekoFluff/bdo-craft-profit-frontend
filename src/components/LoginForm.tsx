@@ -15,7 +15,7 @@ const LoginForm = () => {
           loginUser(
             {},
             {
-              "": response.tokenId,
+              "X-Auth-Google-Token": response.tokenId,
             }
           )
         );
