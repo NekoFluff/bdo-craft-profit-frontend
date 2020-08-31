@@ -43,7 +43,7 @@ const slice = createSlice({
     ) => {
       // console.log("User logged in. Payload:", action.payload);
       const { name, email, googleId } = action.payload.data;
-      const accessToken = action.payload.headers["x-auth-token"];
+      const accessToken = action.payload.headers[""];
       currentUser.name = name;
       // currentUser.firstName = action.payload.givenName;
       // currentUser.lastName = action.payload.familyName;
