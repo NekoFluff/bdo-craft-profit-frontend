@@ -6,6 +6,7 @@ import RecipesPage from "./pages/recipesPage";
 import HomePage from "./pages/homePage";
 import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
+import LoginPage from "./pages/loginPage";
 
 const store = configureStore();
 
@@ -17,6 +18,7 @@ class App extends Component {
           <main className="container-fluid main">
             <Switch>
               <Route path="/recipes/:item" component={RecipesPage} />
+              <Route path="/login" component={LoginPage} />
               <Route path="/" component={HomePage} />
             </Switch>
           </main>

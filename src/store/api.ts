@@ -1,16 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
+import { AxiosRequestConfig } from "axios";
 
-type apiPayload = {
-  // /bugs
-  // PATCH /bugs/1
-  url: string;
-  method?: string;
-  data?: any;
-  onSuccess: string;
+type ActionPayload = {
   onStart?: string;
+  onSuccess?: string;
   onError?: string;
 };
+export type APIPayload = AxiosRequestConfig & ActionPayload;
 
-export const apiCallBegan = createAction<apiPayload>("api/callBegan");
+export const apiCallBegan = createAction<APIPayload>("api/callBegan");
 export const apiCallSuccess = createAction<any>("api/callSuccess");
 export const apiCallFailed = createAction<any>("api/callFailed");
