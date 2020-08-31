@@ -4,7 +4,7 @@ import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
 import { withRouter, RouteComponentProps } from "react-router";
 import PPSTable from "../components/PPSTable";
 import { Container, Row, Col } from "react-bootstrap";
-import MyNavBar from "./../components/Navbar";
+import MyNavBar from "../components/Navbar";
 import LoginForm from "../components/LoginForm";
 import LoginTest from "../components/LoginTest";
 
@@ -19,16 +19,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         <h1 className="p-3" style={{ textAlign: "center" }}>
           Craft Profit v0.2.0
         </h1>
-        <Container className="h-100">
-          <Row className="h-100 justify-content-center align-items-center">
-            <div
-              className="col-12 col-md-9 col-lg-6"
-              style={{ textAlign: "center" }}
-            >
-              <LoginForm />
-              {/* <LoginTest /> */}
-            </div>
-          </Row>
+        <Container>
+          <LoginForm />
+          <LoginTest />
         </Container>
       </React.Fragment>
     );

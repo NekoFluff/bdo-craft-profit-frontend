@@ -1,13 +1,16 @@
+import { RootState } from "./reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "./api";
 import { LOGIN_ENDPOINT } from "../helpers/CONSTANTS";
 import { createSelector } from "reselect";
+import update from "react-addons-update";
 
 type userSliceState = {
   name: string;
   firstName: string;
   lastName: string;
   email: string;
+  type?: string;
   // googleId?: string;
   accessToken?: string;
 };
@@ -17,6 +20,7 @@ const initialState: userSliceState = {
   firstName: "",
   lastName: "",
   email: "",
+  type: null,
   // googleId: null,
   accessToken: null,
 };
@@ -25,36 +29,32 @@ const slice = createSlice({
   name: "currentUser",
   initialState: initialState,
   reducers: {
-    // action => action handler
     userLoggedIn: (
       currentUser,
       action: {
         payload: {
           data: {
             name: string;
-            // givenName: string;
-            // familyName: string;
             email: string;
-            googleId?: string;
+            type?: string;
           };
           headers?: any;
         };
       }
     ) => {
       console.log("User logged in. Payload:", action.payload);
-      const { name, email } = action.payload.data;
+      const { name, email, type } = action.payload.data;
       const accessToken = action.payload.headers["x-auth-token"];
-      currentUser.name = name;
-      // currentUser.firstName = action.payload.givenName;
-      // currentUser.lastName = action.payload.familyName;
-      currentUser.email = email;
-      // currentUser.googleId = googleId;
-      currentUser.accessToken = accessToken;
+
+      return update(currentUser, {
+        name: { $set: name },
+        email: { $set: email },
+        accessToken: { $set: accessToken },
+        type: { $set: type },
+      });
     },
     userLoggedOut: (currentUser, _action) => {
-      currentUser.name = "";
-      currentUser.firstName = "";
-      currentUser.lastName = "";
+      return update(currentUser, { $set: initialState });
     },
   },
 });
@@ -78,6 +78,6 @@ export const logoutUser = () => slice.actions.userLoggedOut({});
 // Selectors
 export const getCurrentUser = () =>
   createSelector(
-    (state: any) => state.entities.currentUser,
+    (state: RootState) => state.entities.currentUser,
     (user) => user
   );

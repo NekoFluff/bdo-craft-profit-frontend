@@ -6,10 +6,12 @@ import { NavLink } from "react-router-dom";
 import Headroom from "react-headroom";
 import Hamburger from "hamburger-react";
 import useWindowSize from "./hooks/useWindowSize";
+import { useSelector } from "react-redux";
+import { getCurrentUser } from "../store/user";
 
 const MyNavBar = (props) => {
   const [isOpen, setOpen] = useState(false);
-
+  const user = useSelector(getCurrentUser());
   const [width, height] = useWindowSize();
 
   const renderNavbar = () => {
@@ -34,15 +36,16 @@ const MyNavBar = (props) => {
             <NavLink to="/" className="menu-item nav-link">
               Home
             </NavLink>
-            <NavLink to="/login" className="menu-item nav-link">
-              Log In
-            </NavLink>
-            <NavLink to="/logout" className="menu-item nav-link">
-              Log Out
-            </NavLink>
-            <NavLink to="/signup" className="menu-item nav-link">
-              Sign Up
-            </NavLink>
+            {user.email == "" && (
+              <NavLink to="/login" className="menu-item nav-link">
+                Log In
+              </NavLink>
+            )}
+            {user.email != "" && (
+              <NavLink to="/logout" className="menu-item nav-link">
+                Log Out
+              </NavLink>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>

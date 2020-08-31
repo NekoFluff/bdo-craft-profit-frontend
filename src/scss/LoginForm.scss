@@ -1,0 +1,41 @@
+.login-form {
+  // padding-left: 1rem;
+  // padding-right: 1rem;
+  background-color: grey;
+  font-family: "Bebas Neue", sans-serif !important;
+
+  &__group {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    margin-left: 2.25rem;
+    margin-right: 2.25rem;
+  }
+
+  &__control {
+    height: 4rem;
+    font-family: "Bebas Neue", sans-serif !important;
+    font-size: 1.5rem;
+  }
+
+  .form-check-label {
+    font-family: "Roboto", sans-serif !important;
+  }
+
+  button {
+    margin-top: 7.5%;
+    display: inline-block;
+    width: 20%;
+    border-radius: 20%;
+    padding: 4% 4% 4% 4%;
+
+    #arrowIcon {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  #signUp {
+    margin-top: 5%;
+    font-size: large;
+  }
+}
