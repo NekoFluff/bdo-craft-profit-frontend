@@ -8,7 +8,7 @@ type userSliceState = {
   firstName: string;
   lastName: string;
   email: string;
-  googleId?: string;
+  // googleId?: string;
   accessToken?: string;
 };
 
@@ -17,7 +17,7 @@ const initialState: userSliceState = {
   firstName: "",
   lastName: "",
   email: "",
-  googleId: null,
+  // googleId: null,
   accessToken: null,
 };
 
@@ -41,14 +41,14 @@ const slice = createSlice({
         };
       }
     ) => {
-      // console.log("User logged in. Payload:", action.payload);
-      const { name, email, googleId } = action.payload.data;
-      const accessToken = action.payload.headers["X-Auth-Token"];
+      console.log("User logged in. Payload:", action.payload);
+      const { name, email } = action.payload.data;
+      const accessToken = action.payload.headers["x-auth-token"];
       currentUser.name = name;
       // currentUser.firstName = action.payload.givenName;
       // currentUser.lastName = action.payload.familyName;
       currentUser.email = email;
-      currentUser.googleId = googleId;
+      // currentUser.googleId = googleId;
       currentUser.accessToken = accessToken;
     },
     userLoggedOut: (currentUser, _action) => {
