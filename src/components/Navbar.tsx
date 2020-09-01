@@ -33,7 +33,7 @@ const MyNavBar = (props) => {
           <Nav className="mx-md-auto align-items-center mt-2" style={styles}>
             {/* Links */}
             <Navbar.Brand href="/">BDO Craft Profit</Navbar.Brand>
-            <NavLink to="/" className="menu-item nav-link">
+            <NavLink to="/" className="menu-item nav-link" exact>
               Home
             </NavLink>
             {user.email == "" && (
@@ -42,9 +42,14 @@ const MyNavBar = (props) => {
               </NavLink>
             )}
             {user.email != "" && (
-              <NavLink to="/logout" className="menu-item nav-link">
-                Log Out
-              </NavLink>
+              <React.Fragment>
+                <NavLink to="/me" className="menu-item nav-link">
+                  Your Stats
+                </NavLink>
+                <NavLink to="/logout" className="menu-item nav-link">
+                  Log Out
+                </NavLink>
+              </React.Fragment>
             )}
           </Nav>
         </Navbar.Collapse>

@@ -17,7 +17,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <main className="container-fluid main">
+          <main className="main" style={{ height: "100vh" }}>
             <Switch>
               <Route path="/" component={HomePage} exact />
               <Route path="/recipes/:item" component={RecipesPage} />

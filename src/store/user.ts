@@ -13,6 +13,7 @@ type userSliceState = {
   type?: string;
   // googleId?: string;
   accessToken?: string;
+  error?: string;
 };
 
 const initialState: userSliceState = {
@@ -56,20 +57,29 @@ const slice = createSlice({
     userLoggedOut: (currentUser, _action) => {
       return update(currentUser, { $set: initialState });
     },
+    userFailedLogIn: (currentUser, action) => {
+      return update(currentUser, { error: { $set: action.payload } });
+    },
   },
 });
 
-export const { userLoggedIn, userLoggedOut } = slice.actions;
+export const { userLoggedIn, userLoggedOut, userFailedLogIn } = slice.actions;
 
 export default slice.reducer;
 
+type LoginUser = {
+  email: string;
+  password: string;
+};
+
 // Commands
-export const loginUser = (user, headers?: any) =>
+export const loginUser = (user?: LoginUser, headers?: any) =>
   apiCallBegan({
     url: LOGIN_ENDPOINT,
     method: "post",
     data: user,
     onSuccess: userLoggedIn.type,
+    onError: userFailedLogIn.type,
     headers,
   });
 

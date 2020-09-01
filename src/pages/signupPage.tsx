@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import SearchBar from "../components/SearchBar";
-import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
 import { withRouter, RouteComponentProps } from "react-router";
-import PPSTable from "../components/PPSTable";
-import { Container, Row, Col } from "react-bootstrap";
-import MyNavBar from "../components/Navbar";
+import { Container } from "react-bootstrap";
 import LoginForm from "../components/LoginForm";
 import LoginTest from "../components/LoginTest";
+import CommonPage from "./commonPage";
 
 type LoginPageProps = {} & RouteComponentProps<{ item: string }>;
 type LoginPageState = {};
@@ -14,8 +11,7 @@ type LoginPageState = {};
 class LoginPage extends Component<LoginPageProps, LoginPageState> {
   render() {
     return (
-      <React.Fragment>
-        <MyNavBar></MyNavBar>
+      <CommonPage>
         <h1 className="p-3" style={{ textAlign: "center" }}>
           Craft Profit v0.2.0
         </h1>
@@ -23,7 +19,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
           <LoginForm />
           <LoginTest />
         </Container>
-      </React.Fragment>
+      </CommonPage>
     );
   }
 }

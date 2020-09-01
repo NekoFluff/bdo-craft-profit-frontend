@@ -1,8 +1,16 @@
+@import "config";
+
 .login-form {
   // padding-left: 1rem;
   // padding-right: 1rem;
-  background-color: grey;
+  background-color: rgb(248, 249, 250);
   font-family: "Bebas Neue", sans-serif !important;
+
+  &__title {
+    margin-top: 7.5%;
+    padding-top: 15%;
+    padding-bottom: 7.5%;
+  }
 
   &__group {
     padding-top: 0.25rem;
@@ -21,7 +29,7 @@
     font-family: "Roboto", sans-serif !important;
   }
 
-  button {
+  &__submit {
     margin-top: 7.5%;
     display: inline-block;
     width: 20%;
@@ -32,10 +40,17 @@
       width: 100%;
       height: 100%;
     }
+
+    @include transition-ease-in-out;
+  }
+  &__google {
+    margin-top: 2.5%;
+    margin-bottom: 10%;
   }
 
   #signUp {
     margin-top: 5%;
-    font-size: large;
+    font-size: 1.25rem;
+    padding-bottom: 2%;
   }
 }
