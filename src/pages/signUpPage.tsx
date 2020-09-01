@@ -6,10 +6,10 @@ import Background from "../components/Background";
 import CommonPage from "./commonPage";
 import SignUpForm from "../components/SignUpForm";
 
-type LoginPageProps = {} & RouteComponentProps<{ item: string }>;
-type LoginPageState = {};
+type SignUpPageProps = {} & RouteComponentProps<{ item: string }>;
+type SignUpPageState = {};
 
-class LoginPage extends Component<LoginPageProps, LoginPageState> {
+class SignUpPage extends Component<SignUpPageProps, SignUpPageState> {
   render() {
     return (
       <CommonPage>
@@ -21,7 +21,6 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                 style={{ textAlign: "center" }}
               >
                 <SignUpForm />
-                {/* <LoginTest /> */}
               </div>
             </Row>
           </Container>
@@ -31,4 +30,4 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
   }
 }
 
-export default withRouter(LoginPage);
+export default withRouter(SignUpPage);

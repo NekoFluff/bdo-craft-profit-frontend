@@ -43,8 +43,9 @@ const SignUpForm = () => {
     }, 2000),
     [password]
   );
+
   useEffect(() => {
-    if (user.name != "") history.push("/");
+    if (user.name != "") history.push("/welcome");
   }, [user]);
 
   const responseGoogle = useCallback(
