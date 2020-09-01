@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import "react-awesome-button/dist/themes/theme-c137.css";
 import "font-awesome/css/font-awesome.css";
 
 require("dotenv").config();

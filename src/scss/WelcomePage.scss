@@ -1,0 +1,28 @@
+@mixin welcome-page__button {
+  font-size: 1.75rem;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+$dark: rgba(48, 49, 50, 1);
+$light: invert($dark);
+
+.welcome-page {
+  &__background {
+    // min-height: 100vh;
+    // height: 100%;
+    // margin: 0;
+    // padding: 4%;
+    text-align: center;
+  }
+
+  &__stat-button {
+    @include welcome-page__button();
+    background-color: $dark;
+    color: $light;
+  }
+  &__profit-button {
+    @include welcome-page__button();
+    background-color: $light;
+    color: $dark;
+  }
+}
