@@ -8,6 +8,7 @@ import axios from "axios";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
 import { Form } from "react-bootstrap";
 import { withRouter, RouteComponentProps } from "react-router";
+import _ from "lodash";
 
 let recipeNames = [];
 
@@ -73,11 +74,11 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
 
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above, so just use it.
-  onSuggestionsFetchRequested = ({ value }) => {
+  onSuggestionsFetchRequested = _.debounce(({ value }) => {
     this.setState({
       suggestions: getSuggestions(value),
     });
-  };
+  }, 500);
 
   // Autosuggest will call this function every time you need to clear suggestions.
   onSuggestionsClearRequested = () => {

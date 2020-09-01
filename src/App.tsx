@@ -9,6 +9,7 @@ import configureStore from "./store/configureStore";
 import LoginPage from "./pages/loginPage";
 import LogoutPage from "./pages/logoutPage";
 import NotFoundPage from "./pages/notFoundPage";
+import SignUpPage from "./pages/signUpPage";
 
 const store = configureStore();
 
@@ -22,6 +23,7 @@ class App extends Component {
               <Route path="/" component={HomePage} exact />
               <Route path="/recipes/:item" component={RecipesPage} />
               <Route path="/login" component={LoginPage} />
+              <Route path="/signup" component={SignUpPage} />
               <Route path="/logout" component={LogoutPage} />
               <Route component={NotFoundPage} />
             </Switch>

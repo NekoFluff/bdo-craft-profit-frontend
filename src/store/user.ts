@@ -1,7 +1,7 @@
 import { RootState } from "./reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "./api";
-import { LOGIN_ENDPOINT } from "../helpers/CONSTANTS";
+import { LOGIN_ENDPOINT, SIGN_UP_ENDPOINT } from "../helpers/CONSTANTS";
 import { createSelector } from "reselect";
 import update from "react-addons-update";
 
@@ -84,6 +84,16 @@ export const loginUser = (user?: LoginUser, headers?: any) =>
   });
 
 export const logoutUser = () => slice.actions.userLoggedOut({});
+
+export const signUpUser = (user?: LoginUser, headers?: any) =>
+  apiCallBegan({
+    url: SIGN_UP_ENDPOINT,
+    method: "post",
+    data: user,
+    onSuccess: userLoggedIn.type,
+    onError: userFailedLogIn.type,
+    headers,
+  });
 
 // Selectors
 export const getCurrentUser = () =>
