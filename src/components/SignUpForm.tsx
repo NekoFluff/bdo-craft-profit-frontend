@@ -18,6 +18,7 @@ import _ from "lodash";
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
@@ -65,6 +66,22 @@ const SignUpForm = () => {
       <h1 className="login-form__title">Sign In</h1>
 
       {error && <Alert variant={"danger"}>{error}</Alert>}
+
+      <Form.Group className="login-form__group" controlId="formBasicName">
+        {/* <Form.Label>EMAIL</Form.Label> */}
+        <Form.Control
+          className="login-form__control"
+          type="name"
+          placeholder="Enter username"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+        {/* <Form.Text className="text-muted">
+          We'll never share your email with anyone else.
+        </Form.Text> */}
+      </Form.Group>
 
       <Form.Group className="login-form__group" controlId="formBasicEmail">
         {/* <Form.Label>EMAIL</Form.Label> */}
@@ -116,6 +133,7 @@ const SignUpForm = () => {
       <Button
         className="login-form__submit"
         disabled={
+          name == "" ||
           email == "" ||
           password == "" ||
           confirmationPassword == "" ||
@@ -134,6 +152,7 @@ const SignUpForm = () => {
           } else {
             dispatch(
               signUpUser({
+                name,
                 email,
                 password,
               })

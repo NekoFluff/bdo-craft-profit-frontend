@@ -10,6 +10,7 @@ const Background: React.FC<BackgroundProps> = (props) => {
     backgroundImage: props.backgroundImage,
     // paddingBottom: "7%",
     // paddingTop: "7%",
+    minHeight: "100vh",
     height: "100%",
     margin: 0,
     padding: "4%",

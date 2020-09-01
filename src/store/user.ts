@@ -72,6 +72,12 @@ type LoginUser = {
   password: string;
 };
 
+type SignUpUser = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 // Commands
 export const loginUser = (user?: LoginUser, headers?: any) =>
   apiCallBegan({
@@ -85,7 +91,7 @@ export const loginUser = (user?: LoginUser, headers?: any) =>
 
 export const logoutUser = () => slice.actions.userLoggedOut({});
 
-export const signUpUser = (user?: LoginUser, headers?: any) =>
+export const signUpUser = (user?: SignUpUser, headers?: any) =>
   apiCallBegan({
     url: SIGN_UP_ENDPOINT,
     method: "post",
