@@ -1,0 +1,5 @@
+@import "config";
+
+.path {
+  @include transition-ease-in-out;
+}

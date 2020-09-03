@@ -2,6 +2,13 @@
   transition: all 0.5s ease-in-out;
 }
 
+@mixin transition-fast {
+  transition: all 0.15s ease-out;
+}
+@mixin transition-slow {
+  transition: all 2s ease-out;
+}
+
 @mixin media-sm {
   @media (min-width: 576px) {
     @content;
