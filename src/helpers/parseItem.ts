@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { rootReducer } from "../store/reducer";
+import { current } from "@reduxjs/toolkit";
 
 const sampleData = {
   _id: "5f31d21326a2b936d5b31515",
@@ -670,29 +671,37 @@ const treeData = buildTree(sampleData);
 let root: any = d3.hierarchy(treeData);
 console.log("d3 parsed:", root);
 root.sum(function (d) {
-  return d["Time to Produce"]; // time spent to craft this item
+  return d.isOpen ? d["Time to Produce"] : 0; // time spent to craft this item
 });
 
-function resetPositions(
-  items = [],
-  barHeight,
-  currentWidth = 0,
-  currentHeight = 0
-) {
-  let x = currentWidth;
-  let y = currentHeight;
-  for (const item of items) {
-    item.data.x = x;
-    item.data.y = y;
-    y += barHeight;
-    const [x2, y2] = resetPositions(item.children, barHeight, x, y);
-    x += item.value;
-    y = y2;
-  }
-  return [x, y];
+export function resetPositions(items = [], barHeight) {
+  let y = 0;
+
+  const recursiveReset = (items = [], barHeight, currentWidth = 0) => {
+    let x = currentWidth;
+    // let y = currentHeight;
+    for (const item of items) {
+      if (!item.data.isOpen) {
+        item.data.x = x;
+        item.data.y = 0;
+      } else {
+        item.data.x = x;
+        item.data.y = y;
+        y += barHeight;
+      }
+
+      recursiveReset(item.children, barHeight, x);
+      x += item.value || 0;
+      // y = y2;
+    }
+    // return [x, y];
+  };
+
+  recursiveReset(items, barHeight, 0);
 }
 
-// resetPositions(root, 50);
-// console.log("d3 parsed 2:", root);
+resetPositions([root], 55);
+
+console.log("d3 parsed 2:", root);
 
 export default root;
