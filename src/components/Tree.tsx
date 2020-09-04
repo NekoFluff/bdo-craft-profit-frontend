@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import root from "../helpers/parseItem";
+import root from "../helpers/parseItemFromMongo";
 import * as d3 from "d3";
 
 const width = 1000;

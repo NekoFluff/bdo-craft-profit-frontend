@@ -1,5 +1,5 @@
 // Main packages
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Events, scrollSpy } from "react-scroll";
 import axios from "axios";
@@ -55,13 +55,13 @@ type DashboardState = {
   craftCount: number;
 };
 
-let itemManager: ItemManager = new ItemManager();
-
 const RecipesDashboard: React.FC<DashboardProps> = ({
   product,
   setProduct,
 }) => {
   const dispatch = useDispatch();
+
+  let itemManager: ItemManager = useMemo(() => new ItemManager(), []);
 
   const orderedItems = useSelector(
     (state: RootState) => state.entities.items.order
@@ -116,9 +116,9 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
         );
         console.log("Original Recipes", recipes);
         const items = itemManager.parseRecipes(recipes);
-        dispatch(rootItemSet(itemManager.officialProductName));
         itemManager.resetToOptimal();
         console.log("Final Items", items);
+        dispatch(rootItemSet(itemManager.officialProductName));
         updateTables();
       } catch (e) {
         console.log(e);

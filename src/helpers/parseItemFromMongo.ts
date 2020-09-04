@@ -642,14 +642,17 @@ const sampleData = {
 };
 
 // Build mapping
-const itemMapping = {};
-itemMapping[sampleData.Name] = sampleData;
-for (const ingredient of sampleData.Ingredients) {
-  itemMapping[ingredient.Name] = ingredient;
+function buildTreeMapping(data) {
+  const itemMapping = {};
+  itemMapping[data.Name] = data;
+  for (const ingredient of data.Ingredients) {
+    itemMapping[ingredient.Name] = ingredient;
+  }
+  return itemMapping;
 }
 
 // Build tree
-function buildTree(item, alreadySeen = {}) {
+function buildTree(item, itemMapping = {}, alreadySeen = {}) {
   if (alreadySeen[item.Name]) return null;
   alreadySeen[item.Name] = true;
 
@@ -658,7 +661,7 @@ function buildTree(item, alreadySeen = {}) {
   if (item.Recipe) {
     tree["children"] = item.Recipe.map((ingredient) => {
       const name = ingredient["Item Name"];
-      return buildTree(itemMapping[name], { ...alreadySeen });
+      return buildTree(itemMapping[name], itemMapping, { ...alreadySeen });
     }).filter((elem) => {
       return elem != null;
     });
@@ -666,15 +669,7 @@ function buildTree(item, alreadySeen = {}) {
   return tree;
 }
 
-// Use methods
-const treeData = buildTree(sampleData);
-let root: any = d3.hierarchy(treeData);
-console.log("d3 parsed:", root);
-root.sum(function (d) {
-  return d.isOpen ? d["Time to Produce"] : 0; // time spent to craft this item
-});
-
-export function resetPositions(items = [], barHeight) {
+export function stackedBar(items = [], barHeight) {
   let y = 0;
 
   const recursiveReset = (items = [], barHeight, currentWidth = 0) => {
@@ -700,8 +695,20 @@ export function resetPositions(items = [], barHeight) {
   recursiveReset(items, barHeight, 0);
 }
 
-resetPositions([root], 55);
+export function convertToTree(data) {
+  // Use methods
+  // console.log("[Convert to Tree] Tree data", data);
 
-console.log("d3 parsed 2:", root);
+  const treeData = buildTree(data, buildTreeMapping(data));
+  let root: any = d3.hierarchy(treeData);
+  root.sum(function (d) {
+    return d.isOpen ? d["Time to Produce"] : 0; // time spent to craft this item
+  });
+  stackedBar([root], 55);
 
+  // console.log("d3 stacked bar tree:", root);
+  return root;
+}
+
+const root = convertToTree(sampleData);
 export default root;

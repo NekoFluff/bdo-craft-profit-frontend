@@ -1,22 +1,30 @@
 import React, { useState, useMemo } from "react";
-import * as d3 from "d3";
 // import "../scss/HierarchicalBarGraph.scss";
-import { useSprings, useSpring, animated } from "react-spring";
-import { resetPositions } from "../helpers/parseItem";
+import { useSpring, animated } from "react-spring";
 
 const Bar = (props) => {
   const { root, barHeight, xScale, onBarClick, isVisible } = props;
 
-  const barSpring = useSpring({
-    width: isVisible ? xScale(root.value + 1) : 0,
-    fill: isVisible ? "purple" : "red",
-  });
-
   const positionSpring = useSpring({
+    // config: {
+    //   duration: 10000,
+    // },
     transform: isVisible
       ? `translate(${xScale(root.data.x)},${root.data.y})`
       : `translate(${xScale(root.data.x)},${0})`,
     opacity: isVisible ? 1 : 0,
+  });
+
+  const barSpring = useSpring({
+    width: isVisible ? xScale(root.value) : 0,
+    fill: isVisible ? (root.data.action === "Buy" ? "green" : "purple") : "red",
+  });
+
+  const shadowSpring = useSpring({
+    width: isVisible ? xScale(root.value) : 0,
+    height: isVisible ? `calc(100% - ${root.data.y}px)` : barHeight + 10, // `calc(100%-${root.data.y} + 100)`
+    // fill: "red",
+    opacity: isVisible ? 0.05 : 0,
   });
 
   return (
@@ -27,8 +35,13 @@ const Bar = (props) => {
       <animated.rect
         {...barSpring}
         className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
-        // width={xScale(root.value)}
         height={barHeight / 2}
+        rx="3"
+      />
+
+      <animated.rect
+        {...shadowSpring}
+        className={`bar-graph__bar-shadow`}
         rx="3"
       />
       <text
@@ -41,37 +54,16 @@ const Bar = (props) => {
         onClick={(e) => {
           onBarClick();
         }}
-      >{`${root.data.Name}: ${isVisible ? root.value : 0}`}</text>
+      >{`${root.data.name}: ${isVisible ? root.value : 0}`}</text>
     </animated.g>
   );
 };
 
 const HierarchicalBarGraph = (props) => {
-  const { root, width, height, barHeight } = props;
+  const { root, width, height, barHeight, xScale, updateGraph } = props;
   console.log("DESCENDANTS", root.descendants());
   const descendants = root.descendants();
   const [activeNode, setActiveNode] = useState(root);
-
-  // Hooks
-  const [rootValue, setRootValue] = useState(10);
-  const xScale = useMemo(
-    () => d3.scaleLinear().domain([0, root.value]).range([0, width]),
-    [rootValue]
-  );
-
-  // console.log(root);
-  const updateRootValues = () => {
-    // Recalculate values
-    root.sum(function (d) {
-      return d.isOpen ? d["Time to Produce"] : 0; // time spent to craft this item
-    });
-
-    // Update x and y positions
-    resetPositions([descendants[0]], 55);
-
-    // then update scale
-    setRootValue(root.value);
-  };
 
   if (!root.data.isOpen) console.log("Empty Root");
   //return null;
@@ -99,7 +91,7 @@ const HierarchicalBarGraph = (props) => {
                   d.data.isOpen = node.data.isOpen;
                 }
 
-                updateRootValues();
+                updateGraph();
                 setActiveNode(node);
               }}
             ></Bar>

@@ -10,7 +10,7 @@ import CommonPage from "./commonPage";
 import ItemCards from "../components/ItemCards";
 import AnimatedCircles from "../components/ItemCardsAnimated";
 import HierarchicalBarGraph from "../components/HierarchicalBarGraph";
-import root from "../helpers/parseItem";
+import root from "../helpers/parseItemFromMongo";
 import ChartWithDimensions from "../components/ChartWithDimensions";
 
 type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
