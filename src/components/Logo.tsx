@@ -1,11 +1,15 @@
 import React from "react";
 import { useSpring, animated, config } from "react-spring";
+import useSound from "use-sound";
+const ImpactSound = require("../sounds/anvil-impact.mp3");
 
 type LogoProps = {
   runAnimation: boolean;
 };
 
 const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
+  const [play] = useSound(ImpactSound, { volume: 0.025 });
+
   const from = {
     transform: "rotate(0) translate(0,0)",
     "transform-origin": "0px 0px",
@@ -13,19 +17,25 @@ const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
   };
 
   const to = {
-    transform: "rotate(90) translate(10,0)",
-    "transform-origin": "200px 0px",
+    transform: "rotate(60) translate(10,0)",
+    "transform-origin": "175px 0px",
     opacity: 0,
   };
 
   const spring = useSpring({
     // config: config.wobbly,
     // config: config.gentle,
-    config: config.stiff,
-    from: from,
+    config: { ...config.stiff, duration: 500 },
+    from: to,
     to: async (next) => {
       while (runAnimation) {
         await next(from);
+        console.log("Anvil Sound Activate");
+        try {
+          play();
+        } catch (e) {
+          console.log("Error playing sound", e);
+        }
         await next(to);
       }
     },
@@ -37,9 +47,9 @@ const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
     // </svg>
     <React.Fragment>
       <svg
-        height="100"
-        viewBox="0 -50 109 109"
-        width="100"
+        height="175"
+        viewBox="0 -100 109 200"
+        width="175"
         xmlns="http://www.w3.org/2000/svg"
       >
         <g id="041---Forging" fill="none">

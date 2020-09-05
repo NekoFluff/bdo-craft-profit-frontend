@@ -38,7 +38,7 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
 
   useInterval(() => {
     setContentReady(true);
-  }, 3000); // 2500
+  }, 2500); // 2500
 
   return (
     <React.Fragment>
