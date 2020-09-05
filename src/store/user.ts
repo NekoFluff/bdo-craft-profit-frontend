@@ -1,9 +1,12 @@
+import { BUFFS_ENDPOINT } from "./../helpers/CONSTANTS";
 import { RootState } from "./reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "./api";
 import { LOGIN_ENDPOINT, SIGN_UP_ENDPOINT } from "../helpers/CONSTANTS";
 import { createSelector } from "reselect";
 import update from "react-addons-update";
+
+export type Buffs = { [key: string]: { timeReduction: number } };
 
 type userSliceState = {
   name: string;
@@ -14,6 +17,7 @@ type userSliceState = {
   // googleId?: string;
   accessToken?: string;
   error?: string;
+  buffs?: Buffs;
 };
 
 const initialState: userSliceState = {
@@ -24,6 +28,8 @@ const initialState: userSliceState = {
   type: null,
   // googleId: null,
   accessToken: null,
+  buffs: null,
+  error: null,
 };
 
 const slice = createSlice({
@@ -38,13 +44,14 @@ const slice = createSlice({
             name: string;
             email: string;
             type?: string;
+            buffs?: Buffs;
           };
           headers?: any;
         };
       }
     ) => {
       console.log("User logged in. Payload:", action.payload);
-      const { name, email, type } = action.payload.data;
+      const { name, email, type, buffs } = action.payload.data;
       const accessToken = action.payload.headers["x-auth-token"];
 
       return update(currentUser, {
@@ -52,18 +59,34 @@ const slice = createSlice({
         email: { $set: email },
         accessToken: { $set: accessToken },
         type: { $set: type },
+        buffs: { $set: buffs },
+        error: { $set: null },
       });
+    },
+    userFailedLogIn: (currentUser, action) => {
+      return update(currentUser, { error: { $set: action.payload } });
     },
     userLoggedOut: (currentUser, _action) => {
       return update(currentUser, { $set: initialState });
     },
-    userFailedLogIn: (currentUser, action) => {
+    updatedBuffs: (currentUser, action) => {
+      return update(currentUser, {
+        buffs: { $set: action.payload.data.buffs },
+      });
+    },
+    failedUpdateBuffs: (currentUser, action) => {
       return update(currentUser, { error: { $set: action.payload } });
     },
   },
 });
 
-export const { userLoggedIn, userLoggedOut, userFailedLogIn } = slice.actions;
+export const {
+  userLoggedIn,
+  userLoggedOut,
+  userFailedLogIn,
+  updatedBuffs,
+  failedUpdateBuffs,
+} = slice.actions;
 
 export default slice.reducer;
 
@@ -101,9 +124,31 @@ export const signUpUser = (user?: SignUpUser, headers?: any) =>
     headers,
   });
 
+export const updateBuffs = (buffs: Buffs, headers: any) =>
+  apiCallBegan({
+    url: BUFFS_ENDPOINT,
+    method: "post",
+    data: buffs,
+    onSuccess: updatedBuffs.type,
+    onError: failedUpdateBuffs.type,
+    headers,
+  });
+
 // Selectors
 export const getCurrentUser = () =>
   createSelector(
     (state: RootState) => state.entities.currentUser,
     (user) => user
+  );
+
+export const getAuthToken = () =>
+  createSelector(
+    (state: RootState) => state.entities.currentUser,
+    (user) => user.accessToken
+  );
+
+export const getBuff = (action: string) =>
+  createSelector(
+    (state: RootState) => state.entities.currentUser,
+    (user) => (user.buffs ? user.buffs[action] : null)
   );

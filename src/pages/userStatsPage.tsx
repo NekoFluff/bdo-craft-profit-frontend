@@ -1,66 +1,94 @@
-import React from "react";
-import SearchBar from "../components/SearchBar";
-import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
+import React, { useCallback, useState } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
-import PPSTable from "../components/PPSTable";
-import { Container, Row, Col } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Jumbotron,
+  Button,
+  ListGroup,
+  Tabs,
+  Tab,
+  Form,
+} from "react-bootstrap";
 import Background from "../components/Background";
 import BackgroundImage from "../images/webb.png";
 import CommonPage from "./commonPage";
-import ItemCards from "../components/ItemCards";
-import AnimatedCircles from "../components/ItemCardsAnimated";
-import HierarchicalBarGraph from "../components/HierarchicalBarGraph";
-import root from "../helpers/parseItemFromMongo";
-import ChartWithDimensions from "../components/ChartWithDimensions";
+import BuffForm from "../components/BuffForms/BuffForm";
 
 type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
 
 const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
+  const [actionList, setActionList] = useState([
+    "Alchemy",
+    "Chopping",
+    "Cooking",
+    "Drying",
+    "Filtering",
+    "Grinding",
+    "Heating",
+    "Refinery",
+    "Shaking",
+    "Simple Alchemy",
+    "Simple Cooking",
+  ]);
+  const renderJumbo = useCallback((action: string) => {
+    return <BuffForm name={action} />;
+  }, []);
+
   return (
     <CommonPage>
       <Background backgroundImage={`url(${BackgroundImage})`}>
-        <h1 className="p-3" style={{ textAlign: "center" }}>
-          Your Stats
-        </h1>
-        <svg
-          style={{
-            border: "2px solid gold",
-          }}
-        />
-        {/* <Container>
-          <Row className="justify-content-center">
-            <Col>
-              <SearchBar />
-            </Col>
-          </Row>
+        {/* STYLE 1 */}
+        <div>
+          <Tab.Container id="user-stats-container" defaultActiveKey="#Alchemy">
+            <Row>
+              <Col sm={2}>
+                <ListGroup>
+                  {actionList.map((action, index) => (
+                    <ListGroup.Item
+                      key={index}
+                      action
+                      onClick={() => {
+                        console.log(`${action} clicked`);
+                      }}
+                      href={`#${action}`}
+                    >
+                      {action}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Col>
+              <Col sm={10}>
+                <Tab.Content>
+                  {actionList.map((action, index) => (
+                    <Tab.Pane eventKey={`#${action}`}>
+                      {renderJumbo(action)}
+                    </Tab.Pane>
+                  ))}
+                </Tab.Content>
+              </Col>
+            </Row>
+          </Tab.Container>
+        </div>
+
+        {/* Version 2 */}
+        {/* <div>
           <Row>
             <Col>
-              <PPSTable />
+              <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+                <Tab eventKey="home" title="Home">
+                  {renderJumbo()}
+                </Tab>
+                <Tab eventKey="profile" title="Profile">
+                  {renderJumbo()}
+                </Tab>
+                <Tab eventKey="contact" title="Contact" disabled>
+                  {renderJumbo()}
+                </Tab>
+              </Tabs>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <MostSearchedItemsTable></MostSearchedItemsTable>
-            </Col>
-          </Row>
-        </Container> */}
-        {/* <ItemCards /> */}
-        <AnimatedCircles />
-        <Container
-          fluid
-          className="d-flex align-items-center align-content-center justify-content-center"
-        >
-          <ChartWithDimensions
-            chartSettings={{
-              width: "1500",
-              height: "900",
-              marginTop: "150",
-              marginRight: "150",
-              marginBottom: "150",
-              marginLeft: "150",
-            }}
-          />
-        </Container>
+        </div> */}
       </Background>
     </CommonPage>
   );

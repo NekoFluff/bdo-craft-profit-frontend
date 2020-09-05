@@ -10,3 +10,4 @@ console.log("API ENDPOINT:", API_ENDPOINT);
 export const USER_ENDPOINT = API_ENDPOINT + "/user";
 export const LOGIN_ENDPOINT = USER_ENDPOINT + "/login";
 export const SIGN_UP_ENDPOINT = USER_ENDPOINT + "/signup";
+export const BUFFS_ENDPOINT = USER_ENDPOINT + "/buffs";

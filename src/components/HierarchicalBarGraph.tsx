@@ -61,7 +61,6 @@ const Bar = (props) => {
 
 const HierarchicalBarGraph = (props) => {
   const { root, width, height, barHeight, xScale, updateGraph } = props;
-  console.log("DESCENDANTS", root.descendants());
   const descendants = root.descendants();
   const [activeNode, setActiveNode] = useState(root);
 
