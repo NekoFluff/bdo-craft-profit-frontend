@@ -4,12 +4,10 @@ import StripesImage from "../images/stripes.jpg";
 import { Image, Container, Row, Jumbotron, Col } from "react-bootstrap";
 import PageTransition from "./PageTransition";
 
-type UnderConstructionProps = {
-  text?: string;
-};
+type UnderConstructionProps = {};
 
 const UnderConstruction: React.FC<UnderConstructionProps> = (props) => {
-  const { text } = props;
+  // const { text } = props;
   return (
     <Container
       style={{
@@ -35,9 +33,11 @@ const UnderConstruction: React.FC<UnderConstructionProps> = (props) => {
         />
         <div>
           <h1>Under Construction</h1>
-          <p style={{ fontFamily: "Roboto" }}>
-            {text || "These little guys are putting the website together."}
-          </p>
+          {props.children || (
+            <p style={{ fontFamily: "Roboto" }}>
+              {"These little guys are putting the website together."}
+            </p>
+          )}
         </div>
         <Image
           // style={{ transform: "scaleY(-0.5) scaleX(-0.5)" }}
