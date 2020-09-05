@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getBuff, getAuthToken, updateBuffs } from "../../store/user";
+import UnderConstruction from "../UnderConstruction";
 
 type BuffFormProps = {
   name: string;
@@ -50,37 +51,43 @@ const BuffForm: React.FC<BuffFormProps> = (props) => {
   };
 
   return (
-    <Jumbotron>
-      {" "}
-      <h1>{`Your ${name} Buffs`}</h1>
-      {/* <p>
-        This is a simple hero unit, a simple jumbotron-style component for
-        calling extra attention to featured content or information.
-      </p> */}
-      {/* <p>
-        <Button variant="primary">Learn more</Button>
-      </p> */}
-      <Form onSubmit={onSubmit}>
-        <Form.Group controlId="form-time-reduction">
-          <Form.Label>Time Reduction</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="0"
-            value={timeReduction}
-            onChange={(e) => {
-              setTimeReduction(parseFloat(e.target.value));
-            }}
-          />
-          <Form.Text className="text-muted">
-            Time reduction buffs from all sources (e.g. Clothing/Alchemy stones)
-          </Form.Text>
-        </Form.Group>
+    <React.Fragment>
+      <Jumbotron>
+        {" "}
+        <h1>{`Your ${name} Buffs`}</h1>
+        {/* <p>
+          This is a simple hero unit, a simple jumbotron-style component for
+          calling extra attention to featured content or information.
+        </p> */}
+        {/* <p>
+          <Button variant="primary">Learn more</Button>
+        </p> */}
+        <Form onSubmit={onSubmit}>
+          <Form.Group controlId="form-time-reduction">
+            <Form.Label>Time Reduction</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="0"
+              value={timeReduction}
+              onChange={(e) => {
+                setTimeReduction(parseFloat(e.target.value));
+              }}
+            />
+            <Form.Text className="text-muted">
+              Time reduction buffs from all sources (e.g. Clothing/Alchemy
+              stones)
+            </Form.Text>
+          </Form.Group>
 
-        <Button variant="primary" type="submit" disabled={!changeExists()}>
-          Save
-        </Button>
-      </Form>
-    </Jumbotron>
+          <Button variant="primary" type="submit" disabled={!changeExists()}>
+            Save
+          </Button>
+        </Form>
+      </Jumbotron>
+      <Row className="justify-content-center">
+        <UnderConstruction text="Additional buff features are being added by these little guys." />
+      </Row>
+    </React.Fragment>
   );
 };
 

@@ -9,6 +9,7 @@ import { setCostValues, setTimeValues } from "../helpers/parseItemFromRedux";
 // My components
 import RecipesDashboard from "./../components/RecipesDashboard";
 import ChartWithDimensions from "../components/ChartWithDimensions";
+import PageTransition from "../components/PageTransition";
 
 const RecipesPage = (props) => {
   const [product, setProduct] = useState("");
@@ -23,42 +24,44 @@ const RecipesPage = (props) => {
   }, [dispatch, props.match.params.item]);
 
   return (
-    <Container fluid id="outer-container">
-      <Container
-        fluid
-        className="d-flex align-items-center align-content-center justify-content-center"
-      >
-        <ChartWithDimensions
-          chartSettings={{
-            width: "1500",
-            height: "900",
-            marginTop: "150",
-            marginRight: "150",
-            marginBottom: "150",
-            marginLeft: "150",
-          }}
-          setValues={setCostValues}
-        />
-      </Container>
-      <Container
-        fluid
-        className="d-flex align-items-center align-content-center justify-content-center"
-      >
-        <ChartWithDimensions
-          chartSettings={{
-            width: "1500",
-            height: "900",
-            marginTop: "150",
-            marginRight: "150",
-            marginBottom: "150",
-            marginLeft: "150",
-          }}
-          setValues={setTimeValues}
-        />
-      </Container>
+    <PageTransition>
+      <Container fluid id="outer-container">
+        <Container
+          fluid
+          className="d-flex align-items-center align-content-center justify-content-center"
+        >
+          <ChartWithDimensions
+            chartSettings={{
+              width: "1500",
+              height: "900",
+              marginTop: "150",
+              marginRight: "150",
+              marginBottom: "150",
+              marginLeft: "150",
+            }}
+            setValues={setCostValues}
+          />
+        </Container>
+        <Container
+          fluid
+          className="d-flex align-items-center align-content-center justify-content-center"
+        >
+          <ChartWithDimensions
+            chartSettings={{
+              width: "1500",
+              height: "900",
+              marginTop: "150",
+              marginRight: "150",
+              marginBottom: "150",
+              marginLeft: "150",
+            }}
+            setValues={setTimeValues}
+          />
+        </Container>
 
-      <RecipesDashboard product={product} setProduct={setProduct} />
-    </Container>
+        <RecipesDashboard product={product} setProduct={setProduct} />
+      </Container>
+    </PageTransition>
   );
 };
 export default withRouter(RecipesPage);

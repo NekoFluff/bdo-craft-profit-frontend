@@ -1,17 +1,12 @@
 import "./scss/App.scss";
 
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import RecipesPage from "./pages/recipesPage";
-import HomePage from "./pages/homePage";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
-import LoginPage from "./pages/loginPage";
-import LogoutPage from "./pages/logoutPage";
-import NotFoundPage from "./pages/notFoundPage";
-import SignUpPage from "./pages/signUpPage";
-import WelcomePage from "./pages/welcomePage";
-import UserStatsPage from "./pages/userStatsPage";
+
+// My components
+import AnimatedSwitch from "./components/AnimatedSwitch";
 
 const store = configureStore();
 
@@ -21,16 +16,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <main className="main" style={{ height: "100vh" }}>
-            <Switch>
-              <Route path="/" component={HomePage} exact />
-              <Route path="/recipes/:item" component={RecipesPage} />
-              <Route path="/login" component={LoginPage} />
-              <Route path="/signup" component={SignUpPage} />
-              <Route path="/logout" component={LogoutPage} />
-              <Route path="/welcome" component={WelcomePage} />
-              <Route path="/me" component={UserStatsPage} />
-              <Route component={NotFoundPage} />
-            </Switch>
+            <AnimatedSwitch />
           </main>
         </Router>
       </Provider>

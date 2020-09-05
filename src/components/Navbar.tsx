@@ -32,7 +32,10 @@ const MyNavBar = (props) => {
         <Navbar.Collapse>
           <Nav className="mx-md-auto align-items-center mt-2" style={styles}>
             {/* Links */}
-            <Navbar.Brand href="/">BDO Craft Profit</Navbar.Brand>
+            <NavLink to="/" className="menu-item navbar-brand" exact>
+              BDO Craft Profit
+            </NavLink>
+
             <NavLink to="/" className="menu-item nav-link" exact>
               Home
             </NavLink>

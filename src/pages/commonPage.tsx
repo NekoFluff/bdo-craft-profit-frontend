@@ -1,14 +1,15 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 import MyNavBar from "../components/Navbar";
 
 type commonPageProps = {};
 
 const commonPage: React.FC<commonPageProps> = (props) => {
   return (
-    <React.Fragment>
+    <Container fluid style={{ margin: 0, padding: 0 }}>
       <MyNavBar></MyNavBar>
       {props.children}
-    </React.Fragment>
+    </Container>
   );
 };
 

@@ -50,6 +50,7 @@
     "react-skylight": "^0.5.1",
     "react-spring": "^9.0.0-rc.3",
     "react-stickynode": "^3.0.3",
+    "react-transition-group": "^4.4.1",
     "redux": "^4.0.5",
     "redux-burger-menu": "^0.2.8",
     "typescript": "^3.9.7"
