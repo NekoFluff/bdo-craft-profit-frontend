@@ -9,6 +9,7 @@ import {
   Tabs,
   Tab,
   Form,
+  Container,
 } from "react-bootstrap";
 import ParallaxBackground from "../components/ParallaxBackground";
 import BackgroundImage from "../images/webb.png";
@@ -39,15 +40,16 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
     <CommonPage>
       <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
         {/* STYLE 1 */}
-        <div>
+        <Container className="m-3" fluid>
           <Tab.Container id="user-stats-container" defaultActiveKey="#Alchemy">
             <Row>
               <Col sm={2}>
                 <ListGroup>
                   {actionList.map((action, index) => (
                     <ListGroup.Item
+                      className="nav-link"
                       key={index}
-                      action
+                      // action
                       onClick={() => {
                         console.log(`${action} clicked`);
                       }}
@@ -69,7 +71,7 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
               </Col>
             </Row>
           </Tab.Container>
-        </div>
+        </Container>
 
         {/* Version 2 */}
         {/* <div>
