@@ -8,7 +8,7 @@ type LogoProps = {
 };
 
 const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
-  const [play] = useSound(ImpactSound, { volume: 0.025 });
+  const [play] = useSound(ImpactSound, { volume: 0.01 });
 
   const from = {
     transform: "rotate(0) translate(0,0)",

@@ -2,7 +2,6 @@ import React from "react";
 import ConstructionImage from "../images/under-construction.gif";
 import StripesImage from "../images/stripes.jpg";
 import { Image, Container, Row, Jumbotron, Col } from "react-bootstrap";
-import PageTransition from "./PageTransition";
 
 type UnderConstructionProps = {};
 

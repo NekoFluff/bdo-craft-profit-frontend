@@ -2,14 +2,14 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { animated, useSpring } from "react-spring";
 
-type BackgroundProps = {
+type ParallaxBackgroundProps = {
   backgroundImage: string;
 };
 
 const calc = (x, y) => [window.innerWidth / 2 - x, window.innerHeight / 2 - y];
 const trans1 = (x, y) => `translate3d(${x / 30}px,${y / 30}px,0)`;
 
-const Background: React.FC<BackgroundProps> = (props) => {
+const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
   const [spring, set] = useSpring(() => ({
     to: {
       xy: [0, 0],
@@ -52,4 +52,4 @@ const Background: React.FC<BackgroundProps> = (props) => {
   );
 };
 
-export default Background;
+export default ParallaxBackground;

@@ -10,7 +10,7 @@ import {
   Tab,
   Form,
 } from "react-bootstrap";
-import Background from "../components/Background";
+import ParallaxBackground from "../components/ParallaxBackground";
 import BackgroundImage from "../images/webb.png";
 import CommonPage from "./commonPage";
 import BuffForm from "../components/BuffForms/BuffForm";
@@ -37,7 +37,7 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
 
   return (
     <CommonPage>
-      <Background backgroundImage={`url(${BackgroundImage})`}>
+      <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
         {/* STYLE 1 */}
         <div>
           <Tab.Container id="user-stats-container" defaultActiveKey="#Alchemy">
@@ -89,7 +89,7 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
             </Col>
           </Row>
         </div> */}
-      </Background>
+      </ParallaxBackground>
     </CommonPage>
   );
 };

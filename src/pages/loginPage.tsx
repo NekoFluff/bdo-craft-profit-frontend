@@ -3,7 +3,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { Container, Row } from "react-bootstrap";
 import LoginForm from "../components/LoginForm";
 import BackgroundImage from "../images/bg1.png";
-import Background from "../components/Background";
+import ParallaxBackground from "../components/ParallaxBackground";
 import CommonPage from "./commonPage";
 
 type LoginPageProps = {} & RouteComponentProps<{ item: string }>;
@@ -13,7 +13,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
   render() {
     return (
       <CommonPage>
-        <Background backgroundImage={`url(${BackgroundImage})`}>
+        <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
           <Container className="h-100">
             <Row className="h-100 justify-content-center align-items-center">
               <div
@@ -25,7 +25,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
               </div>
             </Row>
           </Container>
-        </Background>
+        </ParallaxBackground>
       </CommonPage>
     );
   }

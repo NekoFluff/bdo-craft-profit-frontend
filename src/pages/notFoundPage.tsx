@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Container, Row, Col } from "react-bootstrap";
 import CommonPage from "./commonPage";
-import Background from "../components/Background";
+import ParallaxBackground from "../components/ParallaxBackground";
 import BackgroundImage from "../images/webb.png";
 
 type NotFoundPageProps = {} & RouteComponentProps<{ item: string }>;
@@ -10,7 +10,7 @@ type NotFoundPageProps = {} & RouteComponentProps<{ item: string }>;
 const NotFoundPage: React.FC<NotFoundPageProps> = (props) => {
   return (
     <CommonPage>
-      <Background backgroundImage={`url(${BackgroundImage})`}>
+      <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
         <Container
           fluid
           style={{
@@ -33,7 +33,7 @@ const NotFoundPage: React.FC<NotFoundPageProps> = (props) => {
             </Col>
           </Row>
         </Container>
-      </Background>
+      </ParallaxBackground>
     </CommonPage>
   );
 };

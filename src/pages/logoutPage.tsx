@@ -49,9 +49,6 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
 
   return (
     <CommonPage>
-      <h1 className="p-3" style={{ textAlign: "center" }}>
-        Craft Profit v0.2.0
-      </h1>
       <Container>
         {user.email != "" && <div>Logging Out...</div>}
         {user.email == "" && <div>Goodbye!</div>}

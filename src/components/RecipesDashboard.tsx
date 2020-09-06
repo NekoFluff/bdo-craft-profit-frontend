@@ -224,9 +224,6 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
       {renderSidebar()}
       <div id="page-wrap">
         <MyNavBar></MyNavBar>
-        <h1 className="p-3" style={{ textAlign: "center" }}>
-          Craft Profit v0.2.0
-        </h1>
         <RecipesDashboardButton />
 
         <div className="p-3" style={{ textAlign: "center" }}>
