@@ -53,11 +53,11 @@ const MyNavBar = (props) => {
                 </NavLink>
               </React.Fragment>
             )}
-            <NavLink to="/me#Alchemy" className="menu-item nav-link">
-              Your Stats
-            </NavLink>
             {user.email != "" && (
               <React.Fragment>
+                <NavLink to="/me#Alchemy" className="menu-item nav-link">
+                  Your Stats
+                </NavLink>
                 <NavLink to="/logout" className="menu-item nav-link">
                   Log Out
                 </NavLink>
