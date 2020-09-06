@@ -30,7 +30,7 @@ const RecipesPage = (props) => {
           fluid
           className="d-flex align-items-center align-content-center justify-content-center"
         >
-          <ChartWithDimensions
+          {/* <ChartWithDimensions
             chartSettings={{
               width: "1500",
               height: "900",
@@ -40,13 +40,13 @@ const RecipesPage = (props) => {
               marginLeft: "150",
             }}
             setValues={setCostValues}
-          />
+          /> */}
         </Container>
         <Container
           fluid
           className="d-flex align-items-center align-content-center justify-content-center"
         >
-          <ChartWithDimensions
+          {/* <ChartWithDimensions
             chartSettings={{
               width: "1500",
               height: "900",
@@ -56,7 +56,7 @@ const RecipesPage = (props) => {
               marginLeft: "150",
             }}
             setValues={setTimeValues}
-          />
+          /> */}
         </Container>
 
         <RecipesDashboard product={product} setProduct={setProduct} />
