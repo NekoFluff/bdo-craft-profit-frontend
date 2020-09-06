@@ -34,6 +34,10 @@ $secondary: rgb(245, 20, 100);
     @content;
   }
 }
+body,
+html {
+  height: 100%;
+}
 
 .main {
   background-color: "#f2f2f2";

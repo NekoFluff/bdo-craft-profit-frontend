@@ -86,7 +86,7 @@ const BuffForm: React.FC<BuffFormProps> = (props) => {
       </Jumbotron>
       <Row className="justify-content-center">
         <UnderConstruction>
-          "Additional buff features are being added by these little guys."
+          Additional buff features are being added by these little guys.
         </UnderConstruction>
       </Row>
     </React.Fragment>

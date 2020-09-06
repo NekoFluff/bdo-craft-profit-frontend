@@ -12,7 +12,7 @@ type WelcomePageProps = {} & RouteComponentProps<{ item: string }>;
 const WelcomePage: React.FC<WelcomePageProps> = (props) => {
   return (
     <CommonPage>
-      {/* <Background backgroundImage={`url(${BackgroundImage})`}> */}
+      {/* <Background backgroundImage={`url(${BackgroundImage})`}/> */}
       <Row className="h-100">
         <Col
           className="d-flex h-100 justify-content-center align-items-center welcome-page__background"
@@ -47,7 +47,6 @@ const WelcomePage: React.FC<WelcomePageProps> = (props) => {
           </Button>
         </Col>
       </Row>
-      {/* </Background> */}
     </CommonPage>
   );
 };

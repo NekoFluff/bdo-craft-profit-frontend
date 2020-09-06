@@ -62,4 +62,11 @@
   &__suggestion--highlighted {
     background-color: #ddd;
   }
+
+  &__input {
+    border-radius: 10em;
+    height: 60px;
+    padding-left: 25px;
+    padding-right: 60px;
+  }
 }

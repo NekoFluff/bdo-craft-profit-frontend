@@ -64,7 +64,7 @@ const SignUpForm = () => {
 
   return (
     <Form className="login-form">
-      <h1 className="login-form__title">Sign In</h1>
+      <h1 className="login-form__title">Sign Up</h1>
 
       {error && <Alert variant={"danger"}>{error}</Alert>}
 

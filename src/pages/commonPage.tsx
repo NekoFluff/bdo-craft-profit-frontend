@@ -6,7 +6,7 @@ type commonPageProps = {};
 
 const commonPage: React.FC<commonPageProps> = (props) => {
   return (
-    <Container fluid style={{ margin: 0, padding: 0 }}>
+    <Container fluid style={{ margin: 0, padding: 0, height: "100%" }}>
       <MyNavBar></MyNavBar>
       {props.children}
     </Container>

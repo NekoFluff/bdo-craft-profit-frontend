@@ -1,7 +1,7 @@
 import "../scss/Navbar.scss";
 
 import React, { useState } from "react";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import Headroom from "react-headroom";
 import Hamburger from "hamburger-react";
@@ -15,8 +15,6 @@ const MyNavBar = (props) => {
   const [width, height] = useWindowSize();
 
   const renderNavbar = () => {
-    let styles = {};
-
     return (
       <Navbar
         sticky="top"
@@ -26,23 +24,34 @@ const MyNavBar = (props) => {
         expanded={isOpen}
         // className="justify-content-center"
       >
-        <Navbar.Toggle className="align-self-center">
+        <Navbar.Toggle>
           <Hamburger toggled={isOpen} toggle={setOpen} />
         </Navbar.Toggle>
         <Navbar.Collapse>
-          <Nav className="mx-md-auto align-items-center mt-2" style={styles}>
+          <Nav className={`align-items-center mt-2`}>
             {/* Links */}
-            <NavLink to="/" className="menu-item navbar-brand" exact>
+            <NavLink
+              to="/"
+              className="menu-item navbar-brand"
+              exact
+              style={{ marginRight: "0px", fontSize: "1.25em" }}
+            >
               BDO Craft Profit
             </NavLink>
-
+          </Nav>
+          <Nav className="ml-md-auto align-items-center mt-2">
             <NavLink to="/" className="menu-item nav-link" exact>
               Home
             </NavLink>
             {user.email == "" && (
-              <NavLink to="/login" className="menu-item nav-link">
-                Log In
-              </NavLink>
+              <React.Fragment>
+                <NavLink to="/login" className="menu-item nav-link">
+                  SignUp
+                </NavLink>
+                <NavLink to="/login" className="menu-item nav-link">
+                  Log In
+                </NavLink>
+              </React.Fragment>
             )}
             {user.email != "" && (
               <React.Fragment>
