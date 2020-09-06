@@ -10,7 +10,7 @@ const calc = (x, y) => [window.innerWidth / 2 - x, window.innerHeight / 2 - y];
 const trans1 = (x, y) => `translate3d(${x / 30}px,${y / 30}px,0)`;
 
 const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
-  const [spring, set] = useSpring(() => ({
+  const [spring, set]: any = useSpring(() => ({
     to: {
       xy: [0, 0],
       config: { mass: 10, tension: 550, friction: 140 },
@@ -40,7 +40,8 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
       fluid
       style={{ padding: 0, overflow: "hidden" }}
       onMouseMove={({ clientX: x, clientY: y }) => {
-        set({ xy: calc(x, y) });
+        const target: any = { xy: calc(x, y) };
+        set(target);
       }}
     >
       <animated.div

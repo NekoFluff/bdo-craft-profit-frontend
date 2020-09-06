@@ -7,22 +7,22 @@ type LogoProps = {
   runAnimation: boolean;
 };
 
+const from = {
+  transform: "rotate(0) translate(0,0)",
+  "transform-origin": "175px 0px",
+  opacity: 1,
+};
+
+const to = {
+  transform: "rotate(45) translate(0,0)",
+  // "transform-origin": "175px 0px",
+  opacity: 0,
+};
+
 const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
   const [play] = useSound(ImpactSound, { volume: 0.01 });
 
-  const from = {
-    transform: "rotate(0) translate(0,0)",
-    "transform-origin": "0px 0px",
-    opacity: 1,
-  };
-
-  const to = {
-    transform: "rotate(60) translate(10,0)",
-    "transform-origin": "175px 0px",
-    opacity: 0,
-  };
-
-  const spring = useSpring({
+  const spring: any = useSpring({
     // config: config.wobbly,
     // config: config.gentle,
     config: { ...config.stiff, duration: 500 },
@@ -30,7 +30,7 @@ const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
     to: async (next) => {
       while (runAnimation) {
         await next(from);
-        console.log("Anvil Sound Activate");
+        // console.log("Anvil Sound Activate");
         try {
           play();
         } catch (e) {
@@ -47,9 +47,9 @@ const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
     // </svg>
     <React.Fragment>
       <svg
-        height="175"
-        viewBox="0 -100 109 200"
-        width="175"
+        height="225"
+        viewBox="0 -100 125 200"
+        width="225"
         xmlns="http://www.w3.org/2000/svg"
       >
         <g id="041---Forging" fill="none">
