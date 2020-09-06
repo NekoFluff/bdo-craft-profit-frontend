@@ -5,11 +5,13 @@ import { Container } from "react-bootstrap";
 import { withRouter } from "react-router";
 import { action as toggleMenu } from "redux-burger-menu";
 import { setCostValues, setTimeValues } from "../helpers/parseItemFromRedux";
+import BackgroundImage from "../images/webb.png";
 
 // My components
 import RecipesDashboard from "./../components/RecipesDashboard";
 import ChartWithDimensions from "../components/ChartWithDimensions";
 import PageTransition from "../components/PageTransition";
+import ParallaxBackground from "../components/ParallaxBackground";
 
 const RecipesPage = (props) => {
   const [product, setProduct] = useState("");
@@ -25,12 +27,13 @@ const RecipesPage = (props) => {
 
   return (
     <PageTransition>
-      <Container fluid id="outer-container">
-        <Container
-          fluid
-          className="d-flex align-items-center align-content-center justify-content-center"
-        >
-          {/* <ChartWithDimensions
+      <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
+        <Container fluid id="outer-container">
+          <Container
+            fluid
+            className="d-flex align-items-center align-content-center justify-content-center"
+          >
+            {/* <ChartWithDimensions
             chartSettings={{
               width: "1500",
               height: "900",
@@ -41,12 +44,12 @@ const RecipesPage = (props) => {
             }}
             setValues={setCostValues}
           /> */}
-        </Container>
-        <Container
-          fluid
-          className="d-flex align-items-center align-content-center justify-content-center"
-        >
-          {/* <ChartWithDimensions
+          </Container>
+          <Container
+            fluid
+            className="d-flex align-items-center align-content-center justify-content-center"
+          >
+            {/* <ChartWithDimensions
             chartSettings={{
               width: "1500",
               height: "900",
@@ -57,10 +60,11 @@ const RecipesPage = (props) => {
             }}
             setValues={setTimeValues}
           /> */}
-        </Container>
+          </Container>
 
-        <RecipesDashboard product={product} setProduct={setProduct} />
-      </Container>
+          <RecipesDashboard product={product} setProduct={setProduct} />
+        </Container>
+      </ParallaxBackground>
     </PageTransition>
   );
 };

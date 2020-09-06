@@ -39,7 +39,7 @@ const MyNavBar = (props) => {
               BDO Craft Profit
             </NavLink>
           </Nav>
-          <Nav className="ml-md-auto align-items-center mt-2">
+          <Nav className="mx-md-auto align-items-center mt-2">
             <NavLink to="/" className="menu-item nav-link" exact>
               Home
             </NavLink>

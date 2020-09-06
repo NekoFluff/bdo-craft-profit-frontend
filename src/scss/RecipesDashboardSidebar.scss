@@ -25,6 +25,14 @@ div.bm-cross-button {
   top: 1.25rem !important;
   height: 2rem !important;
   width: 2rem !important;
+  svg {
+    margin-left: 10px;
+    border-radius: 0.25rem !important;
+  }
+}
+
+button {
+  border-radius: 2rem !important;
 }
 
 /* Color/shape of close button cross */
