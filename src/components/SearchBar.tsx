@@ -1,5 +1,3 @@
-import "../scss/SearchBar.scss";
-
 // https://github.com/moroshko/react-autosuggest
 import React, { useState, useEffect, useCallback } from "react";
 import Autosuggest from "react-autosuggest";
@@ -9,6 +7,7 @@ import { Form } from "react-bootstrap";
 import { withRouter, RouteComponentProps } from "react-router";
 import _ from "lodash";
 import { Scrollbars } from "react-custom-scrollbars";
+import "../scss/SearchBar.scss";
 
 let recipeNames = [];
 
@@ -125,6 +124,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   // Finally, render it!
   return (
     <Form
+      className="search-bar__form"
       onSubmit={(e) => {
         e.preventDefault();
         goToRecipe(value);

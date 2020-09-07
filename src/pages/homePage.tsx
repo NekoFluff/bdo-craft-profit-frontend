@@ -22,7 +22,7 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
           className="home-page__body"
           style={{ position: "relative", height: "100%" }}
         >
-          <Col className="flex-grow-1 flex-shrink-1" style={{ top: "27%" }}>
+          <Col className="home-page" style={{ top: "23%" }}>
             <h1 className="p-2 home-page__title">Craft Profit</h1>
             <SearchBar />
           </Col>

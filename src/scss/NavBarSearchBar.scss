@@ -1,6 +1,11 @@
 @import "config";
 
-.home-page {
+.navbar-searchbar {
+  .search-bar__form {
+    padding: 0;
+    margin: 0;
+  }
+
   .custom-scrollbar {
     max-height: 35vh !important;
   }
@@ -14,11 +19,12 @@
       display: flex;
       position: relative;
       justify-content: center;
+      margin-bottom: 0rem !important;
     }
 
     &__input {
-      width: 80%;
-      padding: 10px 20px;
+      width: 100%;
+      padding: 0px 20px;
       // font-family: Helvetica, sans-serif;
       font-weight: 300;
       font-size: 16px;
@@ -28,16 +34,6 @@
       @include media-sm {
         border-radius: 0.5em;
         height: 40px;
-      }
-      @include media-md {
-        border-radius: 0.75em;
-        height: 45px;
-      }
-      @include media-lg {
-        height: 50px;
-      }
-      @include media-xl {
-        height: 60px;
       }
     }
 
@@ -57,8 +53,8 @@
     &__suggestions-container--open {
       display: block;
       position: absolute;
-      top: 100%;
-      width: 80%;
+      top: 99%;
+      width: calc(100%);
 
       border: 1px solid #aaa;
       background-color: #fff;

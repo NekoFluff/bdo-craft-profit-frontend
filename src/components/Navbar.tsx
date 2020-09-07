@@ -1,15 +1,18 @@
-import "../scss/Navbar.scss";
+import "../scss/NavBar.scss";
+import "../scss/NavBarSearchBar.scss";
 
 import React, { useState } from "react";
-import { Navbar, Nav, Button } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Navbar, Nav, Button, Row, Col } from "react-bootstrap";
+import { NavLink, useLocation } from "react-router-dom";
 import Headroom from "react-headroom";
 import Hamburger from "hamburger-react";
 import useWindowSize from "./hooks/useWindowSize";
 import { useSelector } from "react-redux";
 import { getCurrentUser } from "../store/user";
+import SearchBar from "./SearchBar";
 
 const MyNavBar = (props) => {
+  const location = useLocation();
   const [isOpen, setOpen] = useState(false);
   const user = useSelector(getCurrentUser());
   const [width, height] = useWindowSize();
@@ -28,8 +31,13 @@ const MyNavBar = (props) => {
           <Hamburger toggled={isOpen} toggle={setOpen} />
         </Navbar.Toggle>
         <Navbar.Collapse>
-          <Nav className={`align-items-center mt-2`}>
-            {/* Links */}
+          {/* <Col sm={1}>Test</Col>
+          <Col sm={10}>Test 2</Col>
+          <Col sm={1}>Test 3</Col> */}
+          <Nav
+            className={`navbar__logo align-items-center mt-2`}
+            style={{ width: "100%" }}
+          >
             <NavLink
               to="/"
               className="menu-item navbar-brand"
@@ -39,7 +47,7 @@ const MyNavBar = (props) => {
               BDO Craft Profit
             </NavLink>
           </Nav>
-          <Nav className="mx-md-auto align-items-center mt-2">
+          <Nav className="navbar__main justify-content-center align-items-center mt-2">
             <NavLink to="/" className="menu-item nav-link" exact>
               Home
             </NavLink>
@@ -62,6 +70,13 @@ const MyNavBar = (props) => {
                   Log Out
                 </NavLink>
               </React.Fragment>
+            )}
+          </Nav>
+          <Nav className="navbar__search">
+            {location.pathname != "/" && (
+              <div className="navbar-searchbar menu-item">
+                <SearchBar />
+              </div>
             )}
           </Nav>
         </Navbar.Collapse>
