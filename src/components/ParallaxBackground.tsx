@@ -25,8 +25,8 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
     position: "fixed",
     // "background-attachment": "fixed",
     // "background-position": "center",
-    // "background-repeat": "no-repeat",
-    // "background-size": "cover",
+    "background-repeat": "no-repeat",
+    "background-size": "cover",
     top: "50vh",
     left: "50vw",
 
