@@ -1,14 +1,15 @@
 import "../scss/SearchBar.scss";
-import "../scss/AutosuggestTheme.scss";
 
 // https://github.com/moroshko/react-autosuggest
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
 import { Form } from "react-bootstrap";
 import { withRouter, RouteComponentProps } from "react-router";
 import _ from "lodash";
+import { useSpring, animated } from "react-spring";
+import { Scrollbars } from "react-custom-scrollbars";
 
 let recipeNames = [];
 
@@ -34,9 +35,6 @@ const getSuggestions = (value) => {
 // input value for every given suggestion.
 const getSuggestionValue = (suggestion) => suggestion;
 
-// Use your imagination to render suggestions.
-const renderSuggestion = (suggestion) => <span>{suggestion}</span>;
-
 type SearchBarProps = {
   onSearch?: (newProduct) => void;
 } & RouteComponentProps;
@@ -47,91 +45,96 @@ type SearchBarState = {
   product: string;
 };
 
-class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
-  state: SearchBarState = {
-    value: "",
-    suggestions: [],
-    product: "",
+const SearchBar: React.FC<SearchBarProps> = (props) => {
+  const [value, setValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [product, setProduct] = useState("");
+
+  // Component did mount
+  useEffect(() => {
+    const asyncFunc = async () => {
+      try {
+        const uri = API_ENDPOINT + "/recipes/names";
+        console.log("Hello. Search bar loading. URI:", uri);
+        const promise = await axios.get(uri);
+        recipeNames = promise.data;
+        console.log("All Items with Recipes:", recipeNames);
+      } catch (e) {
+        console.log("Component did mount error:", e);
+      }
+    };
+
+    asyncFunc();
+  }, []);
+
+  // Use your imagination to render suggestions.
+  const renderSuggestion = (suggestion) => <span>{suggestion}</span>;
+
+  const renderSuggestionsContainer = ({ containerProps, children, query }) => {
+    return (
+      <div {...containerProps}>
+        <Scrollbars className="custom-scrollbar">{children}</Scrollbars>
+      </div>
+    );
   };
 
-  async componentDidMount() {
-    try {
-      const uri = API_ENDPOINT + "/recipes/names";
-      console.log("Hello. Search bar loading. URI:", uri);
-      const promise = await axios.get(uri);
-      recipeNames = promise.data;
-      console.log("All Items with Recipes:", recipeNames);
-    } catch (e) {
-      console.log("Component did mount error:", e);
-    }
-  }
-
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue,
-    });
+  const onChange = (event, { newValue }) => {
+    setValue(newValue);
   };
 
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above, so just use it.
-  onSuggestionsFetchRequested = _.debounce(({ value }) => {
-    this.setState({
-      suggestions: getSuggestions(value),
-    });
+  const onSuggestionsFetchRequested = _.debounce(({ value }) => {
+    setSuggestions(getSuggestions(value));
   }, 500);
 
   // Autosuggest will call this function every time you need to clear suggestions.
-  onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: [],
-    });
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
   };
 
-  onSearch = (event, data) => {
-    this.setState({ product: data.suggestionValue });
-    this.goToRecipe(data.suggestionValue);
+  const onSearch = (event, data) => {
+    setProduct(data.suggestionValue);
+    goToRecipe(data.suggestionValue);
 
-    if (this.props.onSearch) {
-      this.props.onSearch(data.suggestionValue);
+    if (props.onSearch) {
+      props.onSearch(data.suggestionValue);
     }
   };
 
-  goToRecipe = (itemName) => {
-    this.props.history.push("/recipes/" + itemName);
+  const goToRecipe = (itemName) => {
+    props.history.push("/recipes/" + itemName);
   };
 
-  render() {
-    const { value, suggestions } = this.state;
+  // Autosuggest will pass through all these props to the input.
+  const inputProps = {
+    placeholder: "Search an item to craft",
+    value,
+    onChange: onChange,
+  };
 
-    // Autosuggest will pass through all these props to the input.
-    const inputProps = {
-      placeholder: "Search an item to craft",
-      value,
-      onChange: this.onChange,
-    };
-
-    // Finally, render it!
-    return (
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          this.goToRecipe(this.state.value);
-        }}
-      >
-        <Autosuggest
-          // theme={AutosuggestTheme}
-          // className="d-flex p-2 justify-content-center"
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-          onSuggestionSelected={this.onSearch}
-        />
-      </Form>
-    );
-  }
-}
+  // Finally, render it!
+  return (
+    <Form
+      onSubmit={(e) => {
+        e.preventDefault();
+        goToRecipe(value);
+      }}
+    >
+      <Autosuggest
+        // theme={AutosuggestTheme}
+        // className="d-flex p-2 justify-content-center"
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        renderSuggestionsContainer={renderSuggestionsContainer}
+        inputProps={inputProps}
+        onSuggestionSelected={onSearch}
+      />
+    </Form>
+  );
+};
 
 export default withRouter(SearchBar);
