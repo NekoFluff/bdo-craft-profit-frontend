@@ -10,6 +10,8 @@ import CommonPage from "./commonPage";
 import UnderConstruction from "../components/UnderConstruction";
 import ParallaxBackground from "../components/ParallaxBackground";
 
+import "../scss/HomePage.scss";
+
 type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
 
 const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
@@ -18,32 +20,10 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
       <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
         <Container
           // className="d-flex justify-content-center"
-          style={{ height: "100vh", position: "relative" }}
+          style={{ height: "100%", position: "relative" }}
         >
-          {/* <Row className="d-flex justify-content-center align-items-center">
-            <h1
-              className="p-2"
-              style={{
-                textAlign: "center",
-                color: "white",
-                fontSize: "5em",
-              }}
-            >
-              Craft Profit
-            </h1>
-          </Row> */}
-
           <Col style={{ top: "27%" }}>
-            <h1
-              className="p-2"
-              style={{
-                textAlign: "center",
-                color: "white",
-                fontSize: "5em",
-              }}
-            >
-              Craft Profit
-            </h1>
+            <h1 className="p-2 home-page__title">Craft Profit</h1>
             <SearchBar />
           </Col>
 

@@ -7,7 +7,8 @@ type ParallaxBackgroundProps = {
 };
 
 const calc = (x, y) => [window.innerWidth / 2 - x, window.innerHeight / 2 - y];
-const trans1 = (x, y) => `translate3d(${x / 30}px,${y / 30}px,0)`;
+const trans1 = (x, y) =>
+  `translate3d(calc(-50vw - ${x / 30}px),calc(-50vh - ${y / 30}px),0)`;
 
 const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
   const [spring, set]: any = useSpring(() => ({
@@ -26,6 +27,8 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
     // "background-position": "center",
     // "background-repeat": "no-repeat",
     // "background-size": "cover",
+    top: "50vh",
+    left: "50vw",
 
     minHeight: "110vh",
     minWidth: "110vw",

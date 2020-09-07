@@ -1,0 +1,19 @@
+@import "_config";
+.home-page__title {
+  text-align: center;
+  color: white;
+  font-size: 2em;
+
+  @include media-sm {
+    font-size: 3em;
+  }
+  @include media-md {
+    font-size: 4em;
+  }
+  @include media-lg {
+    font-size: 5em;
+  }
+  @include media-xl {
+    font-size: 6em;
+  }
+}

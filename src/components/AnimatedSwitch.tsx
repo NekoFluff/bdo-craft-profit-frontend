@@ -14,7 +14,7 @@ import UserStatsPage from "../pages/userStatsPage";
 
 const AnimatedSwitch = ({ location }) => {
   return (
-    <TransitionGroup>
+    <TransitionGroup style={{ height: "100%" }}>
       <CSSTransition key={location.key} classNames="" timeout={1000}>
         <Switch location={location}>
           <Route path="/" component={HomePage} exact />
