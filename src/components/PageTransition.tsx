@@ -39,7 +39,7 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
 
   useInterval(() => {
     setContentReady(true);
-  }, 2500); // 2500
+  }, 99999999999); // 2500
 
   const transitionProperties: any = {
     config: { ...config.slow, duration: 666 },

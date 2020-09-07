@@ -9,7 +9,7 @@ type LogoProps = {
 
 const from = {
   transform: "rotate(0) translate(0,0)",
-  "transform-origin": "175px 0px",
+  "transform-origin": "100px 20px",
   opacity: 1,
 };
 
@@ -48,7 +48,7 @@ const Logo: React.FC<LogoProps> = ({ runAnimation }) => {
     <React.Fragment>
       <svg
         height="225"
-        viewBox="0 -100 125 200"
+        viewBox="-65 -100 200 200"
         width="225"
         xmlns="http://www.w3.org/2000/svg"
       >

@@ -19,10 +19,10 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
     <CommonPage>
       <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
         <Container
-          // className="d-flex justify-content-center"
-          style={{ height: "100%", position: "relative" }}
+          className="home-page__body"
+          style={{ position: "relative", height: "100%" }}
         >
-          <Col style={{ top: "27%" }}>
+          <Col className="flex-grow-1 flex-shrink-1" style={{ top: "27%" }}>
             <h1 className="p-2 home-page__title">Craft Profit</h1>
             <SearchBar />
           </Col>

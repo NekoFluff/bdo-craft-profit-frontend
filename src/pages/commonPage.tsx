@@ -9,8 +9,13 @@ const commonPage: React.FC<commonPageProps> = (props) => {
   return (
     <Container fluid style={{ margin: 0, padding: 0, height: "100%" }}>
       <PageTransition>
-        <MyNavBar></MyNavBar>
-        {props.children}
+        <div className="d-flex flex-column" style={{ height: "100%" }}>
+          <div>
+            <MyNavBar></MyNavBar>
+          </div>
+          <div className="align-self-stretch flex-grow-1">{props.children}</div>
+          {/* <div>Flex item</div> */}
+        </div>
       </PageTransition>
     </Container>
   );

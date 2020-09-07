@@ -41,14 +41,17 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
   return (
     <Container
       fluid
-      style={{ padding: 0, overflow: "hidden" }}
+      style={{ padding: 0, overflow: "hidden", height: "100%" }}
       onMouseMove={({ clientX: x, clientY: y }) => {
         const target: any = { xy: calc(x, y) };
         set(target);
       }}
     >
       <animated.div
-        style={{ ...backgroundStyle, transform: spring.xy.interpolate(trans1) }}
+        style={{
+          ...backgroundStyle,
+          transform: spring.xy.interpolate(trans1),
+        }}
       ></animated.div>
       {props.children}
     </Container>
