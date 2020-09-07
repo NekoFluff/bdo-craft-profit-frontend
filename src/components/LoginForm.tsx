@@ -70,7 +70,6 @@ const LoginForm = () => {
           placeholder="Password"
           value={password}
           onChange={(e) => {
-            console.log("New Password:", password);
             setPassword(e.target.value);
           }}
         />
@@ -109,7 +108,6 @@ const LoginForm = () => {
           clientId={GOOGLE_OAUTH_CLIENT_ID}
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
-          cookiePolicy={"single_host_origin"}
           style={{ width: "100%" }}
           isSignedIn={true}
         />

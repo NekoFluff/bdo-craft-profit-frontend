@@ -170,7 +170,6 @@ const SignUpForm = () => {
           clientId={GOOGLE_OAUTH_CLIENT_ID}
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
-          cookiePolicy={"single_host_origin"}
           style={{ width: "100%" }}
           buttonText="Sign up with Google"
         />
