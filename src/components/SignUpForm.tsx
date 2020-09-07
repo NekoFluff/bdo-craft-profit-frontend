@@ -164,9 +164,6 @@ const SignUpForm = () => {
         <ArrowForwardIcon id="arrowIcon" />
       </Button>
 
-      <NavLink id="signUp" to="/signup" className="menu-item nav-link">
-        Sign Up
-      </NavLink>
       <div>
         <GoogleLogin
           className="login-form__google"
@@ -175,6 +172,7 @@ const SignUpForm = () => {
           onFailure={responseGoogle}
           cookiePolicy={"single_host_origin"}
           style={{ width: "100%" }}
+          buttonText="Sign up with Google"
         />
       </div>
     </Form>

@@ -111,6 +111,7 @@ const LoginForm = () => {
           onFailure={responseGoogle}
           cookiePolicy={"single_host_origin"}
           style={{ width: "100%" }}
+          isSignedIn={true}
         />
       </div>
     </Form>

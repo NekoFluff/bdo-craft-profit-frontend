@@ -1,14 +1,13 @@
 import "../scss/SearchBar.scss";
 
 // https://github.com/moroshko/react-autosuggest
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import { API_ENDPOINT } from "../helpers/CONSTANTS";
 import { Form } from "react-bootstrap";
 import { withRouter, RouteComponentProps } from "react-router";
 import _ from "lodash";
-import { useSpring, animated } from "react-spring";
 import { Scrollbars } from "react-custom-scrollbars";
 
 let recipeNames = [];
@@ -73,7 +72,14 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const renderSuggestionsContainer = ({ containerProps, children, query }) => {
     return (
       <div {...containerProps}>
-        <Scrollbars className="custom-scrollbar">{children}</Scrollbars>
+        <Scrollbars
+          className="custom-scrollbar"
+          style={{
+            height: `${children ? children.props.items.length * 48 : 1000}px`,
+          }}
+        >
+          {children}
+        </Scrollbars>
       </div>
     );
   };
@@ -84,9 +90,12 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
 
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above, so just use it.
-  const onSuggestionsFetchRequested = _.debounce(({ value }) => {
-    setSuggestions(getSuggestions(value));
-  }, 500);
+  const onSuggestionsFetchRequested = useCallback(
+    _.debounce(({ value }) => {
+      setSuggestions(getSuggestions(value));
+    }, 500),
+    []
+  );
 
   // Autosuggest will call this function every time you need to clear suggestions.
   const onSuggestionsClearRequested = () => {
