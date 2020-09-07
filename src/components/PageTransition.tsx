@@ -39,7 +39,7 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
 
   useInterval(() => {
     setContentReady(true);
-  }, 99999999999); // 2500
+  }, 2500); // 2500
 
   const transitionProperties: any = {
     config: { ...config.slow, duration: 666 },
@@ -53,7 +53,7 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
       backgroundColor: contentReady ? "green" : "yellow",
     },
     leave: {
-      top: -height,
+      top: -height * 1.5,
       backgroundColor: "green",
     },
   };

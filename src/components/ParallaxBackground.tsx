@@ -41,7 +41,7 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
   return (
     <Container
       fluid
-      style={{ padding: 0, overflow: "hidden", height: "100%" }}
+      style={{ padding: 0, height: "100%" }}
       onMouseMove={({ clientX: x, clientY: y }) => {
         const target: any = { xy: calc(x, y) };
         set(target);
