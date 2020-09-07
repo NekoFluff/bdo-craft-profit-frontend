@@ -7,6 +7,7 @@ import configureStore from "./store/configureStore";
 
 // My components
 import AnimatedSwitch from "./components/AnimatedSwitch";
+import ScrollToTop from "./components/ScrollToTop";
 
 const store = configureStore();
 
@@ -16,6 +17,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <main className="main" style={{ height: "100vh" }}>
+            <ScrollToTop />
             <AnimatedSwitch />
           </main>
         </Router>
