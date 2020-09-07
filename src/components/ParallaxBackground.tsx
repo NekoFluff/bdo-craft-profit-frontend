@@ -27,10 +27,10 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
     // "background-repeat": "no-repeat",
     // "background-size": "cover",
 
-    minHeight: "105vh",
-    minWidth: "105vw",
-    marginLeft: "-2.5%",
-    marginTop: "-2.5%",
+    minHeight: "110vh",
+    minWidth: "110vw",
+    marginLeft: "-5vw",
+    marginTop: "-9vh",
     padding: "0%",
     overflow: "hidden",
   };
