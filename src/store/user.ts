@@ -5,8 +5,8 @@ import { apiCallBegan } from "./api";
 import { LOGIN_ENDPOINT, SIGN_UP_ENDPOINT } from "../helpers/CONSTANTS";
 import { createSelector } from "reselect";
 import update from "react-addons-update";
-
-export type Buffs = { [key: string]: { timeReduction: number } };
+import { Buffs } from "bdo-shopping-cart-package";
+// export type Buffs = { [key: string]: { timeReduction: number } };
 
 type userSliceState = {
   name: string;
@@ -145,6 +145,12 @@ export const getAuthToken = () =>
   createSelector(
     (state: RootState) => state.entities.currentUser,
     (user) => user.accessToken
+  );
+
+export const getBuffs = () =>
+  createSelector(
+    (state: RootState) => state.entities.currentUser,
+    (user) => (user.buffs ? user.buffs : null)
   );
 
 export const getBuff = (action: string) =>

@@ -20,6 +20,7 @@ const RecipesPage = (props) => {
   useEffect(() => {
     setProduct(props.match.params.item);
     dispatch(toggleMenu(true));
+
     return () => {
       dispatch(toggleMenu(false));
     };
@@ -65,7 +66,7 @@ const RecipesPage = (props) => {
           /> */}
           </Container>
 
-          <RecipesDashboard product={product} setProduct={setProduct} />
+          <RecipesDashboard product={product} />
         </Container>
       </ParallaxBackground>
     </PageTransition>

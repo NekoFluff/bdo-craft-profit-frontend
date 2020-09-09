@@ -1,4 +1,3 @@
-import "../scss/NavBar.scss";
 import "../scss/NavBarSearchBar.scss";
 
 import React, { useState } from "react";

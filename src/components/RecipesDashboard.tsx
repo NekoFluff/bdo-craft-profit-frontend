@@ -24,6 +24,7 @@ import { itemsSet, itemsOrderSet, rootItemSet } from "../store/items";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/reducer";
 import { marketPriceOverrided } from "../store/calculator";
+import { getBuffs } from "../store/user";
 
 const cloneItems = (items: { [key: string]: Item }) => {
   const newItems = {};
@@ -45,7 +46,6 @@ const classToObject = (theClass: any): any => {
 
 type DashboardProps = {
   product: string;
-  setProduct: any;
 };
 
 /**
@@ -55,10 +55,7 @@ type DashboardState = {
   craftCount: number;
 };
 
-const RecipesDashboard: React.FC<DashboardProps> = ({
-  product,
-  setProduct,
-}) => {
+const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
   const dispatch = useDispatch();
 
   let itemManager: ItemManager = useMemo(() => new ItemManager(), []);
@@ -66,6 +63,8 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
   const orderedItems = useSelector(
     (state: RootState) => state.entities.items.order
   );
+
+  const buffs = useSelector(getBuffs());
 
   scrollSpy.update();
 
@@ -114,8 +113,9 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
         const { data: recipes } = await axios.get(
           API_ENDPOINT + "/recipes?item=" + productName
         );
-        console.log("Original Recipes", recipes);
+        console.log("Original Recipes for ", productName, recipes);
         const items = itemManager.parseRecipes(recipes);
+        itemManager.applyBuffs(buffs);
         itemManager.resetToOptimal();
         console.log("Final Items", items);
         dispatch(rootItemSet(itemManager.officialProductName));
@@ -124,12 +124,17 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
         console.log(e);
       }
     },
-    [dispatch, updateTables]
+    [dispatch, updateTables, buffs]
   );
 
   useEffect(() => {
-    getData(product);
+    if (product && product != "") getData(product);
   }, [product, getData]);
+
+  // useEffect(() => {
+  //   itemManager.applyBuffs(buffs);
+  //   updateTables();
+  // }, [buffs]);
 
   const renderTables = () => {
     if (itemManager == null) return;
@@ -226,12 +231,8 @@ const RecipesDashboard: React.FC<DashboardProps> = ({
         <MyNavBar></MyNavBar>
         <RecipesDashboardButton />
 
-        <div className="p-3" style={{ textAlign: "center" }}>
-          <SearchBar
-            onSearch={(newProduct) => {
-              setProduct(newProduct);
-            }}
-          />
+        <div className="home-page p-3" style={{ textAlign: "center" }}>
+          <SearchBar />
         </div>
         {renderTables()}
       </div>

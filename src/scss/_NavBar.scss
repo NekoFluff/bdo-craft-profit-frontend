@@ -1,7 +1,5 @@
 @import "config";
 
-@import "bootstrap";
-
 .navbar__logo {
   @include media-lg {
     @extend .col-lg-2;

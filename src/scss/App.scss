@@ -12,6 +12,9 @@ $secondary: rgb(245, 20, 100);
 @import "./Accordion";
 @import "bootstrap";
 
+// Other scss files
+@import "./NavBar";
+
 @function weight($weight-name) {
   @return map-get($map: $font-weights, $key: $weight-name);
 }
