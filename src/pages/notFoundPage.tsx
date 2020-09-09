@@ -10,7 +10,10 @@ type NotFoundPageProps = {} & RouteComponentProps<{ item: string }>;
 const NotFoundPage: React.FC<NotFoundPageProps> = (props) => {
   return (
     <CommonPage>
-      <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
+      <ParallaxBackground
+        backgroundRepeat
+        backgroundImage={`url(${BackgroundImage})`}
+      >
         <Container
           fluid
           style={{

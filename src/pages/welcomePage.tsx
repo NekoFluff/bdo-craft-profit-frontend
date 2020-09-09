@@ -3,7 +3,6 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import LeftBackgroundImage from "../images/double-bubble.png";
 import RightBackgroundImage from "../images/double-bubble-dark.png";
-import ParallaxBackground from "../components/ParallaxBackground";
 import CommonPage from "./commonPage";
 import "../scss/WelcomePage.scss";
 
@@ -12,7 +11,6 @@ type WelcomePageProps = {} & RouteComponentProps<{ item: string }>;
 const WelcomePage: React.FC<WelcomePageProps> = (props) => {
   return (
     <CommonPage>
-      {/* <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}/> */}
       <Row className="h-100">
         <Col
           className="d-flex h-100 justify-content-center align-items-center welcome-page__background"

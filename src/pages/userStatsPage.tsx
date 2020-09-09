@@ -45,7 +45,10 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
       {user.accessToken == null ? (
         <Redirect to="/login" />
       ) : (
-        <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
+        <ParallaxBackground
+          backgroundRepeat
+          backgroundImage={`url(${BackgroundImage})`}
+        >
           {/* STYLE 1 */}
           <Container className="m-3" fluid>
             <Tab.Container

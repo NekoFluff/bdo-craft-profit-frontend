@@ -4,6 +4,7 @@ import { animated, useSpring } from "react-spring";
 
 type ParallaxBackgroundProps = {
   backgroundImage: string;
+  backgroundRepeat?: boolean;
 };
 
 const calc = (x, y) => [window.innerWidth / 2 - x, window.innerHeight / 2 - y];
@@ -11,6 +12,7 @@ const trans1 = (x, y) =>
   `translate3d(calc(-50vw + ${x / 30}px),calc(-50vh + ${y / 30}px),0)`;
 
 const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
+  const { backgroundRepeat, backgroundImage } = props;
   const [spring, set]: any = useSpring(() => ({
     to: {
       xy: [0, 0],
@@ -19,14 +21,14 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
   }));
 
   var backgroundStyle: any = {
-    backgroundImage: props.backgroundImage,
+    backgroundImage: backgroundImage,
     // paddingBottom: "7%",
     // paddingTop: "7%",
     position: "fixed",
     // "background-attachment": "fixed",
     // "background-position": "center",
-    "background-repeat": "no-repeat",
-    "background-size": "cover",
+    "background-repeat": !backgroundRepeat ? "no-repeat" : "repeat",
+    "background-size": !backgroundRepeat ? "cover" : "auto",
     top: "50vh",
     left: "50vw",
 

@@ -27,7 +27,10 @@ const RecipesPage = (props) => {
 
   return (
     <PageTransition>
-      <ParallaxBackground backgroundImage={`url(${BackgroundImage})`}>
+      <ParallaxBackground
+        backgroundRepeat
+        backgroundImage={`url(${BackgroundImage})`}
+      >
         <Container fluid id="outer-container">
           <Container
             fluid
