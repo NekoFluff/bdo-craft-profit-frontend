@@ -1,0 +1,41 @@
+@import "config";
+
+.pullup-tab {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  text-align: center;
+  // height: 70%; // Modified in PullUpTab.tsx
+  z-index: 2000;
+
+  &-flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &-indicator {
+    // height: 50px; // Modified in PullUpTab.tsx
+    display: flex;
+    background-color: red;
+    width: 10%;
+    justify-self: center;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-content {
+    flex-grow: 1;
+    // overflow-y: scroll;
+    // overflow-x: scroll;
+    // height: 100%; // Modified in PullUpTab.tsx
+  }
+
+  &-overflow-content {
+    height: 200px;
+  }
+}

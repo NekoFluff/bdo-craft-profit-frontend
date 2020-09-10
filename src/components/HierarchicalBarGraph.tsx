@@ -1,9 +1,24 @@
 import React, { useState, useMemo } from "react";
 // import "../scss/HierarchicalBarGraph.scss";
 import { useSpring, animated } from "react-spring";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
+import { convertToTree } from "../helpers/parseItemFromRedux";
+import { stackedBar } from "../helpers/parseItemFromRedux";
+import * as d3 from "d3";
+import Axis from "./Charts/Axis";
 
 const Bar = (props) => {
-  const { root, barHeight, xScale, onBarClick, isVisible } = props;
+  const {
+    root,
+    barHeight,
+    xScale,
+    onBarClick,
+    isVisible,
+    boundedHeight,
+    onMouseEnter,
+    onMouseLeave,
+  } = props;
 
   const positionSpring = useSpring({
     // config: {
@@ -16,87 +31,209 @@ const Bar = (props) => {
   });
 
   const barSpring = useSpring({
-    width: isVisible ? xScale(root.value) : 0,
+    width: xScale(root.value),
     fill: isVisible ? (root.data.action === "Buy" ? "green" : "purple") : "red",
   });
 
   const shadowSpring = useSpring({
-    width: isVisible ? xScale(root.value) : 0,
-    height: isVisible ? `calc(100% - ${root.data.y}px)` : barHeight + 10, // `calc(100%-${root.data.y} + 100)`
+    width: xScale(root.value),
+    height: isVisible
+      ? `calc(${boundedHeight}px - ${root.data.y}px)`
+      : barHeight + 10, // `calc(100%-${root.data.y} + 100)`
     // fill: "red",
-    opacity: isVisible ? 0.05 : 0,
+    opacity: isVisible ? 0.09 : 0,
   });
+
+  const lineFunction: any = d3
+    .line()
+    .x((d: any) => d.x)
+    .y((d: any) => d.y);
 
   return (
     <animated.g
       className={`bar-graph__bar-group ${isVisible ? "enter" : "exit"}`}
       {...positionSpring}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
-      <animated.rect
-        {...barSpring}
-        className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
-        height={barHeight / 2}
-        rx="3"
-      />
-
-      <animated.rect
+      {/* <animated.rect
         {...shadowSpring}
         className={`bar-graph__bar-shadow`}
         rx="3"
+      /> */}
+
+      <animated.rect
+        {...barSpring}
+        className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
+        height={barHeight}
+        rx="3"
       />
+
+      {/* <rect
+        x={-xScale(root.data.x)}
+        y={barHeight}
+        width="250px"
+        height="15px"
+        fill="blue"
+      ></rect> */}
       <text
         className="bar-graph__text"
-        x={0}
-        y={-2}
-        fontSize="1.25em"
+        fontSize="1.2em"
         fontFamily="Bebas Neue"
+        textAnchor="end"
+        // textLength="15%"
+        x={-xScale(root.data.x) - 5}
+        y={barHeight}
         // fill="red"
         onClick={(e) => {
           onBarClick();
         }}
-      >{`${root.data.name}: ${isVisible ? root.value : 0}`}</text>
+      >{`${root.data.name}`}</text>
+
+      <path
+        stroke="black"
+        opacity="1"
+        d={lineFunction([
+          { x: -xScale(root.data.x), y: barHeight / 2 },
+          { x: 0, y: barHeight / 2 },
+        ])}
+      ></path>
+      {/* : ${isVisible ? root.value : 0} */}
     </animated.g>
   );
 };
 
 const HierarchicalBarGraph = (props) => {
-  const { root, width, height, barHeight, xScale, updateGraph } = props;
-  const descendants = root.descendants();
+  const { dimensions, setValues } = props;
+  const { boundedWidth: width, boundedHeight: height } = dimensions;
+  const barHeight = 15;
+  const padding = 20;
+  const verticalOffset = 30; // To move chart below Axis
+
+  // Hooks - Items
+  const items = useSelector((state: RootState) => state.entities.items.data);
+  const rootItem = useSelector(
+    (state: RootState) =>
+      state.entities.items.data[state.entities.items.rootItem]
+  );
+
+  // Generate the graph
+  const root = useMemo(() => {
+    const root = convertToTree(rootItem, items);
+    if (root) {
+      props.updateChartHeight(
+        root.descendants().length * (barHeight + padding) + verticalOffset
+      );
+    }
+    return root;
+  }, [rootItem, items]);
+
+  // Hooks - root
   const [activeNode, setActiveNode] = useState(root);
 
+  // Conditional return
+  if (root === null) return null;
+
+  // Get descendants if root is not null
+  const descendants = root.descendants();
+
+  // Hooks - xScale
+  const calculateXScale = () => {
+    if (root == null)
+      return d3
+        .scaleLinear()
+        .domain([0, 1])
+        .range([0, width - dimensions.paddingLeft]);
+    return d3
+      .scaleLinear()
+      .domain([0, root.value])
+      .range([0, width - dimensions.paddingLeft]);
+  };
+
+  let xScale = calculateXScale();
+
+  const updateGraph = () => {
+    if (root === null) return null;
+    setValues(root);
+    xScale = calculateXScale();
+    stackedBar([root], barHeight, padding);
+  };
+
+  updateGraph();
+
   if (!root.data.isOpen) console.log("Empty Root");
-  //return null;
   else
     return (
-      <>
-        {descendants.map((node, index) => {
-          return (
-            <Bar
-              // animationProps={props}
-              key={index}
-              isVisible={node.data.isOpen}
-              root={node}
-              barHeight={barHeight}
-              xScale={xScale}
-              onBarClick={() => {
-                // console.log("New Node List", selectedIndex, newNodeList);
+      <svg
+        transform={`translate(${[
+          dimensions.marginLeft,
+          parseFloat(dimensions.marginTop) + 20,
+        ].join(",")})`}
+      >
+        {/* <rect width={`${width}`} height="50px"></rect> */}
+        <g transform={`translate(${dimensions.paddingLeft}, 0)`}>
+          <Axis
+            domain={[0, root.value]}
+            range={[0, width - dimensions.paddingLeft]}
+          />
+          <g transform={`translate(0, ${verticalOffset})`}>
+            {descendants.map((node, index) => {
+              return (
+                <Bar
+                  boundedHeight={height}
+                  key={index}
+                  isVisible={node.data.isOpen}
+                  root={node}
+                  barHeight={barHeight}
+                  xScale={xScale}
+                  onMouseEnter={() => {
+                    const location = [node.data.x, node.data.y];
 
-                // Update 'isOpen' variable of all descendants
-                node.data.isOpen = !node.data.isOpen;
+                    props.setPopupData({
+                      location: [
+                        xScale(location[0] + node.value / 2) +
+                          parseFloat(dimensions.marginLeft) +
+                          parseFloat(dimensions.paddingLeft),
+                        location[1],
+                      ],
+                      value: node.value,
+                      name: node.data.name,
+                      maxValue: root.value,
+                      // examples: ["Test 1", "Test 2", "Test 3"],
+                      examples: Object.keys(node.data.usedInRecipes).map(
+                        (fullPath) => {
+                          const temp = fullPath.split("/");
+                          if (temp.length > 2) {
+                            return temp[temp.length - 2];
+                          } else {
+                            return null;
+                          }
+                        }
+                      ),
+                    });
+                  }}
+                  onMouseLeave={() => {
+                    props.hidePopupData();
+                  }}
+                  onBarClick={() => {
+                    // Update 'isOpen' variable of all descendants
+                    node.data.isOpen = !node.data.isOpen;
 
-                console.log("IsOpen:", node.data.isOpen);
+                    console.log("IsOpen:", node.data.isOpen);
 
-                for (const d of node.descendants()) {
-                  d.data.isOpen = node.data.isOpen;
-                }
+                    for (const d of node.descendants()) {
+                      d.data.isOpen = node.data.isOpen;
+                    }
 
-                updateGraph();
-                setActiveNode(node);
-              }}
-            ></Bar>
-          );
-        })}
-      </>
+                    updateGraph();
+                    setActiveNode(node);
+                  }}
+                ></Bar>
+              );
+            })}
+          </g>
+        </g>
+      </svg>
     );
 };
 

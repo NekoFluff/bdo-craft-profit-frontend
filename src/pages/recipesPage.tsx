@@ -9,9 +9,9 @@ import BackgroundImage from "../images/webb.png";
 
 // My components
 import RecipesDashboard from "./../components/RecipesDashboard";
-import ChartWithDimensions from "../components/ChartWithDimensions";
 import PageTransition from "../components/PageTransition";
 import ParallaxBackground from "../components/ParallaxBackground";
+import PullUpTab from "../components/Charts/PullUpTab";
 
 const RecipesPage = (props) => {
   const [product, setProduct] = useState("");
@@ -32,6 +32,8 @@ const RecipesPage = (props) => {
         backgroundRepeat
         backgroundImage={`url(${BackgroundImage})`}
       >
+        <PullUpTab />
+
         <Container fluid id="outer-container">
           <Container
             fluid

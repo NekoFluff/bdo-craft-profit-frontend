@@ -38,7 +38,7 @@ function buildTree(
   return tree;
 }
 
-export function stackedBar(items = [], barHeight) {
+export function stackedBar(items = [], barHeight, padding = 0) {
   let y = 0;
 
   const recursiveReset = (items = [], barHeight, currentWidth = 0) => {
@@ -51,7 +51,7 @@ export function stackedBar(items = [], barHeight) {
       } else {
         item.data.x = x;
         item.data.y = y;
-        y += barHeight;
+        y += barHeight + padding;
       }
 
       recursiveReset(item.children, barHeight, x);
