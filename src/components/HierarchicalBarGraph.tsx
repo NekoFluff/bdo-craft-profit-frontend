@@ -18,6 +18,7 @@ const Bar = (props) => {
     boundedHeight,
     onMouseEnter,
     onMouseLeave,
+    maxWidth,
   } = props;
 
   const positionSpring = useSpring({
@@ -53,20 +54,32 @@ const Bar = (props) => {
     <animated.g
       className={`bar-graph__bar-group ${isVisible ? "enter" : "exit"}`}
       {...positionSpring}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
-      {/* <animated.rect
+      {/* SHADOW */}
+      <animated.rect
         {...shadowSpring}
         className={`bar-graph__bar-shadow`}
         rx="3"
-      /> */}
+      />
 
+      {/* VISIBLE BAR */}
       <animated.rect
         {...barSpring}
         className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
         height={barHeight}
         rx="3"
+      />
+
+      {/* INVISIBLE BAR (HOVER) */}
+      <animated.rect
+        className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
+        height={barHeight}
+        width={maxWidth}
+        x={-xScale(root.data.x)}
+        rx="3"
+        opacity={0}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       />
 
       {/* <rect
@@ -76,6 +89,8 @@ const Bar = (props) => {
         height="15px"
         fill="blue"
       ></rect> */}
+
+      {/* BAR GRAPH TEXT */}
       <text
         className="bar-graph__text"
         fontSize="1.2em"
@@ -90,6 +105,7 @@ const Bar = (props) => {
         }}
       >{`${root.data.name}`}</text>
 
+      {/* LINE BETWEEN TEXT AND BAR */}
       <path
         stroke="black"
         opacity="1"
@@ -185,6 +201,7 @@ const HierarchicalBarGraph = (props) => {
                   isVisible={node.data.isOpen}
                   root={node}
                   barHeight={barHeight}
+                  maxWidth={width - dimensions.paddingLeft}
                   xScale={xScale}
                   onMouseEnter={() => {
                     const location = [node.data.x, node.data.y];
