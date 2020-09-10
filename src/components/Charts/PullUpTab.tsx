@@ -66,7 +66,7 @@ const PullUpTab = () => {
       height: "900",
       marginTop: `${Math.min(margin, 75)}`,
       marginRight: `${margin}`,
-      marginBottom: `${Math.min(margin, 25)}`,
+      marginBottom: `${Math.min(margin, 45)}`,
       marginLeft: `${margin}`,
       paddingLeft: `${spaceForText}`,
     },

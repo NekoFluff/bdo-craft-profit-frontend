@@ -38,10 +38,8 @@ const Bar = (props) => {
 
   const shadowSpring = useSpring({
     width: xScale(root.value),
-    height: isVisible
-      ? `calc(${boundedHeight}px - ${root.data.y}px)`
-      : barHeight + 10, // `calc(100%-${root.data.y} + 100)`
-    // fill: "red",
+
+    height: isVisible ? boundedHeight - root.data.y : barHeight + 10,
     opacity: isVisible ? 0.09 : 0,
   });
 
@@ -139,7 +137,9 @@ const HierarchicalBarGraph = (props) => {
     const root = convertToTree(rootItem, items);
     if (root) {
       props.updateChartHeight(
-        root.descendants().length * (barHeight + barPadding) + verticalOffset
+        root.descendants().length * (barHeight + barPadding) +
+          verticalOffset +
+          50
       );
     }
     return root;
@@ -188,7 +188,7 @@ const HierarchicalBarGraph = (props) => {
             {descendants.map((node, index) => {
               return (
                 <Bar
-                  boundedHeight={height}
+                  boundedHeight={height - 40}
                   key={index}
                   isVisible={node.data.isOpen}
                   root={node}
