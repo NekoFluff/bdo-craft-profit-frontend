@@ -123,8 +123,9 @@ const HierarchicalBarGraph = (props) => {
   const { dimensions, setValues } = props;
   const { boundedWidth: width, boundedHeight: height } = dimensions;
   const barHeight = 15;
-  const padding = 20;
+  const barPadding = 20;
   const verticalOffset = 30; // To move chart below Axis
+  const actualWidth = width - dimensions.paddingLeft;
 
   // Hooks - Items
   const items = useSelector((state: RootState) => state.entities.items.data);
@@ -138,7 +139,7 @@ const HierarchicalBarGraph = (props) => {
     const root = convertToTree(rootItem, items);
     if (root) {
       props.updateChartHeight(
-        root.descendants().length * (barHeight + padding) + verticalOffset
+        root.descendants().length * (barHeight + barPadding) + verticalOffset
       );
     }
     return root;
@@ -156,14 +157,8 @@ const HierarchicalBarGraph = (props) => {
   // Hooks - xScale
   const calculateXScale = () => {
     if (root == null)
-      return d3
-        .scaleLinear()
-        .domain([0, 1])
-        .range([0, width - dimensions.paddingLeft]);
-    return d3
-      .scaleLinear()
-      .domain([0, root.value])
-      .range([0, width - dimensions.paddingLeft]);
+      return d3.scaleLinear().domain([0, 1]).range([0, actualWidth]);
+    return d3.scaleLinear().domain([0, root.value]).range([0, actualWidth]);
   };
 
   let xScale = calculateXScale();
@@ -172,7 +167,7 @@ const HierarchicalBarGraph = (props) => {
     if (root === null) return null;
     setValues(root);
     xScale = calculateXScale();
-    stackedBar([root], barHeight, padding);
+    stackedBar([root], barHeight, barPadding);
   };
 
   updateGraph();
@@ -188,10 +183,7 @@ const HierarchicalBarGraph = (props) => {
       >
         {/* <rect width={`${width}`} height="50px"></rect> */}
         <g transform={`translate(${dimensions.paddingLeft}, 0)`}>
-          <Axis
-            domain={[0, root.value]}
-            range={[0, width - dimensions.paddingLeft]}
-          />
+          <Axis domain={[0, root.value]} range={[0, actualWidth]} />
           <g transform={`translate(0, ${verticalOffset})`}>
             {descendants.map((node, index) => {
               return (
@@ -201,7 +193,7 @@ const HierarchicalBarGraph = (props) => {
                   isVisible={node.data.isOpen}
                   root={node}
                   barHeight={barHeight}
-                  maxWidth={width - dimensions.paddingLeft}
+                  maxWidth={actualWidth}
                   xScale={xScale}
                   onMouseEnter={() => {
                     const location = [node.data.x, node.data.y];
