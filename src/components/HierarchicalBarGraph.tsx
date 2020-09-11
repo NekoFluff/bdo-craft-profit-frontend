@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-// import "../scss/HierarchicalBarGraph.scss";
+
 import { useSpring, animated } from "react-spring";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/reducer";
