@@ -33,8 +33,11 @@ const RecipesPage = (props) => {
         backgroundImage={`url(${BackgroundImage})`}
       >
         <PullUpTab />
-
-        <Container fluid id="outer-container">
+        <Container
+          fluid
+          id="outer-container"
+          style={{ margin: 0, padding: 0, height: "100%" }}
+        >
           <RecipesDashboard product={product} />
         </Container>
       </ParallaxBackground>

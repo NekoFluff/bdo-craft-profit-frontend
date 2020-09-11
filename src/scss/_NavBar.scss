@@ -1,9 +1,13 @@
 @import "config";
 
 .navbar {
+  padding: 0;
+  margin: 0;
+
   &__logo {
     @include media-lg {
       @extend .col-lg-2;
+      padding-left: 1.5em;
     }
   }
 
@@ -14,8 +18,12 @@
   }
 
   &__search {
+    padding: 0px 10%;
+    margin: 0;
     @include media-lg {
       @extend .col-lg-2;
+      padding: 0;
+      padding-right: 1.5em;
     }
   }
 

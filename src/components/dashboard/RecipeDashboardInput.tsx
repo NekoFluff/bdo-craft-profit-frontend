@@ -6,7 +6,7 @@ import numberWithCommas from "../../helpers/numberWithCommas";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/reducer";
 
-const RecipesSidebarUserInputAccordion = (props) => {
+const RecipeDashboardInput = (props) => {
   const items = useSelector((state: RootState) => state.entities.items.data);
 
   const handleSubmit = (e) => {
@@ -159,7 +159,7 @@ const RecipesSidebarUserInputAccordion = (props) => {
   };
 
   return (
-    <Accordion defaultActiveKey="0">
+    <Accordion defaultActiveKey="0" style={{ margin: "1.5rem" }}>
       {/* Card 1 */}
       <Card>
         <Card.Header style={{ backgroundColor: "rgb(200, 200, 200)" }}>
@@ -186,4 +186,4 @@ const RecipesSidebarUserInputAccordion = (props) => {
   );
 };
 
-export default RecipesSidebarUserInputAccordion;
+export default RecipeDashboardInput;

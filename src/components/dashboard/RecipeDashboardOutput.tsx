@@ -1,17 +1,20 @@
-import React, { useState } from "react";
-import WithTooltip from "../hoc/WithTooltip";
-import { InputGroup, Form, Button, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "../../helpers/numberWithCommas";
-import secondsToHms from "../../helpers/secondsToHms";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/reducer";
 import {
   getMarketPriceForItem,
   getShoppingCartDataForItem,
 } from "bdo-shopping-cart-package";
+import React, { useState } from "react";
+import { Accordion, Button, Card, Form, InputGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
-const RecipesSidebarTotalProfitAccordion = (props) => {
+import numberWithCommas from "../../helpers/numberWithCommas";
+import secondsToHms from "../../helpers/secondsToHms";
+import { RootState } from "../../store/reducer";
+import WithTooltip from "../hoc/WithTooltip";
+
+import "../../scss/DashboardOutput.scss";
+
+const RecipeDashboardOutput = (props) => {
   const [marketPriceOverride, setMarketPriceOverride] = useState(-1);
 
   const item = useSelector(
@@ -152,20 +155,33 @@ const RecipesSidebarTotalProfitAccordion = (props) => {
   };
 
   return (
-    <Accordion defaultActiveKey="0">
-      {/* Card 3 */}
-      <Card>
-        <Card.Header style={{ backgroundColor: "rgb(200, 200, 200)" }}>
-          <Accordion.Toggle as={Button} variant="link" eventKey="2">
-            Total Profit (Output)
-          </Accordion.Toggle>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>{renderOutput()}</Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+    // <Accordion defaultActiveKey="0" style={{ margin: "1.5em" }}>
+    //   <Card>
+    //     <Card.Header style={{ backgroundColor: "rgb(200, 200, 200)" }}>
+    //       <Accordion.Toggle as={Button} variant="link" eventKey="0">
+    //         Total Profit (Output)
+    //       </Accordion.Toggle>
+    //     </Card.Header>
+    //     <Accordion.Collapse eventKey="0">
+    //       <Card.Body>{renderOutput()}</Card.Body>
+    //     </Accordion.Collapse>
+    //   </Card>
+    // </Accordion>
+    <div className="dashboard-output">
+      <div className="dashboard-output__left">
+        <div className="dashboard-output__number">X</div>
+        <div className="dashboard-output__text">Silver Spent</div>
+      </div>
+      <div className="dashboard-output__middle">
+        <div className="dashboard-output__number">X</div>
+        <div className="dashboard-output__text">Total Profit</div>
+      </div>
+      <div className="dashboard-output__right">
+        <div className="dashboard-output__number">X</div>
+        <div className="dashboard-output__text">Profit per Second</div>
+      </div>
+    </div>
   );
 };
 
-export default RecipesSidebarTotalProfitAccordion;
+export default RecipeDashboardOutput;

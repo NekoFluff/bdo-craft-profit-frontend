@@ -55,7 +55,12 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
           transform: spring.xy.interpolate(trans1),
         }}
       ></animated.div>
-      {props.children}
+      <div
+        className="parallaxBackgroundContent"
+        style={{ position: "relative" }}
+      >
+        {props.children}
+      </div>
     </Container>
   );
 };

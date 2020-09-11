@@ -8,6 +8,7 @@ const initialPopupData: PopupData = {
   value: 0,
   maxValue: 0,
   examples: ["Sample Example"],
+  shoppingCartData: {},
 };
 
 type ChartSettings = {

@@ -408,7 +408,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
               <div
                 id="toolbar"
                 style={{
-                  backgroundColor: "rgb(230, 230, 230)",
+                  backgroundColor: "rgb(200, 200, 200)",
                 }}
               >
                 <MTableToolbar {...props} style={{ "text-align": "center" }} />

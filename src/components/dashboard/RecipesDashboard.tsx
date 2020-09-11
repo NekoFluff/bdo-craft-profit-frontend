@@ -1,30 +1,33 @@
-// Main packages
-import React, { useEffect, useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { Events, scrollSpy } from "react-scroll";
 import axios from "axios";
-import _ from "lodash";
 
 // My package
-import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
+import { ItemManager, ProfitCalculator } from "bdo-shopping-cart-package";
 import { Item } from "bdo-shopping-cart-package";
+import _ from "lodash";
+
+// Main packages
+import React, { useCallback, useEffect, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { Events, scrollSpy } from "react-scroll";
 
 // Helpers
 import { API_ENDPOINT } from "../../helpers/CONSTANTS";
+import { marketPriceOverrided } from "../../store/calculator";
 
-// Other omponents
+// Redux
+import { itemsOrderSet, itemsSet, rootItemSet } from "../../store/items";
+import { RootState } from "../../store/reducer";
+import { getBuffs } from "../../store/user";
+import MyNavBar from "../common/Navbar";
+import SearchBar from "../common/SearchBar";
+import RecipeDashboardInput from "./RecipeDashboardInput";
+import RecipeDashboardOutput from "./RecipeDashboardOutput";
+
+// Other components
 import RecipesDashboardButton from "./RecipesDashboardButton";
 import RecipesDashboardSidebar from "./RecipesDashboardSidebar";
 import RecipesTable from "./RecipesTable";
-import MyNavBar from "../common/Navbar";
-import SearchBar from "../common/SearchBar";
-
-// Redux
-import { itemsSet, itemsOrderSet, rootItemSet } from "../../store/items";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/reducer";
-import { marketPriceOverrided } from "../../store/calculator";
-import { getBuffs } from "../../store/user";
 
 const cloneItems = (items: { [key: string]: Item }) => {
   const newItems = {};
@@ -229,11 +232,62 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
       {/* {renderSidebar()} */}
       {/* <RecipesDashboardButton /> */}
       <div id="page-wrap">
-        <MyNavBar></MyNavBar>
+        <MyNavBar />
 
         {/* <div className="home-page p-3" style={{ textAlign: "center" }}>
           <SearchBar />
         </div> */}
+        <RecipeDashboardInput
+          onUpdateCraftCount={(newCraftCount) => {
+            itemManager.defaultCraftCount = newCraftCount;
+            itemManager.recalculate({ craftCount: newCraftCount });
+            updateTables();
+          }}
+          onUpdateValuePack={(valuePackEnabled) => {
+            ProfitCalculator.valuePackEnabled = valuePackEnabled;
+            itemManager.resetToOptimal();
+            updateTables();
+          }}
+          onMarketPriceChange={(newMarketPrice) => {
+            itemManager.items[
+              itemManager.officialProductName
+            ].overrideMarketPrice = newMarketPrice;
+            dispatch(
+              marketPriceOverrided({
+                itemName: itemManager.officialProductName,
+                marketPrice: newMarketPrice,
+              })
+            );
+            itemManager.resetToOptimal();
+            updateTables();
+          }}
+        />
+        <RecipeDashboardOutput
+          onUpdateCraftCount={(newCraftCount) => {
+            itemManager.defaultCraftCount = newCraftCount;
+            itemManager.recalculate({ craftCount: newCraftCount });
+            updateTables();
+          }}
+          onUpdateValuePack={(valuePackEnabled) => {
+            ProfitCalculator.valuePackEnabled = valuePackEnabled;
+            itemManager.resetToOptimal();
+            updateTables();
+          }}
+          onMarketPriceChange={(newMarketPrice) => {
+            itemManager.items[
+              itemManager.officialProductName
+            ].overrideMarketPrice = newMarketPrice;
+            dispatch(
+              marketPriceOverrided({
+                itemName: itemManager.officialProductName,
+                marketPrice: newMarketPrice,
+              })
+            );
+            itemManager.resetToOptimal();
+            updateTables();
+          }}
+        />
+
         {renderTables()}
       </div>
     </>

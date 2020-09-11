@@ -11,6 +11,7 @@ export type PopupData = {
   value: number;
   maxValue: number;
   examples: string[];
+  shoppingCartData: any;
 };
 
 type ChartPopupProps = {
@@ -22,7 +23,7 @@ type ChartPopupProps = {
 };
 
 const ChartPopup: React.FC<ChartPopupProps> = (props) => {
-  const { data, isHidden, width = 300, height = 125, topOffset = 0 } = props;
+  const { data, isHidden, width = 300, height = 150, topOffset = 0 } = props;
   data.examples = data.examples.filter((text) => {
     if (text != "") return text;
   });
@@ -35,7 +36,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
       //   data.location[1] + topOffset
       // )}px)`,
       transform: `translate(${data.location[0] - width / 2}px,${
-        topOffset - height / 2 + data.location[1]
+        topOffset - height + data.location[1]
       }px)`,
       opacity: isHidden ? 0 : 1,
     },
@@ -43,13 +44,18 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
 
   const percentage = ((data.value / data.maxValue) * 100).toFixed(2);
   console.log("Y", data.location[1], topOffset);
+  const numberText =
+    data.shoppingCartData.action === "Buy"
+      ? ` - [Buy  ${numberWithCommas(data.shoppingCartData.expectedCount)}]`
+      : " - [Craft]";
   return (
     <animated.div
       className="chart-popup"
       style={{ ...popupSpring, width, height }}
     >
+      <div className="chart-popup__title">{`${data.name}${numberText}`} </div>
       <div className="chart-popup__title">
-        {`${data.name}: ${numberWithCommas(data.value)}`}{" "}
+        {`${numberWithCommas(data.value)} Silver`}{" "}
       </div>
       <div className="chart-popup__examples" id="examples">
         {data.examples.length > 0 && <b>Used In:</b>}

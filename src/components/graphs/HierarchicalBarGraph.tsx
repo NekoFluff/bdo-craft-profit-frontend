@@ -9,6 +9,8 @@ import * as d3 from "d3";
 import Axis from "./Axis";
 
 const Bar = (props) => {
+  const buyColor = "#BD1A13FF";
+  const craftColor = "#4F4F4FFF";
   const {
     root,
     barHeight,
@@ -21,6 +23,7 @@ const Bar = (props) => {
     maxWidth,
     paddingLeft,
   } = props;
+  const color = root.data.action === "Buy" ? buyColor : craftColor;
 
   const positionSpring = useSpring({
     // config: {
@@ -34,11 +37,7 @@ const Bar = (props) => {
 
   const barSpring = useSpring({
     width: xScale(root.value),
-    fill: isVisible
-      ? root.data.action === "Buy"
-        ? "#BD1A13FF"
-        : "#4F4F4FFF"
-      : "red",
+    fill: color,
   });
 
   const shadowSpring = useSpring({
@@ -59,11 +58,11 @@ const Bar = (props) => {
       {...positionSpring}
     >
       {/* SHADOW */}
-      <animated.rect
+      {/* <animated.rect
         {...shadowSpring}
         className={`bar-graph__bar-shadow`}
         rx="3"
-      />
+      /> */}
 
       {/* VISIBLE BAR */}
       <animated.rect
@@ -82,7 +81,8 @@ const Bar = (props) => {
         // textLength="15%"
         x={-xScale(root.data.x) - 5}
         y={barHeight}
-        // fill="red"
+        stroke={color}
+        fill={color}
         // onClick={(e) => {
         //   onBarClick();
         // }}
@@ -119,7 +119,7 @@ const HierarchicalBarGraph = (props) => {
   const barHeight = 15;
   const barPadding = 20;
   const verticalOffset = 30; // To move chart below Axis
-  const actualWidth = width - dimensions.paddingLeft;
+  const actualWidth = width - parseFloat(dimensions.paddingLeft);
 
   // Hooks - Items
   const items = useSelector((state: RootState) => state.entities.items.data);
@@ -214,7 +214,7 @@ const HierarchicalBarGraph = (props) => {
                   barHeight={barHeight}
                   maxWidth={actualWidth}
                   xScale={xScale}
-                  paddingLeft={dimensions.paddingLeft}
+                  paddingLeft={parseFloat(dimensions.paddingLeft)}
                   onMouseEnter={() => {
                     const location = [node.data.x, node.data.y];
 
@@ -228,8 +228,9 @@ const HierarchicalBarGraph = (props) => {
                       value: node.value,
                       name: node.data.name,
                       maxValue: root.value,
-                      // examples: ["Test 1", "Test 2", "Test 3"],
                       examples: [getParent(node.data.path)],
+                      shoppingCartData:
+                        node.data.shoppingCartData[node.data.path],
                     });
                   }}
                   onMouseLeave={() => {
