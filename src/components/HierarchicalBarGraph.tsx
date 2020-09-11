@@ -19,6 +19,7 @@ const Bar = (props) => {
     onMouseEnter,
     onMouseLeave,
     maxWidth,
+    paddingLeft,
   } = props;
 
   const positionSpring = useSpring({
@@ -68,26 +69,6 @@ const Bar = (props) => {
         rx="3"
       />
 
-      {/* INVISIBLE BAR (HOVER) */}
-      <animated.rect
-        className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
-        height={barHeight}
-        width={maxWidth}
-        x={-xScale(root.data.x)}
-        rx="3"
-        opacity={0}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      />
-
-      {/* <rect
-        x={-xScale(root.data.x)}
-        y={barHeight}
-        width="250px"
-        height="15px"
-        fill="blue"
-      ></rect> */}
-
       {/* BAR GRAPH TEXT */}
       <text
         className="bar-graph__text"
@@ -98,9 +79,9 @@ const Bar = (props) => {
         x={-xScale(root.data.x) - 5}
         y={barHeight}
         // fill="red"
-        onClick={(e) => {
-          onBarClick();
-        }}
+        // onClick={(e) => {
+        //   onBarClick();
+        // }}
       >{`${root.data.name}`}</text>
 
       {/* LINE BETWEEN TEXT AND BAR */}
@@ -112,7 +93,18 @@ const Bar = (props) => {
           { x: 0, y: barHeight / 2 },
         ])}
       ></path>
-      {/* : ${isVisible ? root.value : 0} */}
+
+      {/* INVISIBLE BAR (HOVER) */}
+      <animated.rect
+        className={`bar-graph__bar ${isVisible ? "enter" : "exit"}`}
+        height={barHeight}
+        width={maxWidth + paddingLeft}
+        x={-xScale(root.data.x) - paddingLeft}
+        rx="3"
+        opacity={0}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      />
     </animated.g>
   );
 };
@@ -195,6 +187,7 @@ const HierarchicalBarGraph = (props) => {
                   barHeight={barHeight}
                   maxWidth={actualWidth}
                   xScale={xScale}
+                  paddingLeft={dimensions.paddingLeft}
                   onMouseEnter={() => {
                     const location = [node.data.x, node.data.y];
 
