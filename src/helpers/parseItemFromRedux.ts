@@ -13,7 +13,8 @@ function buildTree(
   alreadySeen: { [key: string]: boolean } = {},
   previousPath = ""
 ) {
-  if (alreadySeen[item.name]) return null;
+  let discontinue = false;
+  if (alreadySeen[item.name]) discontinue = true;
   alreadySeen[item.name] = true;
   const path = `${previousPath}/${item.name}`;
   let tree = { ...item };
@@ -21,19 +22,22 @@ function buildTree(
   tree["path"] = path;
   tree["action"] = item.shoppingCartData[path].action;
   if (item.recipes && item.recipes[item.activeRecipeId]) {
-    tree["children"] = item.recipes[item.activeRecipeId].ingredients
-      .map((ingredient) => {
-        const name = ingredient["Item Name"];
-        return buildTree(
-          itemMapping[name],
-          itemMapping,
-          { ...alreadySeen },
-          path
-        );
-      })
-      .filter((elem) => {
-        return elem != null;
-      });
+    if (discontinue) {
+      tree["children"] = [];
+    } else
+      tree["children"] = item.recipes[item.activeRecipeId].ingredients
+        .map((ingredient) => {
+          const name = ingredient["Item Name"];
+          return buildTree(
+            itemMapping[name],
+            itemMapping,
+            { ...alreadySeen },
+            path
+          );
+        })
+        .filter((elem) => {
+          return elem != null;
+        });
   }
   return tree;
 }
@@ -69,10 +73,13 @@ export function setCostValues(root: HierarchyNode<Item & { path: string }>) {
     const cartEntry = datum.shoppingCartData[datum.path];
     // const path = key.split("/");
     // const itemName = path[path.length - 1];
-    // console.log("ITEM PATH", datum.path, cartEntry);
-    return datum.isSymbolic || datum.activeRecipeId != ""
+    console.log("ITEM PATH", datum.path, datum);
+
+    return datum.isSymbolic
       ? 0
-      : cartEntry.individualPrice * cartEntry.craftCount;
+      : datum.activeRecipeId != "" && datum["action"] === "Craft" // If crafting
+      ? 0
+      : datum.marketData["Market Price"] * cartEntry.expectedCount;
   });
   return root;
 }

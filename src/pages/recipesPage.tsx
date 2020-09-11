@@ -35,39 +35,6 @@ const RecipesPage = (props) => {
         <PullUpTab />
 
         <Container fluid id="outer-container">
-          <Container
-            fluid
-            className="d-flex align-items-center align-content-center justify-content-center"
-          >
-            {/* <ChartWithDimensions
-            chartSettings={{
-              width: "1500",
-              height: "900",
-              marginTop: "150",
-              marginRight: "150",
-              marginBottom: "150",
-              marginLeft: "150",
-            }}
-            setValues={setCostValues}
-          /> */}
-          </Container>
-          <Container
-            fluid
-            className="d-flex align-items-center align-content-center justify-content-center"
-          >
-            {/* <ChartWithDimensions
-            chartSettings={{
-              width: "1500",
-              height: "900",
-              marginTop: "150",
-              marginRight: "150",
-              marginBottom: "150",
-              marginLeft: "150",
-            }}
-            setValues={setTimeValues}
-          /> */}
-          </Container>
-
           <RecipesDashboard product={product} />
         </Container>
       </ParallaxBackground>

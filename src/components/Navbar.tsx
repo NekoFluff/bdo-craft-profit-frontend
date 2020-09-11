@@ -85,7 +85,7 @@ const MyNavBar = (props) => {
 
   if (width <= 992) {
     return renderNavbar();
-  } else return <Headroom>{renderNavbar()}</Headroom>;
+  } else return <Headroom style={{ zIndex: 20 }}>{renderNavbar()}</Headroom>;
 };
 
 export default MyNavBar;

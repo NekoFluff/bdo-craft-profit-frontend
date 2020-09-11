@@ -1,39 +1,43 @@
 @import "config";
 
-.navbar__logo {
-  @include media-lg {
-    @extend .col-lg-2;
+.navbar {
+  &__logo {
+    @include media-lg {
+      @extend .col-lg-2;
+    }
   }
-}
-.navbar__main {
-  @include media-lg {
-    @extend .col-lg-8;
+
+  &__main {
+    @include media-lg {
+      @extend .col-lg-8;
+    }
   }
-}
-.navbar__search {
-  @include media-lg {
-    @extend .col-lg-2;
+
+  &__search {
+    @include media-lg {
+      @extend .col-lg-2;
+    }
   }
-}
 
-.navbar-toggler {
-  box-shadow: none !important;
-  border: none !important;
-}
+  &-toggler {
+    box-shadow: none !important;
+    border: none !important;
+  }
 
-a.navbar-brand {
-  font-family: "Bebas Neue", sans-serif;
-}
+  &-nav {
+    font-family: "Bebas Neue", sans-serif;
 
-a.menu-item {
-  font-family: "Bebas Neue", sans-serif;
-}
+    .btn {
+      font-size: 1.25em;
+      // color: red;
+    }
+  }
 
-.navbar-nav {
-  font-family: "Bebas Neue", sans-serif;
+  a.navbar-brand {
+    font-family: "Bebas Neue", sans-serif;
+  }
 
-  .btn {
-    font-size: 1.25em;
-    // color: red;
+  a.menu-item {
+    font-family: "Bebas Neue", sans-serif;
   }
 }

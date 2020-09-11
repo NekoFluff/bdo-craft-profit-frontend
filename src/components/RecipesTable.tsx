@@ -166,7 +166,9 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
         <div>
           <Badge variant="warning">
             {`${numberWithCommas(
-              individualPrice * craftCount
+              action === "Buy"
+                ? individualPrice * timesBought
+                : individualPrice * craftCount
             )} silver spent to get these materials`}
           </Badge>
         </div>

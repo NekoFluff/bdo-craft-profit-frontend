@@ -182,6 +182,15 @@ const HierarchicalBarGraph = (props) => {
   //   />
   // </g>
 
+  const getParent = (path) => {
+    const temp = path.split("/");
+    if (temp.length > 2) {
+      return temp[temp.length - 2];
+    } else {
+      return null;
+    }
+  };
+
   if (!root.data.isOpen) console.log("Empty Root");
   else
     return (
@@ -220,16 +229,7 @@ const HierarchicalBarGraph = (props) => {
                       name: node.data.name,
                       maxValue: root.value,
                       // examples: ["Test 1", "Test 2", "Test 3"],
-                      examples: Object.keys(node.data.usedInRecipes).map(
-                        (fullPath) => {
-                          const temp = fullPath.split("/");
-                          if (temp.length > 2) {
-                            return temp[temp.length - 2];
-                          } else {
-                            return null;
-                          }
-                        }
-                      ),
+                      examples: [getParent(node.data.path)],
                     });
                   }}
                   onMouseLeave={() => {

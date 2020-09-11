@@ -226,14 +226,14 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
 
   return (
     <>
-      {renderSidebar()}
+      {/* {renderSidebar()} */}
+      {/* <RecipesDashboardButton /> */}
       <div id="page-wrap">
         <MyNavBar></MyNavBar>
-        <RecipesDashboardButton />
 
-        <div className="home-page p-3" style={{ textAlign: "center" }}>
+        {/* <div className="home-page p-3" style={{ textAlign: "center" }}>
           <SearchBar />
-        </div>
+        </div> */}
         {renderTables()}
       </div>
     </>
