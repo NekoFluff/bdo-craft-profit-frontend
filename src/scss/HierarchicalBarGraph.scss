@@ -10,12 +10,15 @@
   &__shadow {
     right: 1rem;
   }
+
   &__group {
     right: 1rem;
   }
+
   &__text {
     right: 1rem;
   }
+
   &__bar {
     @include transition-fast;
     fill: black;
@@ -27,13 +30,10 @@
     right: 1rem;
     fill: red;
   }
+
   &__item-group {
     @include transition-slow;
   }
-
-  // &__bagroup {
-  //   @include transition-fast;
-  // }
 }
 
 .enter {
@@ -41,14 +41,14 @@
   transition: transform 3s ease-in-out;
   transform: rotate(144);
   fill-opacity: 100%;
-  fill: #101820FF;
+  fill: #101820ff;
 }
 
 .exit {
   @include transition-slow;
   transition: transform 3s ease-in-out;
   fill-opacity: 10%;
-  fill: #FEE715FF;
+  fill: #fee715ff;
 }
 
 .bar-graph__item-group {
