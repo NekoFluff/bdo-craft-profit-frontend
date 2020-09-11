@@ -1,14 +1,14 @@
-// scss
-import "../scss/RecipesDashboardSidebar.scss";
-
+import CloseIcon from "@material-ui/icons/Close";
 // Other packages
 import React from "react";
 import { withRouter } from "react-router";
-import CloseIcon from "@material-ui/icons/Close";
 
 // My components
-import Menu from "./Menu";
+import Menu from "../common/Menu";
 import RecipesSidebar, { SidebarProps } from "./RecipesSidebar";
+
+// scss
+import "../../scss/RecipesDashboardSidebar.scss";
 
 const RecipesDashboardSidebar: React.FC<SidebarProps> = (props) => {
   return (

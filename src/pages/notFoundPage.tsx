@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from "react";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Container, Row, Col } from "react-bootstrap";
-import CommonPage from "./commonPage";
-import ParallaxBackground from "../components/ParallaxBackground";
+import { Col, Container, Row } from "react-bootstrap";
+import { RouteComponentProps, withRouter } from "react-router";
+
+import ParallaxBackground from "../components/background/ParallaxBackground";
 import BackgroundImage from "../images/webb.png";
+import CommonPage from "./commonPage";
 
 type NotFoundPageProps = {} & RouteComponentProps<{ item: string }>;
 

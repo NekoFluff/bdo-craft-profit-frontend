@@ -1,13 +1,15 @@
-// https://github.com/moroshko/react-autosuggest
-import React, { useState, useEffect, useCallback } from "react";
-import Autosuggest from "react-autosuggest";
 import axios from "axios";
-import { API_ENDPOINT } from "../helpers/CONSTANTS";
-import { Form } from "react-bootstrap";
-import { withRouter, RouteComponentProps } from "react-router";
 import _ from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
+// https://github.com/moroshko/react-autosuggest
+import Autosuggest from "react-autosuggest";
+import { Form } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
-import "../scss/SearchBar.scss";
+import { RouteComponentProps, withRouter } from "react-router";
+
+import { API_ENDPOINT } from "../../helpers/CONSTANTS";
+
+import "../../scss/SearchBar.scss";
 
 let recipeNames = [];
 

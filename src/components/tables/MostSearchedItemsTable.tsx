@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
-import tableIcons from "../helpers/tableIcons";
+import tableIcons from "../../helpers/tableIcons";
 import { Link } from "react-router-dom";
-import { API_ENDPOINT } from "../helpers/CONSTANTS";
+import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 
 class MostSearchedItemsTable extends Component {
   state = {

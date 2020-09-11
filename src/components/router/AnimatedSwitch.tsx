@@ -1,16 +1,16 @@
 import React from "react";
-import { withRouter, Switch, Route } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
+import HomePage from "../../pages/homePage";
+import LoginPage from "../../pages/loginPage";
+import LogoutPage from "../../pages/logoutPage";
+import NotFoundPage from "../../pages/notFoundPage";
 // Pages
-import RecipesPage from "../pages/recipesPage";
-import HomePage from "../pages/homePage";
-import LoginPage from "../pages/loginPage";
-import LogoutPage from "../pages/logoutPage";
-import NotFoundPage from "../pages/notFoundPage";
-import SignUpPage from "../pages/signUpPage";
-import WelcomePage from "../pages/welcomePage";
-import UserStatsPage from "../pages/userStatsPage";
+import RecipesPage from "../../pages/recipesPage";
+import SignUpPage from "../../pages/signUpPage";
+import UserStatsPage from "../../pages/userStatsPage";
+import WelcomePage from "../../pages/welcomePage";
 
 const AnimatedSwitch = ({ location }) => {
   return (

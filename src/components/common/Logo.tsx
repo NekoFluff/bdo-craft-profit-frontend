@@ -1,7 +1,8 @@
 import React from "react";
-import { useSpring, animated, config } from "react-spring";
+import { animated, config, useSpring } from "react-spring";
 import useSound from "use-sound";
-const ImpactSound = require("../sounds/anvil-impact.mp3");
+
+const ImpactSound = require("../../sounds/anvil-impact.mp3");
 
 type LogoProps = {
   runAnimation: boolean;

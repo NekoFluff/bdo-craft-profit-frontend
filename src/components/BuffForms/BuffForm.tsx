@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import {
-  Row,
-  Col,
-  Jumbotron,
   Button,
-  ListGroup,
-  Tabs,
-  Tab,
+  Col,
   Form,
+  Jumbotron,
+  ListGroup,
+  Row,
+  Tab,
+  Tabs,
 } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { getBuff, getAuthToken, updateBuffs } from "../../store/user";
-import UnderConstruction from "../UnderConstruction";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getAuthToken, getBuff, updateBuffs } from "../../store/user";
+import UnderConstruction from "../common/UnderConstruction";
 
 type BuffFormProps = {
   name: string;

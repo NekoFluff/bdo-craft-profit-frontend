@@ -1,22 +1,23 @@
 import React, { useCallback, useState } from "react";
-import { withRouter, RouteComponentProps, Redirect } from "react-router";
 import {
-  Row,
-  Col,
-  Jumbotron,
   Button,
-  ListGroup,
-  Tabs,
-  Tab,
-  Form,
+  Col,
   Container,
+  Form,
+  Jumbotron,
+  ListGroup,
+  Row,
+  Tab,
+  Tabs,
 } from "react-bootstrap";
-import ParallaxBackground from "../components/ParallaxBackground";
-import BackgroundImage from "../images/webb.png";
-import CommonPage from "./commonPage";
-import BuffForm from "../components/BuffForms/BuffForm";
-import { getCurrentUser } from "../store/user";
 import { useSelector } from "react-redux";
+import { Redirect, RouteComponentProps, withRouter } from "react-router";
+
+import ParallaxBackground from "../components/background/ParallaxBackground";
+import BuffForm from "../components/buffForms/BuffForm";
+import BackgroundImage from "../images/webb.png";
+import { getCurrentUser } from "../store/user";
+import CommonPage from "./commonPage";
 
 type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
 

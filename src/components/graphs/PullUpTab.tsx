@@ -8,10 +8,10 @@ import useWindowSize from "../hooks/useWindowSize";
 import { Scrollbars } from "react-custom-scrollbars";
 
 // My components
-import DoubleArrow from "../DoubleArrow";
+import DoubleArrow from "../common/DoubleArrow";
 import chartWithDimensions from "./chartWithDimensions";
 import { setCostValues, setTimeValues } from "../../helpers/parseItemFromRedux";
-import HierarchicalBarGraph from "../HierarchicalBarGraph";
+import HierarchicalBarGraph from "./HierarchicalBarGraph";
 
 const PullUpTab = () => {
   const [width, height] = useWindowSize();

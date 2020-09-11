@@ -1,14 +1,15 @@
-import "../scss/NavBarSearchBar.scss";
-
-import React, { useState } from "react";
-import { Navbar, Nav, Button, Row, Col } from "react-bootstrap";
-import { NavLink, useLocation } from "react-router-dom";
-import Headroom from "react-headroom";
 import Hamburger from "hamburger-react";
-import useWindowSize from "./hooks/useWindowSize";
+import React, { useState } from "react";
+import { Button, Col, Nav, Navbar, Row } from "react-bootstrap";
+import Headroom from "react-headroom";
 import { useSelector } from "react-redux";
-import { getCurrentUser } from "../store/user";
+import { NavLink, useLocation } from "react-router-dom";
+
+import { getCurrentUser } from "../../store/user";
+import useWindowSize from "../hooks/useWindowSize";
 import SearchBar from "./SearchBar";
+
+import "../../scss/NavBarSearchBar.scss";
 
 const MyNavBar = (props) => {
   const location = useLocation();

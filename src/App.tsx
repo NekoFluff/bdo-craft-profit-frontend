@@ -6,8 +6,8 @@ import { Provider } from "react-redux";
 import configureStore from "./store/configureStore";
 
 // My components
-import AnimatedSwitch from "./components/AnimatedSwitch";
-import ScrollToTop from "./components/ScrollToTop";
+import AnimatedSwitch from "./components/router/AnimatedSwitch";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 const store = configureStore();
 

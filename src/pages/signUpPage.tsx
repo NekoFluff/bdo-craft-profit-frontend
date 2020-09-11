@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { withRouter, RouteComponentProps } from "react-router";
 import { Container, Row } from "react-bootstrap";
+import { RouteComponentProps, withRouter } from "react-router";
+
+import ParallaxBackground from "../components/background/ParallaxBackground";
+import SignUpForm from "../components/userForms/SignUpForm";
 import BackgroundImage from "../images/bg1.png";
-import ParallaxBackground from "../components/ParallaxBackground";
 import CommonPage from "./commonPage";
-import SignUpForm from "../components/SignUpForm";
 
 type SignUpPageProps = {} & RouteComponentProps<{ item: string }>;
 type SignUpPageState = {};

@@ -1,20 +1,22 @@
-import React, { useCallback, useState, useEffect } from "react";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import _ from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { GoogleLogin } from "react-google-login";
-import { GOOGLE_OAUTH_CLIENT_ID } from "../helpers/CONSTANTS";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
-import "../scss/LoginForm.scss";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+
+import { GOOGLE_OAUTH_CLIENT_ID } from "../../helpers/CONSTANTS";
+import { RootState } from "../../store/reducer";
 import {
   getCurrentUser,
-  userFailedLogIn,
-  signUpUser,
   loginUser,
-} from "../store/user";
-import { RootState } from "../store/reducer";
-import { Alert } from "react-bootstrap";
-import _ from "lodash";
+  signUpUser,
+  userFailedLogIn,
+} from "../../store/user";
+
+import "../../scss/LoginForm.scss";
 
 const SignUpForm = () => {
   const dispatch = useDispatch();

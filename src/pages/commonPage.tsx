@@ -1,7 +1,8 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import MyNavBar from "../components/Navbar";
-import PageTransition from "../components/PageTransition";
+
+import MyNavBar from "../components/common/Navbar";
+import PageTransition from "../components/common/PageTransition";
 
 type commonPageProps = {};
 

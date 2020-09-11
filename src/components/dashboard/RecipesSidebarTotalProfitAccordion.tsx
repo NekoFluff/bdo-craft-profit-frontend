@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import WithTooltip from "./hoc/WithTooltip";
+import WithTooltip from "../hoc/WithTooltip";
 import { InputGroup, Form, Button, Accordion, Card } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "../helpers/numberWithCommas";
-import secondsToHms from "../helpers/secondsToHms";
+import numberWithCommas from "../../helpers/numberWithCommas";
+import secondsToHms from "../../helpers/secondsToHms";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/reducer";
+import { RootState } from "../../store/reducer";
 import {
   getMarketPriceForItem,
   getShoppingCartDataForItem,

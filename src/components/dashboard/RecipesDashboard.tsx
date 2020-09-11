@@ -10,21 +10,21 @@ import { ProfitCalculator, ItemManager } from "bdo-shopping-cart-package";
 import { Item } from "bdo-shopping-cart-package";
 
 // Helpers
-import { API_ENDPOINT } from "../helpers/CONSTANTS";
+import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 
 // Other omponents
 import RecipesDashboardButton from "./RecipesDashboardButton";
 import RecipesDashboardSidebar from "./RecipesDashboardSidebar";
 import RecipesTable from "./RecipesTable";
-import MyNavBar from "./Navbar";
-import SearchBar from "./SearchBar";
+import MyNavBar from "../common/Navbar";
+import SearchBar from "../common/SearchBar";
 
 // Redux
-import { itemsSet, itemsOrderSet, rootItemSet } from "../store/items";
+import { itemsSet, itemsOrderSet, rootItemSet } from "../../store/items";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/reducer";
-import { marketPriceOverrided } from "../store/calculator";
-import { getBuffs } from "../store/user";
+import { RootState } from "../../store/reducer";
+import { marketPriceOverrided } from "../../store/calculator";
+import { getBuffs } from "../../store/user";
 
 const cloneItems = (items: { [key: string]: Item }) => {
   const newItems = {};

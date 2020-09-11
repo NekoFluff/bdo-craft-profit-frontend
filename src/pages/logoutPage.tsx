@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect } from "react";
-import { withRouter, RouteComponentProps } from "react-router";
 import { Container } from "react-bootstrap";
-import { GOOGLE_OAUTH_CLIENT_ID } from "../helpers/CONSTANTS";
-import { useDispatch } from "react-redux";
 import { useGoogleLogout } from "react-google-login";
-import { logoutUser } from "../store/user";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router";
+
+import { GOOGLE_OAUTH_CLIENT_ID } from "../helpers/CONSTANTS";
+import { logoutUser } from "../store/user";
 import { getCurrentUser } from "../store/user";
 import CommonPage from "./commonPage";
 

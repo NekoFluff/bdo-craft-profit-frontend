@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Container, Row, Col, Button } from "react-bootstrap";
-import LeftBackgroundImage from "../images/double-bubble.png";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import { RouteComponentProps, withRouter } from "react-router";
+
 import RightBackgroundImage from "../images/double-bubble-dark.png";
+import LeftBackgroundImage from "../images/double-bubble.png";
 import CommonPage from "./commonPage";
+
 import "../scss/WelcomePage.scss";
 
 type WelcomePageProps = {} & RouteComponentProps<{ item: string }>;

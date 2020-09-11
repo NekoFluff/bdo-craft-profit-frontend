@@ -1,19 +1,19 @@
-// scss
-import "../scss/HomePage.scss";
-
 // Packages
 import React from "react";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import { RouteComponentProps, withRouter } from "react-router";
 
+import ParallaxBackground from "../components/background/ParallaxBackground";
+import SearchBar from "../components/common/SearchBar";
+import UnderConstruction from "../components/common/UnderConstruction";
+import MostSearchedItemsTable from "../components/tables/MostSearchedItemsTable";
+import PPSTable from "../components/tables/PPSTable";
+import BackgroundImage from "../images/bg1.png";
 // My components
 import CommonPage from "./commonPage";
-import SearchBar from "../components/SearchBar";
-import ParallaxBackground from "../components/ParallaxBackground";
-import BackgroundImage from "../images/bg1.png";
-import PPSTable from "../components/PPSTable";
-import MostSearchedItemsTable from "../components/MostSearchedItemsTable";
-import UnderConstruction from "../components/UnderConstruction";
+
+// scss
+import "../scss/HomePage.scss";
 
 type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
 

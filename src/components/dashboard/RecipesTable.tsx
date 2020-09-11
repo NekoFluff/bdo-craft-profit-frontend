@@ -1,24 +1,25 @@
-import "../scss/RecipeTable.scss";
-
-import React, { useContext, useState } from "react";
-import MaterialTable, { MTableToolbar } from "material-table"; // https://material-table.com/#/
-import tableIcons from "../helpers/tableIcons";
 import { Chip } from "@material-ui/core";
-import { Link, Element } from "react-scroll";
+import { ProfitCalculator } from "bdo-shopping-cart-package";
+import { getMarketPriceForItem } from "bdo-shopping-cart-package";
+import MaterialTable, { MTableToolbar } from "material-table";
+import React, { useContext, useState } from "react";
 import {
-  Button,
-  Badge,
   Accordion,
   AccordionContext,
+  Badge,
+  Button,
   Card,
   useAccordionToggle,
 } from "react-bootstrap";
-import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "../helpers/numberWithCommas";
-import secondsToHms from "../helpers/secondsToHms";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/reducer";
-import { getMarketPriceForItem } from "bdo-shopping-cart-package";
+import { Element, Link } from "react-scroll";
+
+import numberWithCommas from "../../helpers/numberWithCommas";
+import secondsToHms from "../../helpers/secondsToHms";
+import tableIcons from "../../helpers/tableIcons";
+import { RootState } from "../../store/reducer";
+
+import "../../scss/RecipeTable.scss";
 
 type ContextAwareToggleProps = {
   eventKey: string;
