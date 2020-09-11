@@ -45,6 +45,18 @@ function chartWithDimensions(
         />
 
         <svg width={dimensions.width} height={dimensions.height}>
+          {/* TODO: Remove this lavender rectangle later. */}
+          <g transform={`translate(${[dimensions.marginLeft, 20].join(",")})`}>
+            <rect
+              width={dimensions.boundedWidth}
+              height={
+                dimensions.boundedHeight + parseFloat(dimensions.marginTop) + 20
+              }
+              rx={15}
+              fill="white"
+            />
+          </g>
+
           <text
             x="50%"
             y={`${parseInt(chartSettings.marginTop || "0")}px`}
@@ -54,20 +66,6 @@ function chartWithDimensions(
           >
             {title}
           </text>
-
-          <g
-            transform={`translate(${[
-              dimensions.marginLeft,
-              parseFloat(dimensions.marginTop) + 20,
-            ].join(",")})`}
-          >
-            {/* TODO: Remove this lavender rectangle later. */}
-            <rect
-              width={dimensions.boundedWidth}
-              height={dimensions.boundedHeight}
-              fill="lavender"
-            />
-          </g>
 
           <Component
             dimensions={dimensions}

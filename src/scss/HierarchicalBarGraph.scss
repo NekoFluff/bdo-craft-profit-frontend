@@ -41,14 +41,14 @@
   transition: transform 3s ease-in-out;
   transform: rotate(144);
   fill-opacity: 100%;
-  fill: purple;
+  fill: #101820FF;
 }
 
 .exit {
   @include transition-slow;
   transition: transform 3s ease-in-out;
   fill-opacity: 10%;
-  fill: green;
+  fill: #FEE715FF;
 }
 
 .bar-graph__item-group {

@@ -34,7 +34,11 @@ const Bar = (props) => {
 
   const barSpring = useSpring({
     width: xScale(root.value),
-    fill: isVisible ? (root.data.action === "Buy" ? "green" : "purple") : "red",
+    fill: isVisible
+      ? root.data.action === "Buy"
+        ? "#BD1A13FF"
+        : "#4F4F4FFF"
+      : "red",
   });
 
   const shadowSpring = useSpring({
@@ -163,6 +167,20 @@ const HierarchicalBarGraph = (props) => {
   };
 
   updateGraph();
+
+  //   <g
+  //   transform={`translate(${[
+  //     dimensions.marginLeft,
+  //     parseFloat(dimensions.marginTop) + 20,
+  //   ].join(",")})`}
+  // >
+  //   {/* TODO: Remove this lavender rectangle later. */}
+  //   <rect
+  //     width={dimensions.boundedWidth}
+  //     height={dimensions.boundedHeight}
+  //     fill="lavender"
+  //   />
+  // </g>
 
   if (!root.data.isOpen) console.log("Empty Root");
   else
