@@ -3,37 +3,74 @@
 @mixin dashboard-output-content {
   width: 100%;
   height: 100%;
-  margin: 1%;
-  padding: 2.5em;
+
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border-radius: 0.5em;
+  padding: 0.5em;
+
+  @include media-sm {
+    margin: 0em;
+    padding: 1em;
+    border-radius: 0em;
+  }
+  @include media-md {
+    margin: 0em;
+    padding: 1.5em;
+    border-radius: 0em;
+  }
+  @include media-lg {
+    margin: 0.25em;
+    padding: 2em;
+    border-radius: 0.5em;
+  }
+  @include media-xl {
+    margin: 0.25em;
+    padding: 2.5em;
+    border-radius: 0.5em;
+  }
 }
 
 .dashboard-output {
-  // z-index: 20;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: lightgrey;
+  border-radius: 0.5em;
+  margin: 1.5em;
+  justify-content: center;
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 75px;
-  justify-content: space-around;
-  align-items: center;
-  height: 100%;
 
-  @include media-sm {
+  &__title {
+    align-self: center;
+    margin-top: 20px;
+    width: 100%;
+    font-size: 2.5em;
+    font-family: "Bebas Neue";
+  }
+  &__content {
+    // z-index: 20;
+    display: flex;
     flex-direction: column;
-  }
-  @include media-md {
-    flex-direction: column;
-  }
-  @include media-lg {
-    flex-direction: row;
-  }
-  @include media-xl {
-    flex-direction: row;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+
+    @include media-sm {
+      flex-direction: column;
+    }
+    @include media-md {
+      flex-direction: column;
+    }
+    @include media-lg {
+      flex-direction: row;
+    }
+    @include media-xl {
+      flex-direction: row;
+    }
   }
 
   &__left {
@@ -43,7 +80,12 @@
 
   &__middle {
     @include dashboard-output-content;
-    background-color: green;
+    background-color: turquoise;
+  }
+
+  &__middle-2 {
+    @include dashboard-output-content;
+    background-color: orange;
   }
 
   &__right {
@@ -53,11 +95,11 @@
 
   &__number {
     font-family: "Bebas Neue", sans-serif;
-    font-size: 2.5em;
+    font-size: 1.5em;
   }
 
   &__text {
     font-family: "Roboto", sans-serif;
-    font-size: 1.5em;
+    font-size: 1.25em;
   }
 }

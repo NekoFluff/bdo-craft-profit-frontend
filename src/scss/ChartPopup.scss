@@ -17,13 +17,13 @@
   // transition: all 0.2s ease-out;
   pointer-events: none;
 
-  &:before {
-    content: "";
+  &__triangle {
+    // content: "";
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 20px;
-    height: 20px;
+    // bottom: 0;
+    // left: 50%;
+    width: 12px;
+    height: 12px;
     background: white;
     /* border: 1px solid #ddd; */
     border-top-color: transparent;

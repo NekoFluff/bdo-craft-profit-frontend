@@ -196,37 +196,6 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
     );
   };
 
-  const renderSidebar = () => {
-    return (
-      // <Sticky className="mt-4" enabled={true} top={50}>
-      <RecipesDashboardSidebar
-        onUpdateCraftCount={(newCraftCount) => {
-          itemManager.recalculate({ craftCount: newCraftCount });
-          updateTables();
-        }}
-        onUpdateValuePack={(valuePackEnabled) => {
-          ProfitCalculator.valuePackEnabled = valuePackEnabled;
-          itemManager.resetToOptimal();
-          updateTables();
-        }}
-        onMarketPriceChange={(newMarketPrice) => {
-          itemManager.items[
-            itemManager.officialProductName
-          ].overrideMarketPrice = newMarketPrice;
-          dispatch(
-            marketPriceOverrided({
-              itemName: itemManager.officialProductName,
-              marketPrice: newMarketPrice,
-            })
-          );
-          itemManager.resetToOptimal();
-          updateTables();
-        }}
-      ></RecipesDashboardSidebar>
-      // </Sticky>
-    );
-  };
-
   return (
     <>
       {/* {renderSidebar()} */}
@@ -239,13 +208,14 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
         </div> */}
         <RecipeDashboardInput
           onUpdateCraftCount={(newCraftCount) => {
+            // console.log("NEW CRAFT COUNT", newCraftCount);
             itemManager.defaultCraftCount = newCraftCount;
             itemManager.recalculate({ craftCount: newCraftCount });
             updateTables();
           }}
           onUpdateValuePack={(valuePackEnabled) => {
             ProfitCalculator.valuePackEnabled = valuePackEnabled;
-            itemManager.resetToOptimal();
+            itemManager.recalculate();
             updateTables();
           }}
           onMarketPriceChange={(newMarketPrice) => {
@@ -258,35 +228,16 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
                 marketPrice: newMarketPrice,
               })
             );
+            itemManager.recalculate();
+            updateTables();
+          }}
+          resetToOptimal={() => {
             itemManager.resetToOptimal();
             updateTables();
           }}
         />
-        <RecipeDashboardOutput
-          onUpdateCraftCount={(newCraftCount) => {
-            itemManager.defaultCraftCount = newCraftCount;
-            itemManager.recalculate({ craftCount: newCraftCount });
-            updateTables();
-          }}
-          onUpdateValuePack={(valuePackEnabled) => {
-            ProfitCalculator.valuePackEnabled = valuePackEnabled;
-            itemManager.resetToOptimal();
-            updateTables();
-          }}
-          onMarketPriceChange={(newMarketPrice) => {
-            itemManager.items[
-              itemManager.officialProductName
-            ].overrideMarketPrice = newMarketPrice;
-            dispatch(
-              marketPriceOverrided({
-                itemName: itemManager.officialProductName,
-                marketPrice: newMarketPrice,
-              })
-            );
-            itemManager.resetToOptimal();
-            updateTables();
-          }}
-        />
+
+        <RecipeDashboardOutput />
 
         {renderTables()}
       </div>

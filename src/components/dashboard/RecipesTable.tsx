@@ -19,7 +19,7 @@ import secondsToHms from "../../helpers/secondsToHms";
 import tableIcons from "../../helpers/tableIcons";
 import { RootState } from "../../store/reducer";
 
-import "../../scss/RecipeTable.scss";
+import "../../scss/RecipesTable.scss";
 
 type ContextAwareToggleProps = {
   eventKey: string;
@@ -371,7 +371,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
         icons={tableIcons}
         columns={[
           {
-            title: `Name`,
+            title: `Ingredients`,
             field: "Item Name",
             render: (rowData) => (
               <Link

@@ -57,7 +57,7 @@ const ParallaxBackground: React.FC<ParallaxBackgroundProps> = (props) => {
       ></animated.div>
       <div
         className="parallaxBackgroundContent"
-        style={{ position: "relative" }}
+        style={{ position: "relative", height: "100%" }}
       >
         {props.children}
       </div>

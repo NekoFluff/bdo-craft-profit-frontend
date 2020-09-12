@@ -1,9 +1,6 @@
 @import "config";
 
 .navbar {
-  padding: 0;
-  margin: 0;
-
   &__logo {
     @include media-lg {
       @extend .col-lg-2;
@@ -20,6 +17,7 @@
   &__search {
     padding: 0px 10%;
     margin: 0;
+    height: 100%;
     @include media-lg {
       @extend .col-lg-2;
       padding: 0;

@@ -11,7 +11,7 @@ import PageTransition from "../components/common/PageTransition";
 import RecipesDashboard from "../components/dashboard/RecipesDashboard";
 import PullUpTab from "../components/graphs/PullUpTab";
 import { setCostValues, setTimeValues } from "../helpers/parseItemFromRedux";
-import BackgroundImage from "../images/webb.png";
+import BackgroundImage from "../images/webb-dark.png";
 
 const RecipesPage = (props) => {
   const [product, setProduct] = useState("");

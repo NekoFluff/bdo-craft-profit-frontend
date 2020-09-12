@@ -1,16 +1,46 @@
-import React from "react";
-import WithTooltip from "../hoc/WithTooltip";
-import { Form, Button, Accordion, Card, ButtonGroup } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "../../helpers/numberWithCommas";
+import React, { useState } from "react";
+import {
+  Accordion,
+  Button,
+  ButtonGroup,
+  Card,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
+
+import numberWithCommas from "../../helpers/numberWithCommas";
 import { RootState } from "../../store/reducer";
+import WithTooltip from "../hoc/WithTooltip";
+import CraftCountInput from "./CraftCountInput";
+import MarketPriceInput from "./MarketPriceInput";
 
 const RecipeDashboardInput = (props) => {
+  // Selectors
   const items = useSelector((state: RootState) => state.entities.items.data);
+  const [marketPriceOverride, setMarketPriceOverride] = useState(-1);
+  const [craftCount, setCraftCount] = useState(100);
 
+  // Handlers
+  const handleMarketPriceChange = (value) => {
+    setMarketPriceOverride(value);
+  };
+
+  // Handlers
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { onMarketPriceChange } = props;
+
+    if (onMarketPriceChange != null && marketPriceOverride > 0) {
+      onMarketPriceChange(Math.round(marketPriceOverride));
+    }
+
+    const { onUpdateCraftCount } = props;
+
+    if (onUpdateCraftCount != null) {
+      onUpdateCraftCount(craftCount);
+    }
   };
 
   const onUpdateValuePack = (e) => {
@@ -22,11 +52,8 @@ const RecipeDashboardInput = (props) => {
   };
 
   const onUpdateCraftCount = (e) => {
-    const { onUpdateCraftCount: callback } = props;
-
-    if (callback != null) {
-      callback(e.target.value);
-    }
+    console.log("UPDATE CRAFT COUNT", e.target.value);
+    setCraftCount(e.target.value);
   };
 
   const renderShoppingCart = () => {
@@ -106,18 +133,20 @@ const RecipeDashboardInput = (props) => {
   const renderInput = () => {
     return (
       <Form onSubmit={handleSubmit}>
-        {/* Craft COunt */}
-        <Form.Group controlId="formCraftCount">
-          <Form.Label>How many would you like to craft?</Form.Label>
-          <Form.Control
-            onChange={onUpdateCraftCount}
-            type="number"
-            placeholder="100 (default)"
-          />
-          <Form.Text className="text-muted">
-            Adjustments are instantly reflected in the dashboard.
-          </Form.Text>
-        </Form.Group>
+        {/* Craft Count */}
+        <CraftCountInput onUpdateCraftCount={onUpdateCraftCount} />
+
+        <MarketPriceInput
+          updateMarketPrice={handleMarketPriceChange}
+          marketPriceOverride={marketPriceOverride}
+          forceUpdate={(value) => {
+            const { onMarketPriceChange } = props;
+
+            if (onMarketPriceChange != null && value > 0) {
+              onMarketPriceChange(Math.round(value));
+            }
+          }}
+        />
 
         {/* Value Pack Checkbox */}
         <Form.Group controlId="formBasicCheckbox">
@@ -154,6 +183,26 @@ const RecipeDashboardInput = (props) => {
             </WithTooltip>
           </ButtonGroup>
         </Form.Group>
+
+        <button
+          type="submit"
+          className="btn btn-primary"
+          style={{ width: "100%", marginTop: "25px", padding: "10px" }}
+        >
+          Run Calculations (does not modify tables below)
+        </button>
+
+        <button
+          className="btn btn-secondary"
+          style={{ width: "100%", marginTop: "25px", padding: "10px" }}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log("RESET TO OPTIMAL");
+            props.resetToOptimal();
+          }}
+        >
+          Find recipe with highest Profit per Second (modifies all tables below)
+        </button>
       </Form>
     );
   };
@@ -164,7 +213,7 @@ const RecipeDashboardInput = (props) => {
       <Card>
         <Card.Header style={{ backgroundColor: "rgb(200, 200, 200)" }}>
           <Accordion.Toggle as={Button} variant="link" eventKey="0">
-            Input
+            Your Input
           </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse eventKey="0">
