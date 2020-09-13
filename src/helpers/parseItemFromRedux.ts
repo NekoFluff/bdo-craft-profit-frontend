@@ -87,12 +87,14 @@ export function setCostValues(root: HierarchyNode<Item & { path: string }>) {
 export function setTimeValues(root: HierarchyNode<Item & { path: string }>) {
   root.sum(function (datum) {
     const cartEntry = datum.shoppingCartData[datum.path];
+
     // const path = key.split("/");
     // const itemName = path[path.length - 1];
     // console.log("ITEM PATH", datum.path, cartEntry);
     return datum.isSymbolic || datum.activeRecipeId == ""
       ? 0
-      : cartEntry.cumulativeTimeSpent * cartEntry.craftCount;
+      : datum.recipes[datum.activeRecipeId].timeToProduce *
+          cartEntry.craftCount;
   });
   return root;
 }

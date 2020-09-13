@@ -217,7 +217,7 @@ const HierarchicalBarGraph = (props) => {
                   paddingLeft={parseFloat(dimensions.paddingLeft)}
                   onMouseEnter={() => {
                     const location = [node.data.x, node.data.y];
-
+                    console.log("NODE DATA", node.data);
                     props.setPopupData({
                       location: [
                         xScale(location[0] + node.value / 2) +
@@ -231,6 +231,9 @@ const HierarchicalBarGraph = (props) => {
                       examples: [getParent(node.data.path)],
                       shoppingCartData:
                         node.data.shoppingCartData[node.data.path],
+                      action: node.data.recipes[node.data.activeRecipeId]
+                        ? node.data.recipes[node.data.activeRecipeId].action
+                        : "",
                     });
                   }}
                   onMouseLeave={() => {

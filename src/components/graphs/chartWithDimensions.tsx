@@ -9,6 +9,7 @@ const initialPopupData: PopupData = {
   maxValue: 0,
   examples: ["Sample Example"],
   shoppingCartData: {},
+  action: "N/A",
 };
 
 type ChartSettings = {
@@ -27,7 +28,7 @@ function chartWithDimensions(
   title: string
 ) {
   return (props) => {
-    const { setValues } = props;
+    const { setValues, setValueText } = props;
     // Hooks
     const [ref, dimensions] = useChartDimensions(chartSettings);
     const [popupData, setPopupData] = useState(initialPopupData);
@@ -43,6 +44,7 @@ function chartWithDimensions(
           data={popupData}
           isHidden={popupHidden}
           topOffset={parseInt(dimensions.marginTop) + 20}
+          setValueText={setValueText}
         />
 
         <svg width={dimensions.width} height={dimensions.height}>

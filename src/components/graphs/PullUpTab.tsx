@@ -1,17 +1,20 @@
-// scss
-import "../../scss/PullUpTab.scss";
-
 // Packages
 import React, { useState } from "react";
-import { useSpring, animated } from "react-spring";
-import useWindowSize from "../hooks/useWindowSize";
+import { Carousel } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
+import { animated, useSpring } from "react-spring";
+
+import numberWithCommas from "../../helpers/numberWithCommas";
+import { setCostValues, setTimeValues } from "../../helpers/parseItemFromRedux";
 
 // My components
 import DoubleArrow from "../common/DoubleArrow";
+import useWindowSize from "../hooks/useWindowSize";
 import chartWithDimensions from "./chartWithDimensions";
-import { setCostValues, setTimeValues } from "../../helpers/parseItemFromRedux";
 import HierarchicalBarGraph from "./HierarchicalBarGraph";
+
+// scss
+import "../../scss/PullUpTab.scss";
 
 const PullUpTab = () => {
   const [width, height] = useWindowSize();
@@ -59,18 +62,32 @@ const PullUpTab = () => {
   });
   const margin = width / 12;
   const spaceForText = 200;
-  const Chart = chartWithDimensions(
+  const SilverChart = chartWithDimensions(
     HierarchicalBarGraph,
     {
-      width: `${width}`,
+      width: `${width * 0.7}`,
       height: "900",
-      marginTop: `${Math.min(margin, 150)}`,
+      marginTop: `${Math.min(margin, 75)}`,
+      marginRight: `${0}`,
+      marginBottom: `${Math.min(margin, 45)}`,
+      marginLeft: `${0}`,
+      paddingLeft: `${spaceForText}`,
+    },
+    "Total Silver Spent"
+  );
+
+  const TimeChart = chartWithDimensions(
+    HierarchicalBarGraph,
+    {
+      width: `${width * 0.7}`,
+      height: "900",
+      marginTop: `${Math.min(margin, 75)}`,
       marginRight: `${margin}`,
       marginBottom: `${Math.min(margin, 45)}`,
       marginLeft: `${margin}`,
       paddingLeft: `${spaceForText}`,
     },
-    "Total Silver Spent"
+    "Total Crafting Time"
   );
 
   return (
@@ -112,7 +129,58 @@ const PullUpTab = () => {
             <h1 className="pullup-tab-overflow-content">Content 15</h1>
             <h1 className="pullup-tab-overflow-content">Content 16</h1>
             <h1 className="pullup-tab-overflow-content">Content 17</h1> */}
-            <Chart setValues={setCostValues} />
+            <Carousel
+              // fade
+              interval={null}
+              nextIcon={
+                <span
+                  aria-hidden="true"
+                  className="carousel-control-next-icon"
+                  style={{
+                    backgroundColor: "gray",
+                    width: "25%",
+                    height: "25%",
+                    padding: "3em",
+                    margin: "1em",
+                    borderRadius: "0.5em",
+                  }}
+                />
+              }
+              nextLabel={"Next"}
+              prevIcon={
+                <span
+                  aria-hidden="true"
+                  className="carousel-control-prev-icon"
+                  style={{
+                    backgroundColor: "gray",
+                    width: "25%",
+                    height: "25%",
+                    padding: "3em",
+                    margin: "1em",
+
+                    borderRadius: "0.5em",
+                  }}
+                />
+              }
+              prevLabel={"Previous"}
+            >
+              <Carousel.Item>
+                <SilverChart
+                  setValues={setCostValues}
+                  setValueText={(value) => {
+                    return `${numberWithCommas(value)} Silver`;
+                  }}
+                />
+              </Carousel.Item>
+              <Carousel.Item>
+                <TimeChart
+                  setValues={setTimeValues}
+                  setValueText={(value) => {
+                    return `${numberWithCommas(value)} Seconds Total`;
+                  }}
+                />
+              </Carousel.Item>
+            </Carousel>
           </Scrollbars>
         </animated.div>
       </div>

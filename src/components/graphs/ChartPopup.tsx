@@ -9,9 +9,11 @@ export type PopupData = {
   location: [number, number];
   name: string;
   value: number;
+  secondaryValue?: number;
   maxValue: number;
   examples: string[];
   shoppingCartData: any;
+  action: string;
 };
 
 type ChartPopupProps = {
@@ -21,6 +23,7 @@ type ChartPopupProps = {
   height?: number;
   topOffset?: number;
   isVertical?: boolean;
+  setValueText: (value) => string;
 };
 
 const ChartPopup: React.FC<ChartPopupProps> = (props) => {
@@ -31,6 +34,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
     height = 150,
     topOffset = 0,
     isVertical = false,
+    setValueText,
   } = props;
   data.examples = data.examples.filter((text) => {
     if (text != "") return text;
@@ -47,7 +51,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
         ? `translate(${data.location[0] - width / 2}px,${
             topOffset - height + data.location[1]
           }px)`
-        : `translate(${data.location[0] - width - 20}px,${
+        : `translate(${data.location[0]}px,${
             topOffset - height / 2 + data.location[1] + 22
           }px)`,
       opacity: isHidden ? 0 : 1,
@@ -59,7 +63,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
   const numberText =
     data.shoppingCartData.action === "Buy"
       ? ` - [Buy  ${numberWithCommas(data.shoppingCartData.expectedCount)}]`
-      : " - [Craft]";
+      : ` - [${data.action}]`;
   return (
     <React.Fragment>
       <animated.div
@@ -76,9 +80,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
         ></div>
 
         <div className="chart-popup__title">{`${data.name}${numberText}`} </div>
-        <div className="chart-popup__title">
-          {`${numberWithCommas(data.value)} Silver`}{" "}
-        </div>
+        <div className="chart-popup__title">{setValueText(data.value)} </div>
         <div className="chart-popup__examples" id="examples">
           {data.examples.length > 0 && <b>Used In:</b>}
           {data.examples.map((text, index) => {
