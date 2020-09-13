@@ -1,12 +1,22 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { rootReducer } from "./reducer";
-// import logger from "./middleware/logger";
-import toast from "./middleware/toast";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+
 import api from "./middleware/api";
+// import logger from "./middleware/logger";
+// import toast from "./middleware/toast";
+import { rootReducer } from "./reducer";
+
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export default function () {
-  return configureStore({
-    reducer: rootReducer,
+  let store = configureStore({
+    reducer: persistedReducer,
     middleware: [
       ...getDefaultMiddleware(),
       // logger({ destination: "console" }),
@@ -14,4 +24,7 @@ export default function () {
       api,
     ],
   });
+  let persistor = persistStore(store);
+
+  return { store, persistor };
 }

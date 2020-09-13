@@ -9,18 +9,22 @@ import configureStore from "./store/configureStore";
 import AnimatedSwitch from "./components/router/AnimatedSwitch";
 import ScrollToTop from "./components/common/ScrollToTop";
 
-const store = configureStore();
+import { PersistGate } from "redux-persist/integration/react";
+
+const { store, persistor } = configureStore();
 
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router>
-          <main className="main" style={{ height: "100vh" }}>
-            <ScrollToTop />
-            <AnimatedSwitch />
-          </main>
-        </Router>
+        <PersistGate loading={null} persistor={persistor}>
+          <Router>
+            <main className="main" style={{ height: "100vh" }}>
+              <ScrollToTop />
+              <AnimatedSwitch />
+            </main>
+          </Router>
+        </PersistGate>
       </Provider>
     );
   }
