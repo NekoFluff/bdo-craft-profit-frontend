@@ -1,5 +1,28 @@
 @import "config";
 
+.search-bar__spinner {
+  position: absolute;
+  right: 20%;
+  bottom: 6.5%;
+
+  @include media-sm {
+    right: 14.5%;
+    bottom: 3%;
+  }
+  @include media-md {
+    right: 14%;
+    bottom: 4%;
+  }
+  @include media-lg {
+    right: 13.5%;
+    bottom: 5%;
+  }
+  @include media-xl {
+    right: 13%;
+    bottom: 6.5%;
+  }
+}
+
 .home-page {
   .custom-scrollbar {
     max-height: 35vh !important;

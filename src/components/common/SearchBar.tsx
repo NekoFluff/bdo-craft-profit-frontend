@@ -3,7 +3,7 @@ import _ from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 // https://github.com/moroshko/react-autosuggest
 import Autosuggest from "react-autosuggest";
-import { Form } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { RouteComponentProps, withRouter } from "react-router";
 
@@ -49,6 +49,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [product, setProduct] = useState("");
+  const [isLoadingData, setLoadingData] = useState(true);
 
   // Component did mount
   useEffect(() => {
@@ -59,6 +60,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         const promise = await axios.get(uri);
         recipeNames = promise.data;
         console.log("All Items with Recipes:", recipeNames);
+        setLoadingData(false);
       } catch (e) {
         console.log("Component did mount error:", e);
       }
@@ -144,6 +146,15 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         inputProps={inputProps}
         onSuggestionSelected={onSearch}
       />
+      {isLoadingData && (
+        <Spinner
+          className="search-bar__spinner"
+          animation="border"
+          role="status"
+        >
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      )}
     </Form>
   );
 };
