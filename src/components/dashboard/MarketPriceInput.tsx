@@ -64,6 +64,7 @@ const MarketPriceInput = (props) => {
         Press 'Enter' after changing the market price to re-calculate costs.
       </Form.Text>
       {item &&
+        item.marketData &&
         item.marketData["Market Price"] != props.marketPriceOverride &&
         props.marketPriceOverride !== -1 && (
           <Button

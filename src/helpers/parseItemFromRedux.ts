@@ -79,7 +79,9 @@ export function setCostValues(root: HierarchyNode<Item & { path: string }>) {
       ? 0
       : datum.activeRecipeId != "" && datum["action"] === "Craft" // If crafting
       ? 0
-      : datum.marketData["Market Price"] * cartEntry.expectedCount;
+      : datum.marketData
+      ? datum.marketData["Market Price"] * cartEntry.expectedCount
+      : 0;
   });
   return root;
 }

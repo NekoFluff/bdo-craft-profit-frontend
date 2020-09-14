@@ -11,6 +11,7 @@ import {
   Card,
   useAccordionToggle,
 } from "react-bootstrap";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import { Element, Link } from "react-scroll";
 
@@ -159,7 +160,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
         </div>
         <div>
           <Badge variant="success">{`Profit per sec: ${numberWithCommas(
-            profitPerSecond
+            profitPerSecond.toFixed(2)
           )} silver/second`}</Badge>
         </div>
 
@@ -411,7 +412,21 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
                   backgroundColor: "rgb(200, 200, 200)",
                 }}
               >
-                <MTableToolbar {...props} style={{ "text-align": "center" }} />
+                <div className="d-flex flex-col align-items-center">
+                  {console.log("PROPS", props)}
+                  <LazyLoadImage
+                    // alt={image.alt}
+                    height={"30px"}
+                    width={"30px"}
+                    src={item.image} // use normal <img> attributes as props
+                    style={{ marginRight: "0px", marginLeft: "24px" }}
+                  />
+                  <MTableToolbar
+                    {...props}
+                    style={{ "text-align": "left", width: "200px" }}
+                  ></MTableToolbar>
+                </div>
+
                 {/* <div {...props}>{props.title}</div> */}
 
                 {renderParentLinks(parentPaths)}

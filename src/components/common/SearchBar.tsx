@@ -5,25 +5,29 @@ import React, { useCallback, useEffect, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import { Form, Spinner } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { RouteComponentProps, withRouter } from "react-router";
 
 import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 
 import "../../scss/SearchBar.scss";
 
-let recipeNames = [];
+let allRecipes = [];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = (value) => {
+  if (typeof value !== "string") {
+    return [];
+  }
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
 
   return inputLength === 0
     ? []
-    : recipeNames.filter((sampleName) => {
-        if (sampleName == null) return null;
+    : allRecipes.filter((sample) => {
+        if (sample == null || sample["_id"] == null) return null;
         else {
-          const matches = sampleName.toLowerCase().match(inputValue);
+          const matches = sample["_id"].toLowerCase().match(inputValue);
           if (matches == null) return null;
           else return matches.length > 0;
         }
@@ -39,16 +43,9 @@ type SearchBarProps = {
   onSearch?: (newProduct) => void;
 } & RouteComponentProps;
 
-type SearchBarState = {
-  value: string;
-  suggestions: string[];
-  product: string;
-};
-
 const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [product, setProduct] = useState("");
   const [isLoadingData, setLoadingData] = useState(true);
 
   // Component did mount
@@ -58,8 +55,8 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         const uri = API_ENDPOINT + "/recipes/names";
         console.log("Hello. Search bar loading. URI:", uri);
         const promise = await axios.get(uri);
-        recipeNames = promise.data;
-        console.log("All Items with Recipes:", recipeNames);
+        allRecipes = promise.data;
+        console.log("All Items with Recipes:", allRecipes);
         setLoadingData(false);
       } catch (e) {
         console.log("Component did mount error:", e);
@@ -70,7 +67,18 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   }, []);
 
   // Use your imagination to render suggestions.
-  const renderSuggestion = (suggestion) => <span>{suggestion}</span>;
+  const renderSuggestion = (suggestion) => (
+    <span>
+      <LazyLoadImage
+        // alt={image.alt}
+        height={"20px"}
+        width={"20px"}
+        src={suggestion["Image"]} // use normal <img> attributes as props
+        style={{ marginRight: "10px" }}
+      />
+      {suggestion["_id"]}
+    </span>
+  );
 
   const renderSuggestionsContainer = ({ containerProps, children, query }) => {
     return (
@@ -106,15 +114,16 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   };
 
   const onSearch = (event, data) => {
-    setProduct(data.suggestionValue);
-    goToRecipe(data.suggestionValue);
+    console.log("On Search", data);
+    const name = data.suggestionValue["_id"];
+    goToRecipe(name);
 
     if (props.onSearch) {
-      props.onSearch(data.suggestionValue);
+      props.onSearch(name);
     }
   };
 
-  const goToRecipe = (itemName) => {
+  const goToRecipe = (itemName: string) => {
     props.history.push("/recipes/" + itemName);
   };
 
