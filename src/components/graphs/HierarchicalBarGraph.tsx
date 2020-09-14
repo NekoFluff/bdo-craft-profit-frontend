@@ -1,11 +1,10 @@
-import React, { useState, useMemo } from "react";
-
-import { useSpring, animated } from "react-spring";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/reducer";
-import { convertToTree } from "../../helpers/parseItemFromRedux";
-import { stackedBar } from "../../helpers/parseItemFromRedux";
 import * as d3 from "d3";
+import React, { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { animated, useSpring } from "react-spring";
+
+import { convertToTree, stackedBar } from "../../helpers/parseItemFromRedux";
+import { RootState } from "../../store/reducer";
 import Axis from "./Axis";
 
 const Bar = (props) => {

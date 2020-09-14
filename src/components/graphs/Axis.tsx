@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
 import * as d3 from "d3";
+import React, { useMemo } from "react";
 
 const Axis = ({ domain = [0, 100], range = [10, 290] }) => {
   const ticks = useMemo(() => {

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createSelector } from "reselect";
 import { Item } from "bdo-shopping-cart-package";
 import update from "react-addons-update";
+import { createSelector } from "reselect";
 
 type itemsSliceState = {
   rootItem: string;

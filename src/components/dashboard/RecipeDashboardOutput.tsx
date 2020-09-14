@@ -1,7 +1,7 @@
-import { ProfitCalculator } from "bdo-shopping-cart-package";
 import {
   getMarketPriceForItem,
   getShoppingCartDataForItem,
+  ProfitCalculator,
 } from "bdo-shopping-cart-package";
 import React from "react";
 import { useSelector } from "react-redux";

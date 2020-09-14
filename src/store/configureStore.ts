@@ -1,7 +1,8 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
 
+// defaults to localStorage for web
 import api from "./middleware/api";
 // import logger from "./middleware/logger";
 // import toast from "./middleware/toast";

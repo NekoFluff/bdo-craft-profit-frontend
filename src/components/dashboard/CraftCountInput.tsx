@@ -1,20 +1,8 @@
-import {
-  getMarketPriceForItem,
-  getShoppingCartDataForItem,
-} from "bdo-shopping-cart-package";
-import React, { useState } from "react";
-import {
-  Accordion,
-  Button,
-  ButtonGroup,
-  Card,
-  Form,
-  InputGroup,
-} from "react-bootstrap";
+import React from "react";
+import { Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../../store/reducer";
-import WithTooltip from "../hoc/WithTooltip";
 
 const CraftCountInput = (props) => {
   const itemName = useSelector(

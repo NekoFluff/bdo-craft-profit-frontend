@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { RouteComponentProps, withRouter } from "react-router";
 

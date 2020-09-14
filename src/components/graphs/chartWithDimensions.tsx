@@ -1,4 +1,5 @@
-import React, { useMemo, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
+
 import useChartDimensions from "../hooks/useChartDimensions";
 import ChartPopup, { PopupData } from "./ChartPopup";
 

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { animated, config, Transition, useSpring } from "react-spring";
+
 import { useInterval } from "../hooks/useInterval";
 import useWindowSize from "../hooks/useWindowSize";
-import { useSpring, animated, config } from "react-spring";
 import Logo from "./Logo";
-import { Row, Col } from "react-bootstrap";
-import { Transition } from "react-spring";
 
 type PageTransitionProps = {
   // location: string;

@@ -1,6 +1,4 @@
 import * as d3 from "d3";
-import { rootReducer } from "../store/reducer";
-import { current } from "@reduxjs/toolkit";
 
 const sampleData = {
   _id: "5f31d21326a2b936d5b31515",

@@ -1,6 +1,6 @@
 import Hamburger from "hamburger-react";
 import React, { useState } from "react";
-import { Button, Col, Nav, Navbar, Row } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 import Headroom from "react-headroom";
 import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";

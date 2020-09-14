@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
 import { ResizeObserver } from "@juggle/resize-observer";
+import { useEffect, useRef, useState } from "react";
 
 const combineChartDimensions = (dimensions) => {
   const parsedDimensions = {

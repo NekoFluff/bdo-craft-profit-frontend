@@ -1,9 +1,10 @@
-// scss
+import React, { useState } from "react";
+import React from "react";
+import { animated, useSpring } from "react-spring";
+import numberWithCommas from "../../helpers/numberWithCommas";
 import "../../scss/ChartPopup.scss";
 
-import React, { useState } from "react";
-import { useSpring, animated } from "react-spring";
-import numberWithCommas from "../../helpers/numberWithCommas";
+import "../../scss/ChartPopup.scss";
 
 export type PopupData = {
   location: [number, number];

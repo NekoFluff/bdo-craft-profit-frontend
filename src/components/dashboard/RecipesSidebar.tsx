@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import { withRouter, RouteComponentProps } from "react-router";
+import React, { useEffect } from "react";
+import { RouteComponentProps, withRouter } from "react-router";
+
 import RecipesSidebarTotalProfitAccordion from "./RecipesSidebarTotalProfitAccordion";
 import RecipesSidebarUserInputAccordion from "./RecipesSidebarUserInputAccordion";
 

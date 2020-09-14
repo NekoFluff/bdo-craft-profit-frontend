@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createSelector } from "reselect";
-import { apiCallBegan } from "./api";
 import moment from "moment";
+import { createSelector } from "reselect";
+
+import { apiCallBegan } from "./api";
 
 const slice = createSlice({
   name: "bugs",

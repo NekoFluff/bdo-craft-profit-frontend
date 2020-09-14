@@ -10,7 +10,6 @@ import PageTransition from "../components/common/PageTransition";
 // My components
 import RecipesDashboard from "../components/dashboard/RecipesDashboard";
 import PullUpTab from "../components/graphs/PullUpTab";
-import { setCostValues, setTimeValues } from "../helpers/parseItemFromRedux";
 import BackgroundImage from "../images/webb-dark.png";
 
 const RecipesPage = (props) => {

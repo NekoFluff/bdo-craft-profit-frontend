@@ -1,6 +1,7 @@
 import { Item } from "bdo-shopping-cart-package";
 import * as d3 from "d3";
 import { HierarchyNode } from "d3";
+
 // Build mapping
 function buildTreeMapping(data) {
   return data;

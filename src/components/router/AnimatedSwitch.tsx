@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-
 // Pages
 import EmailVerificationPage from "../../pages/emailVerificationPage";
 import HomePage from "../../pages/homePage";

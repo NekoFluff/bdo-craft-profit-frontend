@@ -1,15 +1,13 @@
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import { Alert } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import { GoogleLogin } from "react-google-login";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
 
 import { GOOGLE_OAUTH_CLIENT_ID } from "../../helpers/CONSTANTS";
 import { RootState } from "../../store/reducer";
-import { loginUser } from "../../store/user";
-import { getCurrentUser } from "../../store/user";
+import { getCurrentUser, loginUser } from "../../store/user";
 
 import "../../scss/LoginForm.scss";
 

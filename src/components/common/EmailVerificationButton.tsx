@@ -1,9 +1,8 @@
-import React from "react";
 import axios from "axios";
+import React from "react";
 import { Button } from "react-bootstrap";
+
 import { USER_ENDPOINT } from "../../helpers/CONSTANTS";
-import { useSelector } from "react-redux";
-import { getCurrentUser } from "../../store/user";
 
 type EmailVerificationButtonProps = {
   onSuccess: (result: string) => void;

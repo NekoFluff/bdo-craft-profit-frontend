@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTrail, useSpring, config, animated } from "react-spring";
+import { animated, useTrail } from "react-spring";
 
 type DoubleArrowProps = {
   reverse: boolean;

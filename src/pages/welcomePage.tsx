@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import React from "react";
+import { Button, Col, Row } from "react-bootstrap";
 import { RouteComponentProps, withRouter } from "react-router";
 
 import RightBackgroundImage from "../images/double-bubble-dark.png";

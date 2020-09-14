@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import ViewQuiltIcon from "@material-ui/icons/ViewQuilt";
+import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { action as toggleMenu } from "redux-burger-menu";
-import ViewQuiltIcon from "@material-ui/icons/ViewQuilt";
-import { Button } from "react-bootstrap";
+
 import "../scss/RecipesDashboardButton.scss";
 
 const RecipesDashboardButton = () => {

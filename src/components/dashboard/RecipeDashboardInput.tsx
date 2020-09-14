@@ -1,13 +1,6 @@
 import { ProfitCalculator } from "bdo-shopping-cart-package";
 import React, { useState } from "react";
-import {
-  Accordion,
-  Button,
-  ButtonGroup,
-  Card,
-  Form,
-  InputGroup,
-} from "react-bootstrap";
+import { Accordion, Button, ButtonGroup, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 import numberWithCommas from "../../helpers/numberWithCommas";

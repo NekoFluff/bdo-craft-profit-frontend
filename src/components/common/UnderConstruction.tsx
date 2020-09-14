@@ -1,7 +1,7 @@
 import React from "react";
+import { Container, Image, Row } from "react-bootstrap";
+
 import ConstructionImage from "../../images/under-construction.gif";
-import StripesImage from "../../images/stripes.jpg";
-import { Image, Container, Row, Jumbotron, Col } from "react-bootstrap";
 
 type UnderConstructionProps = {};
 

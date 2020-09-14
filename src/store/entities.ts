@@ -1,8 +1,9 @@
 import { combineReducers } from "redux";
+
 import bugsReducer from "./bugs";
+import calculatorReducer from "./calculator";
 import itemsReducer from "./items";
 import currentUserReducer from "./user";
-import calculatorReducer from "./calculator";
 
 export default combineReducers({
   bugs: bugsReducer,

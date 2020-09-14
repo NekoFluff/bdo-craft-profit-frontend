@@ -1,32 +1,22 @@
 import axios from "axios";
-
 // My package
-import { ItemManager, ProfitCalculator } from "bdo-shopping-cart-package";
-import { Item } from "bdo-shopping-cart-package";
+import { Item, ItemManager, ProfitCalculator } from "bdo-shopping-cart-package";
 import _ from "lodash";
-
 // Main packages
 import React, { useCallback, useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Events, scrollSpy } from "react-scroll";
 
 // Helpers
 import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 import { marketPriceOverrided } from "../../store/calculator";
-
 // Redux
 import { itemsOrderSet, itemsSet, rootItemSet } from "../../store/items";
 import { RootState } from "../../store/reducer";
 import { getBuffs } from "../../store/user";
 import MyNavBar from "../common/Navbar";
-import SearchBar from "../common/SearchBar";
 import RecipeDashboardInput from "./RecipeDashboardInput";
 import RecipeDashboardOutput from "./RecipeDashboardOutput";
-
-// Other components
-import RecipesDashboardButton from "./RecipesDashboardButton";
-import RecipesDashboardSidebar from "./RecipesDashboardSidebar";
 import RecipesTable from "./RecipesTable";
 
 const cloneItems = (items: { [key: string]: Item }) => {

@@ -1,18 +1,7 @@
-import {
-  getMarketPriceForItem,
-  getShoppingCartDataForItem,
-} from "bdo-shopping-cart-package";
-import React, { useEffect, useState } from "react";
-import {
-  Accordion,
-  Button,
-  ButtonGroup,
-  Card,
-  Form,
-  InputGroup,
-} from "react-bootstrap";
+import { getMarketPriceForItem } from "bdo-shopping-cart-package";
+import React from "react";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { marketPriceOverrided } from "../../store/calculator";
 
 import { RootState } from "../../store/reducer";
 import WithTooltip from "../hoc/WithTooltip";

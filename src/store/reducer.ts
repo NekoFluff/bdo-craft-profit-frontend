@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
-import entitiesReducer from "./entities";
 import { reducer as burgerMenu } from "redux-burger-menu";
+
+import entitiesReducer from "./entities";
 
 export const rootReducer = combineReducers({
   entities: entitiesReducer,

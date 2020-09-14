@@ -1,10 +1,11 @@
-import React from "react";
-import WithTooltip from "../hoc/WithTooltip";
-import { Form, Button, Accordion, Card, ButtonGroup } from "react-bootstrap";
 import { ProfitCalculator } from "bdo-shopping-cart-package";
-import numberWithCommas from "../../helpers/numberWithCommas";
+import React from "react";
+import { Accordion, Button, ButtonGroup, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
+
+import numberWithCommas from "../../helpers/numberWithCommas";
 import { RootState } from "../../store/reducer";
+import WithTooltip from "../hoc/WithTooltip";
 
 const RecipesSidebarUserInputAccordion = (props) => {
   const items = useSelector((state: RootState) => state.entities.items.data);

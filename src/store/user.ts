@@ -1,11 +1,13 @@
-import { BUFFS_ENDPOINT } from "./../helpers/CONSTANTS";
-import { RootState } from "./reducer";
 import { createSlice } from "@reduxjs/toolkit";
-import { apiCallBegan } from "./api";
-import { LOGIN_ENDPOINT, SIGN_UP_ENDPOINT } from "../helpers/CONSTANTS";
-import { createSelector } from "reselect";
-import update from "react-addons-update";
 import { Buffs } from "bdo-shopping-cart-package";
+import update from "react-addons-update";
+import { createSelector } from "reselect";
+
+import { LOGIN_ENDPOINT, SIGN_UP_ENDPOINT } from "../helpers/CONSTANTS";
+import { BUFFS_ENDPOINT } from "./../helpers/CONSTANTS";
+import { apiCallBegan } from "./api";
+import { RootState } from "./reducer";
+
 // export type Buffs = { [key: string]: { timeReduction: number } };
 
 type userSliceState = {

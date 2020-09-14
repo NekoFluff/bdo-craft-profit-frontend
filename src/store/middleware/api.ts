@@ -1,8 +1,9 @@
-import { APIPayload } from "./../api";
 import axios from "axios";
-import * as actions from "../api";
-import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 import { Middleware } from "redux";
+
+import { API_ENDPOINT } from "../../helpers/CONSTANTS";
+import * as actions from "../api";
+import { APIPayload } from "./../api";
 
 const api: Middleware = ({ dispatch }) => (next) => async (action: {
   payload: APIPayload;

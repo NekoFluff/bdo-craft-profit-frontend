@@ -1,8 +1,8 @@
-import { useMediaQuery } from "@material-ui/core";
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
-import { Col, Container, Row, Button } from "react-bootstrap";
-import { NavLink, useLocation } from "react-router-dom";
+import jwt from "jwt-decode";
+import React, { useEffect, useState } from "react";
+import { Button, Container, Row } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 import ParallaxBackground from "../components/background/ParallaxBackground";
 import EmailVerificationButton from "../components/common/EmailVerificationButton";
@@ -10,8 +10,6 @@ import useQuery from "../components/hooks/useQuery";
 import { USER_ENDPOINT } from "../helpers/CONSTANTS";
 import BackgroundImage from "../images/webb.png";
 import CommonPage from "./commonPage";
-
-import jwt from "jwt-decode";
 
 type EmailVerificationPageProps = {};
 
