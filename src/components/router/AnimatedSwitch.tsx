@@ -2,11 +2,12 @@ import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
+// Pages
+import EmailVerificationPage from "../../pages/emailVerificationPage";
 import HomePage from "../../pages/homePage";
 import LoginPage from "../../pages/loginPage";
 import LogoutPage from "../../pages/logoutPage";
 import NotFoundPage from "../../pages/notFoundPage";
-// Pages
 import RecipesPage from "../../pages/recipesPage";
 import SignUpPage from "../../pages/signUpPage";
 import UserStatsPage from "../../pages/userStatsPage";
@@ -23,6 +24,7 @@ const AnimatedSwitch = ({ location }) => {
           <Route path="/signup" component={SignUpPage} />
           <Route path="/logout" component={LogoutPage} />
           <Route path="/welcome" component={WelcomePage} />
+          <Route path="/verifyEmail" component={EmailVerificationPage} />
           <Route path="/me" component={UserStatsPage} />
           <Route component={NotFoundPage} />
         </Switch>
