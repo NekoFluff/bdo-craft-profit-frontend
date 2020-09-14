@@ -21,12 +21,17 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
 
   const logoutSuccess = useCallback(() => {
     dispatch(logoutUser());
-    console.log("Logout successful");
+    console.log("Google logout successful");
+  }, [dispatch]);
+
+  const logoutFailure = useCallback(() => {
+    dispatch(logoutUser());
+    console.log("Google logout failed");
   }, [dispatch]);
 
   const { signOut } = useGoogleLogout({
     // jsSrc,
-    // onFailure,
+    onFailure: logoutFailure,
     clientId: GOOGLE_OAUTH_CLIENT_ID,
     // cookiePolicy,
     // loginHint,
