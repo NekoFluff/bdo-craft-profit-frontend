@@ -54,7 +54,7 @@ const MarketPriceInput = (props) => {
       </Form.Text>
       {item &&
         item.marketData &&
-        item.marketData["Market Price"] != props.marketPriceOverride &&
+        item.marketData["Market Price"] !== props.marketPriceOverride &&
         props.marketPriceOverride !== -1 && (
           <Button
             style={{ marginTop: "0.5em" }}

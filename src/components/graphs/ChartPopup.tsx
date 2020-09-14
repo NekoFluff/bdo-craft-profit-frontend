@@ -1,9 +1,6 @@
-import React, { useState } from "react";
 import React from "react";
 import { animated, useSpring } from "react-spring";
 import numberWithCommas from "../../helpers/numberWithCommas";
-import "../../scss/ChartPopup.scss";
-
 import "../../scss/ChartPopup.scss";
 
 export type PopupData = {
@@ -38,7 +35,8 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
     setValueText,
   } = props;
   data.examples = data.examples.filter((text) => {
-    if (text != "") return text;
+    if (text !== "") return text;
+    else return null;
   });
   const popupSpring: any = useSpring({
     from: {

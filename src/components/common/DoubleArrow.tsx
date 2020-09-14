@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { animated, useTrail } from "react-spring";
 
 type DoubleArrowProps = {
@@ -7,7 +7,6 @@ type DoubleArrowProps = {
 };
 
 const DoubleArrow: React.FC<DoubleArrowProps> = (props) => {
-  const [isHidden, setIsHidden] = useState(true);
   const { reverse, size } = props;
 
   const from = {

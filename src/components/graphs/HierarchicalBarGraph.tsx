@@ -14,9 +14,9 @@ const Bar = (props) => {
     root,
     barHeight,
     xScale,
-    onBarClick,
+    // onBarClick,
     isVisible,
-    boundedHeight,
+    // boundedHeight,
     onMouseEnter,
     onMouseLeave,
     maxWidth,
@@ -39,12 +39,12 @@ const Bar = (props) => {
     fill: color,
   });
 
-  const shadowSpring = useSpring({
-    width: xScale(root.value),
+  // const shadowSpring = useSpring({
+  //   width: xScale(root.value),
 
-    height: isVisible ? boundedHeight - root.data.y : barHeight + 10,
-    opacity: isVisible ? 0.09 : 0,
-  });
+  //   height: isVisible ? boundedHeight - root.data.y : barHeight + 10,
+  //   opacity: isVisible ? 0.09 : 0,
+  // });
 
   const lineFunction: any = d3
     .line()
@@ -138,10 +138,10 @@ const HierarchicalBarGraph = (props) => {
       );
     }
     return root;
-  }, [rootItem, items]);
+  }, [rootItem, items, props]);
 
   // Hooks - root
-  const [activeNode, setActiveNode] = useState(root);
+  const [, setActiveNode] = useState(root);
 
   // Conditional return
   if (root === null) return null;

@@ -4,19 +4,19 @@ import { Carousel } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { animated, useSpring } from "react-spring";
 import numberWithCommas from "../../helpers/numberWithCommas";
+
 import { setCostValues, setTimeValues } from "../../helpers/parseItemFromRedux";
 // scss
 import "../../scss/PullUpTab.scss";
+
 // My components
 import DoubleArrow from "../common/DoubleArrow";
 import useWindowSize from "../hooks/useWindowSize";
 import chartWithDimensions from "./chartWithDimensions";
 import HierarchicalBarGraph from "./HierarchicalBarGraph";
 
-// My components
-// scss
 const PullUpTab = () => {
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
   const pullTabHeight = "40px";
   const [isOpen, setIsOpen] = useState(false);
 

@@ -23,13 +23,13 @@ const LoginForm = () => {
   );
 
   useEffect(() => {
-    if (user.name != "") history.push("/");
-  }, [user]);
+    if (user.name !== "") history.push("/");
+  }, [user, history]);
 
   const responseGoogle = useCallback(
     (response) => {
       console.log("Google Response:", response);
-      if (response.profileObj != null) {
+      if (response.profileObj !== null) {
         dispatch(
           loginUser(null, {
             "X-Auth-Google-Token": response.tokenId,
@@ -81,7 +81,7 @@ const LoginForm = () => {
 
       <Button
         className="login-form__submit"
-        disabled={email == "" || password == ""}
+        disabled={email === "" || password === ""}
         id="container"
         variant="primary"
         type="submit"

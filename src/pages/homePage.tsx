@@ -1,15 +1,12 @@
 // Packages
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container } from "react-bootstrap";
 import { RouteComponentProps, withRouter } from "react-router";
 
+// My components
 import ParallaxBackground from "../components/background/ParallaxBackground";
 import SearchBar from "../components/common/SearchBar";
-import UnderConstruction from "../components/common/UnderConstruction";
-import MostSearchedItemsTable from "../components/tables/MostSearchedItemsTable";
-import PPSTable from "../components/tables/PPSTable";
 import BackgroundImage from "../images/bg1.png";
-// My components
 import CommonPage from "./commonPage";
 
 // scss

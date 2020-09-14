@@ -15,7 +15,7 @@ const MyNavBar = (props) => {
   const location = useLocation();
   const [isOpen, setOpen] = useState(false);
   const user = useSelector(getCurrentUser());
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
 
   const renderNavbar = () => {
     return (
@@ -51,7 +51,7 @@ const MyNavBar = (props) => {
             <NavLink to="/" className="menu-item nav-link" exact>
               Home
             </NavLink>
-            {user.email == "" && (
+            {user.email === "" && (
               <React.Fragment>
                 <NavLink to="/signup" className="menu-item nav-link">
                   SignUp
@@ -61,7 +61,7 @@ const MyNavBar = (props) => {
                 </NavLink>
               </React.Fragment>
             )}
-            {user.email != "" && (
+            {user.email !== "" && (
               <React.Fragment>
                 <NavLink to="/me#Alchemy" className="menu-item nav-link">
                   Your Stats
@@ -73,7 +73,7 @@ const MyNavBar = (props) => {
             )}
           </Nav>
           <Nav className="navbar__search">
-            {location.pathname != "/" && (
+            {location.pathname !== "/" && (
               <div className="navbar-searchbar menu-item">
                 <SearchBar />
               </div>

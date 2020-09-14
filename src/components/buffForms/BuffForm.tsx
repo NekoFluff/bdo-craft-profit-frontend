@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import {
-  Button,
-
-  Form,
-  Jumbotron,
-
-  Row
-} from "react-bootstrap";
+import { Button, Form, Jumbotron, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuthToken, getBuff, updateBuffs } from "../../store/user";
 import UnderConstruction from "../common/UnderConstruction";
-
 
 type BuffFormProps = {
   name: string;
@@ -28,7 +20,7 @@ const BuffForm: React.FC<BuffFormProps> = (props) => {
 
   // Look for changes to the form
   const changeExists = () => {
-    return buff ? buff.timeReduction != timeReduction : true;
+    return buff ? buff.timeReduction !== timeReduction : true;
   };
 
   const onSubmit = (e) => {

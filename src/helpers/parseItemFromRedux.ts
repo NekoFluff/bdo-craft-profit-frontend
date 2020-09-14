@@ -2,11 +2,6 @@ import { Item } from "bdo-shopping-cart-package";
 import * as d3 from "d3";
 import { HierarchyNode } from "d3";
 
-// Build mapping
-function buildTreeMapping(data) {
-  return data;
-}
-
 // Build tree
 function buildTree(
   item: Item,
@@ -74,11 +69,11 @@ export function setCostValues(root: HierarchyNode<Item & { path: string }>) {
     const cartEntry = datum.shoppingCartData[datum.path];
     // const path = key.split("/");
     // const itemName = path[path.length - 1];
-    console.log("ITEM PATH", datum.path, datum);
+    // console.log("ITEM PATH", datum.path, datum);
 
     return datum.isSymbolic
       ? 0
-      : datum.activeRecipeId != "" && datum["action"] === "Craft" // If crafting
+      : datum.activeRecipeId !== "" && datum["action"] === "Craft" // If crafting
       ? 0
       : datum.marketData
       ? datum.marketData["Market Price"] * cartEntry.expectedCount
@@ -94,7 +89,7 @@ export function setTimeValues(root: HierarchyNode<Item & { path: string }>) {
     // const path = key.split("/");
     // const itemName = path[path.length - 1];
     // console.log("ITEM PATH", datum.path, cartEntry);
-    return datum.isSymbolic || datum.activeRecipeId == ""
+    return datum.isSymbolic || datum.activeRecipeId === ""
       ? 0
       : datum.recipes[datum.activeRecipeId].timeToProduce *
           cartEntry.craftCount;

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row } from "react-bootstrap";
 import { RouteComponentProps, withRouter } from "react-router";
-
 import ParallaxBackground from "../components/background/ParallaxBackground";
 import SignUpForm from "../components/userForms/SignUpForm";
 import BackgroundImage from "../images/bg1.png";

@@ -14,7 +14,7 @@ type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
 const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
   const user = useSelector(getCurrentUser());
 
-  const [actionList, setActionList] = useState([
+  const [actionList] = useState([
     "Alchemy",
     "Chopping",
     "Cooking",

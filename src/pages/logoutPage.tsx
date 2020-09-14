@@ -41,7 +41,7 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
   });
 
   let signOutFunction: any;
-  if (user.type == "Google") {
+  if (user.type === "Google") {
     signOutFunction = signOut;
   } else {
     signOutFunction = logoutSuccess;
@@ -49,7 +49,7 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
 
   useEffect(() => {
     signOutFunction();
-  }, []);
+  }, [signOutFunction]);
 
   return (
     <CommonPage>
@@ -72,8 +72,8 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
           >
             <>
               <div>
-                {user.email != "" && <h1>Logging Out...</h1>}
-                {user.email == "" && <h1>Goodbye!</h1>}
+                {user.email !== "" && <h1>Logging Out...</h1>}
+                {user.email === "" && <h1>Goodbye!</h1>}
                 <h5>Come back soon! I love you!</h5>
               </div>
               <Button variant="primary">

@@ -33,7 +33,7 @@ const SignUpForm = () => {
   const checkPassword = useCallback(
     _.debounce((p) => {
       console.log("Password", password, p);
-      if (password != p) {
+      if (password !== p) {
         dispatch(
           userFailedLogIn("Confirmation password does not match password.")
         );
@@ -46,13 +46,13 @@ const SignUpForm = () => {
   );
 
   useEffect(() => {
-    if (user.name != "") history.push("/welcome");
-  }, [user]);
+    if (user.name !== "") history.push("/welcome");
+  }, [user, history]);
 
   const responseGoogle = useCallback(
     (response) => {
       console.log("Google Response:", response);
-      if (response.profileObj != null) {
+      if (response.profileObj !== null) {
         dispatch(
           loginUser(null, {
             "X-Auth-Google-Token": response.tokenId,
@@ -135,19 +135,19 @@ const SignUpForm = () => {
       <Button
         className="login-form__submit"
         disabled={
-          name == "" ||
-          email == "" ||
-          password == "" ||
-          confirmationPassword == "" ||
-          password != confirmationPassword
+          name === "" ||
+          email === "" ||
+          password === "" ||
+          confirmationPassword === "" ||
+          password !== confirmationPassword
         }
         id="container"
         variant="primary"
         type="submit"
         onClick={(e) => {
           e.preventDefault();
-          /* TODO: Warning when confirmation password != password (when the user finishing typing and clicks on the next element) */
-          if (password != confirmationPassword) {
+          /* TODO: Warning when confirmation password !== password (when the user finishing typing and clicks on the next element) */
+          if (password !== confirmationPassword) {
             dispatch(
               userFailedLogIn("Password does not match confirmation password.")
             );

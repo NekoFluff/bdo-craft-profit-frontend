@@ -413,7 +413,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
                 }}
               >
                 <div className="d-flex flex-col align-items-center">
-                  {console.log("PROPS", props)}
+                  {/* {console.log("TABLE PROPS", props)} */}
                   <LazyLoadImage
                     // alt={image.alt}
                     height={"30px"}

@@ -35,7 +35,7 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = (props) => {
       }
     };
     verifyToken(tokenString);
-  }, []);
+  }, [tokenString]);
 
   return (
     <CommonPage>

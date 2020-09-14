@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { animated, config, Transition, useSpring } from "react-spring";
-
+import { animated, config, Transition } from "react-spring";
 import { useInterval } from "../hooks/useInterval";
 import useWindowSize from "../hooks/useWindowSize";
 import Logo from "./Logo";
@@ -11,30 +9,26 @@ type PageTransitionProps = {
 };
 
 const PageTransition: React.FC<PageTransitionProps> = (props) => {
-  const [width, height] = useWindowSize();
+  const [, height] = useWindowSize();
   const [contentReady, setContentReady] = useState(false);
-  const [renderContent, setRenderContent] = useState(false);
+
   // const { location } = props;
-  const history = useHistory();
+  // const history = useHistory();
 
   useEffect(() => {
     // if (contentReady) history.push(location);
   }, [contentReady]);
 
-  const positionSpring: any = useSpring({
-    config: config.slow,
-    top: contentReady ? -height : 0,
-    // opacity: contentReady ? 0 : 1,
-    backgroundColor: contentReady ? "green" : "yellow",
-    from: {
-      top: -height,
-      backgroundColor: "yellow",
-    },
-  });
-
-  useInterval(() => {
-    setRenderContent(true);
-  }, 500); // 1250
+  // const positionSpring: any = useSpring({
+  //   config: config.slow,
+  //   top: contentReady ? -height : 0,
+  //   // opacity: contentReady ? 0 : 1,
+  //   backgroundColor: contentReady ? "green" : "yellow",
+  //   from: {
+  //     top: -height,
+  //     backgroundColor: "yellow",
+  //   },
+  // });
 
   useInterval(() => {
     setContentReady(true);
@@ -56,7 +50,6 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
       backgroundColor: "green",
     },
   };
-  const items = ["Hello World"];
 
   return (
     <React.Fragment>
@@ -93,6 +86,7 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
                       href="https://www.flaticon.com/authors/smashicons"
                       title="Smashicons"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       Smashicons
                     </a>{" "}
@@ -101,6 +95,7 @@ const PageTransition: React.FC<PageTransitionProps> = (props) => {
                       href="https://www.flaticon.com/"
                       title="Flaticon"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {" "}
                       www.flaticon.com

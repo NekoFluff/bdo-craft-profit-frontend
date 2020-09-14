@@ -41,13 +41,6 @@ type DashboardProps = {
   product: string;
 };
 
-/**
- * @deprecated
- */
-type DashboardState = {
-  craftCount: number;
-};
-
 const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
   const dispatch = useDispatch();
 
@@ -94,7 +87,7 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
     });
     newOrderedItems = _.map(newOrderedItems, "name");
     dispatch(itemsOrderSet(newOrderedItems));
-  }, [dispatch]);
+  }, []);
   /**
    * Call back-end API to retrives all recipes associated
    * @param {string} productName
@@ -117,11 +110,11 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
         console.log(e);
       }
     },
-    [dispatch, updateTables, buffs]
+    [dispatch, updateTables, buffs, itemManager]
   );
 
   useEffect(() => {
-    if (product && product != "") getData(product);
+    if (product && product !== "") getData(product);
   }, [product, getData]);
 
   // useEffect(() => {
