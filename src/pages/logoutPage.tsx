@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Button } from "react-bootstrap";
 import { useGoogleLogout } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router";
+import { NavLink } from "react-router-dom";
 
+import ParallaxBackground from "../components/background/ParallaxBackground";
 import { GOOGLE_OAUTH_CLIENT_ID } from "../helpers/CONSTANTS";
+import BackgroundImage from "../images/webb.png";
 import { logoutUser } from "../store/user";
 import { getCurrentUser } from "../store/user";
 import CommonPage from "./commonPage";
@@ -50,11 +53,45 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
 
   return (
     <CommonPage>
-      <Container>
-        {user.email != "" && <div>Logging Out...</div>}
-        {user.email == "" && <div>Goodbye!</div>}
-        <div>Come back soon! I love you!</div>
-      </Container>
+      <ParallaxBackground
+        backgroundRepeat
+        backgroundImage={`url(${BackgroundImage})`}
+      >
+        <Container
+          fluid
+          style={{
+            // marginTop: "5%",
+            display: "flex",
+            justifyContent: "center",
+            height: "95%",
+          }}
+        >
+          <Row
+            className="justify-content-around"
+            style={{ textAlign: "center", flexDirection: "column" }}
+          >
+            <>
+              <div>
+                {user.email != "" && <h1>Logging Out...</h1>}
+                {user.email == "" && <h1>Goodbye!</h1>}
+                <h5>Come back soon! I love you!</h5>
+              </div>
+              <Button variant="primary">
+                <NavLink
+                  to="/"
+                  className="menu-item navbar-brand"
+                  exact
+                  style={{ margin: "0px", fontSize: "1.25em", color: "white" }}
+                >
+                  Return Home
+                </NavLink>
+              </Button>
+
+              <br />
+            </>
+          </Row>
+        </Container>
+      </ParallaxBackground>
     </CommonPage>
   );
 };

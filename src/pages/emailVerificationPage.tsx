@@ -1,7 +1,7 @@
-import { Button, useMediaQuery } from "@material-ui/core";
+import { useMediaQuery } from "@material-ui/core";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Button } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 
 import ParallaxBackground from "../components/background/ParallaxBackground";
@@ -72,14 +72,20 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = (props) => {
                   <h5>Welcome to the party.</h5>
                   <h5> Let's start making some profit!</h5>
                 </div>
-                <NavLink
-                  to="/"
-                  className="menu-item navbar-brand"
-                  exact
-                  style={{ margin: "0px", fontSize: "1.25em" }}
-                >
-                  Return Home
-                </NavLink>
+                <Button variant="primary">
+                  <NavLink
+                    to="/"
+                    className="menu-item navbar-brand"
+                    exact
+                    style={{
+                      margin: "0px",
+                      fontSize: "1.25em",
+                      color: "white",
+                    }}
+                  >
+                    Return Home
+                  </NavLink>
+                </Button>
               </>
             )}
             {verificationResult.includes("Invalid token") && (
@@ -93,6 +99,7 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = (props) => {
                 }}
               />
             )}
+            <br />
           </Row>
         </Container>
       </ParallaxBackground>
