@@ -54,6 +54,7 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
 
   useEffect(() => {
     signOutFunction();
+    logoutSuccess();
   }, [signOutFunction]);
 
   return (
