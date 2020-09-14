@@ -13,6 +13,7 @@ import { API_ENDPOINT } from "../../helpers/CONSTANTS";
 import "../../scss/SearchBar.scss";
 
 let allRecipes = [];
+let getRecipeImage = {};
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = (value) => {
@@ -24,14 +25,18 @@ const getSuggestions = (value) => {
 
   return inputLength === 0
     ? []
-    : allRecipes.filter((sample) => {
-        if (sample == null || sample["_id"] == null) return null;
-        else {
-          const matches = sample["_id"].toLowerCase().match(inputValue);
-          if (matches == null) return null;
-          else return matches.length > 0;
-        }
-      });
+    : allRecipes
+        .filter((sample) => {
+          if (sample == null || sample["_id"] == null) return null;
+          else {
+            const matches = sample["_id"].toLowerCase().match(inputValue);
+            if (matches == null) return null;
+            else return matches.length > 0;
+          }
+        })
+        .map((value) => {
+          return value["_id"];
+        });
 };
 
 // When suggestion is clicked, Autosuggest needs to populate the input
@@ -53,9 +58,11 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
     const asyncFunc = async () => {
       try {
         const uri = API_ENDPOINT + "/recipes/names";
-        console.log("Hello. Search bar loading. URI:", uri);
         const promise = await axios.get(uri);
         allRecipes = promise.data;
+        for (const recipe of allRecipes) {
+          getRecipeImage[recipe["_id"]] = recipe["Image"];
+        }
         console.log("All Items with Recipes:", allRecipes);
         setLoadingData(false);
       } catch (e) {
@@ -73,10 +80,10 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         // alt={image.alt}
         height={"20px"}
         width={"20px"}
-        src={suggestion["Image"]} // use normal <img> attributes as props
+        src={getRecipeImage[suggestion]} // use normal <img> attributes as props
         style={{ marginRight: "10px" }}
       />
-      {suggestion["_id"]}
+      {suggestion}
     </span>
   );
 
@@ -96,6 +103,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   };
 
   const onChange = (event, { newValue }) => {
+    console.log("On Change:", newValue);
     setValue(newValue);
   };
 
@@ -103,6 +111,8 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   // You already implemented this logic above, so just use it.
   const onSuggestionsFetchRequested = useCallback(
     _.debounce(({ value }) => {
+      console.log("On Suggestions Fetch:", value);
+
       setSuggestions(getSuggestions(value));
     }, 500),
     []
@@ -115,7 +125,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
 
   const onSearch = (event, data) => {
     console.log("On Search", data);
-    const name = data.suggestionValue["_id"];
+    const name = data.suggestionValue;
     goToRecipe(name);
 
     if (props.onSearch) {

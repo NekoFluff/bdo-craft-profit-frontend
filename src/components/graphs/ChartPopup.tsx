@@ -84,7 +84,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
         <div className="chart-popup__examples" id="examples">
           {data.examples.length > 0 && <b>Used In:</b>}
           {data.examples.map((text, index) => {
-            return <div>{text}</div>;
+            return <div key={index}>{text}</div>;
           })}
         </div>
         {/* <div className="chart-popup__value">
