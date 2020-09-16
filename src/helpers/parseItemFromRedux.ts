@@ -18,9 +18,13 @@ function buildTree(
   tree["path"] = path;
   // console.log("Building Tree.... ", item, path);
   const shoppingCartData = item.shoppingCartData[path];
-  if (!shoppingCartData || shoppingCartData.action === "Buy") {
-    discontinue = true;
+  if (!shoppingCartData) {
+    tree["action"] = "INVALID";
+    tree["children"] = [];
+    return tree;
   }
+
+  if (shoppingCartData.action === "Buy") discontinue = true;
 
   tree["action"] = shoppingCartData.action;
   if (item.recipes && item.recipes[item.activeRecipeId]) {

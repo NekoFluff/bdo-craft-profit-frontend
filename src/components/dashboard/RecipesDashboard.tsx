@@ -89,6 +89,7 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
     newOrderedItems = _.map(newOrderedItems, "name");
     dispatch(itemsOrderSet(newOrderedItems));
   }, []);
+
   /**
    * Call back-end API to retrives all recipes associated
    * @param {string} productName
@@ -142,7 +143,7 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
     }
 
     return (
-      <div>
+      <div style={{ marginBottom: "5em" }}>
         {orderedItems.map((currentItemName) => {
           return (
             <RecipesTable

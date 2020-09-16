@@ -60,7 +60,7 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
   const percentage = ((data.value / data.maxValue) * 100).toFixed(2);
 
   const numberText =
-    data.shoppingCartData.action === "Buy"
+    data.shoppingCartData && data.shoppingCartData.action === "Buy"
       ? ` - [Buy  ${numberWithCommas(data.shoppingCartData.expectedCount)}]`
       : ` - [${data.action}]`;
   return (

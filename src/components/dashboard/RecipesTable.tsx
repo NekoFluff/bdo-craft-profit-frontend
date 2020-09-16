@@ -66,7 +66,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
   });
 
   if (item == null) return null;
-  if (Object.values(item.usedInRecipes).length === 0) return null;
+  // if (Object.values(item.usedInRecipes).length === 0) return null;
 
   const renderDetailsButton = () => {
     return (

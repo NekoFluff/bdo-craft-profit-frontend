@@ -150,8 +150,7 @@ const RecipeDashboardInput = (props) => {
             checked={ProfitCalculator.valuePackEnabled}
           />
           <Form.Text className="text-muted">
-            This checkbox re-runs the optimizer and reselects what items to
-            craft and what items to buy from the market.
+            Calculations are automatically updated on selection/deselction.
           </Form.Text>
         </Form.Group>
 
@@ -189,8 +188,8 @@ const RecipeDashboardInput = (props) => {
           className="btn btn-secondary"
           style={{ width: "100%", marginTop: "25px", padding: "10px" }}
           onClick={(e) => {
-            e.preventDefault();
-            console.log("RESET TO OPTIMAL");
+            // e.preventDefault();
+            // console.log("RESET TO OPTIMAL");
             props.resetToOptimal();
           }}
         >
