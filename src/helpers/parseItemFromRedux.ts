@@ -16,7 +16,13 @@ function buildTree(
   let tree = { ...item };
   tree["isOpen"] = true;
   tree["path"] = path;
-  tree["action"] = item.shoppingCartData[path].action;
+  console.log("Building Tree.... ", item, path);
+  const shoppingCartData = item.shoppingCartData[path];
+  if (!shoppingCartData || shoppingCartData.action === "Buy") {
+    discontinue = true;
+  }
+
+  tree["action"] = shoppingCartData.action;
   if (item.recipes && item.recipes[item.activeRecipeId]) {
     if (discontinue) {
       tree["children"] = [];
@@ -107,8 +113,6 @@ export function convertToTree(
 
   const treeData = buildTree(rootItem, mapping);
   let root: any = d3.hierarchy(treeData);
-
-  // setCostValues(root);
 
   // console.log("d3 stacked bar tree:", root);
   return root;

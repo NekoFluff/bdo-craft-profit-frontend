@@ -103,7 +103,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   };
 
   const onChange = (event, { newValue }) => {
-    console.log("On Change:", newValue);
+    // console.log("On Change:", newValue);
     setValue(newValue);
   };
 
