@@ -54,7 +54,7 @@ const LogoutPage: React.FC<LogoutPageProps> = (props) => {
 
   useEffect(() => {
     signOutFunction();
-    logoutSuccess();
+    logoutSuccess(); // Force logout. The React Google package is bugged.
   }, [signOutFunction]);
 
   return (

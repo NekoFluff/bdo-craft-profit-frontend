@@ -1,50 +1,32 @@
-import axios from "axios";
-import jwt from "jwt-decode";
-import React, { useEffect, useState } from "react";
-import { Button, Container, Row } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import React from "react";
+import { Container, Row } from "react-bootstrap";
 
 import ParallaxBackground from "../components/background/ParallaxBackground";
-import EmailVerificationButton from "../components/common/EmailVerificationButton";
-import useQuery from "../components/hooks/useQuery";
-import { USER_ENDPOINT } from "../helpers/CONSTANTS";
-import BackgroundImage from "../images/webb.png";
+import NewPasswordForm from "../components/userForms/NewPasswordForm";
+import BackgroundImage from "../images/bg1.png";
 import CommonPage from "./commonPage";
 
-type EmailVerificationPageProps = {};
+type ResetPasswordPageProps = {};
 
-const EmailVerificationPage: React.FC<EmailVerificationPageProps> = (props) => {
-  const query = useQuery();
-  const tokenString = query.get("token");
-  const tokenObj = jwt(tokenString);
-
-  const [verificationResult, setVerificationResult] = useState(
-    "Email is being verified [insert loading circle]... Please wait a moment"
-  );
-
-  useEffect(() => {
-    const verifyToken = async (token) => {
-      try {
-        // Get the data
-        const { data: result } = await axios.post(
-          USER_ENDPOINT + "/verificationToken?token=" + token
-        );
-        // console.log("Verification Result:", result);
-        setVerificationResult(result);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    verifyToken(tokenString);
-  }, [tokenString]);
-
+const ResetPasswordPage: React.FC<ResetPasswordPageProps> = (props) => {
   return (
     <CommonPage>
       <ParallaxBackground
         backgroundRepeat
         backgroundImage={`url(${BackgroundImage})`}
       >
-        <Container
+        <Container className="h-100">
+          <Row className="h-100 justify-content-center align-items-center">
+            <div
+              className="col-12 col-md-9 col-lg-6"
+              style={{ textAlign: "center" }}
+            >
+              <NewPasswordForm />
+            </div>
+          </Row>
+        </Container>
+
+        {/* <Container
           fluid
           style={{
             // marginTop: "5%",
@@ -100,10 +82,10 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = (props) => {
             )}
             <br />
           </Row>
-        </Container>
+        </Container> */}
       </ParallaxBackground>
     </CommonPage>
   );
 };
 
-export default EmailVerificationPage;
+export default ResetPasswordPage;

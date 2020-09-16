@@ -10,6 +10,7 @@ import { RootState } from "../../store/reducer";
 import { getCurrentUser, loginUser } from "../../store/user";
 
 import "../../scss/LoginForm.scss";
+import ForgotPasswordLink from "../common/ForgotPasswordLink";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ const LoginForm = () => {
             setPassword(e.target.value);
           }}
         />
+        <ForgotPasswordLink />
       </Form.Group>
 
       {/* <Form.Group controlId="formBasicCheckbox">
