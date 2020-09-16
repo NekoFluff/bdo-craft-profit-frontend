@@ -35,7 +35,7 @@ const NewPasswordForm = () => {
 
   return (
     <Form className="login-form">
-      <h1 className="login-form__title">Forgot Password</h1>
+      <h1 className="login-form__title">New Password</h1>
 
       {resetPasswordResult != "" && (
         <Alert
