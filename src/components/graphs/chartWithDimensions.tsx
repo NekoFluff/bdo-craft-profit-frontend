@@ -39,7 +39,7 @@ function chartWithDimensions(
       <div
         className="Chart__wrapper"
         ref={ref}
-        style={{ height: dimensions.height, width: dimensions.width }}
+        style={{ height: dimensions.height, width: dimensions.boundedWidth }}
       >
         <ChartPopup
           data={popupData}

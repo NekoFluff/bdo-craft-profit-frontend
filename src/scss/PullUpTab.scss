@@ -8,10 +8,10 @@
   right: 0;
   background-color: white;
   box-shadow: 0 -10px 8px rgba(52, 73, 94, 0.2);
+  z-index: 1021;
 
   text-align: center;
   // height: 70%; // Modified in PullUpTab.tsx
-  z-index: 12;
 
   &-flex-container {
     display: flex;
@@ -29,7 +29,7 @@
     align-self: center;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 8px rgba(52, 73, 94, 0.2);
+    // box-shadow: 0 10px 8px rgba(52, 73, 94, 0.2);
   }
 
   &-content {

@@ -74,8 +74,8 @@ const Bar = (props) => {
       {/* BAR GRAPH TEXT */}
       <text
         className="bar-graph__text"
-        fontSize="1.2em"
-        fontFamily="Bebas Neue"
+        fontSize="0.8em"
+        fontFamily="Roboto"
         textAnchor="end"
         // textLength="15%"
         x={-xScale(root.data.x) - 5}

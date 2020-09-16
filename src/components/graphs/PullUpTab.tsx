@@ -1,6 +1,6 @@
 // Packages
 import React, { useState } from "react";
-import { Carousel } from "react-bootstrap";
+import { Carousel, Row } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { animated, useSpring } from "react-spring";
 import numberWithCommas from "../../helpers/numberWithCommas";
@@ -21,7 +21,7 @@ const PullUpTab = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   let breakpoints = [576, 768, 992, 1200];
-  let heightsAtBreakpoints = ["90%", "90%", "55%", "50%"];
+  let heightsAtBreakpoints = ["100%", "100%", "60%", "50%"];
   const pickHeight = () => {
     let index = 0;
     for (
@@ -60,32 +60,25 @@ const PullUpTab = () => {
     },
   });
   const margin = width / 12;
-  const spaceForText = 200;
+  const spaceForText = Math.min(width / 5, 200);
+  const chartSettings = {
+    width: `${width * 0.62}`,
+    height: "900",
+    marginTop: `${Math.min(margin, 75)}`,
+    marginRight: `${0}`,
+    marginBottom: `${Math.min(margin, 45)}`,
+    marginLeft: `${0}`,
+    paddingLeft: `${spaceForText}`,
+  };
   const SilverChart = chartWithDimensions(
     HierarchicalBarGraph,
-    {
-      width: `${width * 0.7}`,
-      height: "900",
-      marginTop: `${Math.min(margin, 75)}`,
-      marginRight: `${0}`,
-      marginBottom: `${Math.min(margin, 45)}`,
-      marginLeft: `${0}`,
-      paddingLeft: `${spaceForText}`,
-    },
+    chartSettings,
     "Total Silver Spent"
   );
 
   const TimeChart = chartWithDimensions(
     HierarchicalBarGraph,
-    {
-      width: `${width * 0.7}`,
-      height: "900",
-      marginTop: `${Math.min(margin, 75)}`,
-      marginRight: `${margin}`,
-      marginBottom: `${Math.min(margin, 45)}`,
-      marginLeft: `${margin}`,
-      paddingLeft: `${spaceForText}`,
-    },
+    chartSettings,
     "Total Crafting Time"
   );
 
@@ -128,6 +121,7 @@ const PullUpTab = () => {
             <h1 className="pullup-tab-overflow-content">Content 15</h1>
             <h1 className="pullup-tab-overflow-content">Content 16</h1>
             <h1 className="pullup-tab-overflow-content">Content 17</h1> */}
+
             <Carousel
               // fade
               interval={null}
@@ -137,10 +131,10 @@ const PullUpTab = () => {
                   className="carousel-control-next-icon"
                   style={{
                     backgroundColor: "gray",
-                    width: "25%",
-                    height: "25%",
-                    padding: "3em",
-                    margin: "1em",
+                    width: "5%",
+                    height: "5%",
+                    padding: "1.5em",
+                    margin: "0.75em",
                     borderRadius: "0.5em",
                   }}
                 />
@@ -152,32 +146,37 @@ const PullUpTab = () => {
                   className="carousel-control-prev-icon"
                   style={{
                     backgroundColor: "gray",
-                    width: "25%",
-                    height: "25%",
-                    padding: "3em",
-                    margin: "1em",
+                    width: "5%",
+                    height: "5%",
+                    padding: "1.5em",
+                    margin: "0.75em",
 
                     borderRadius: "0.5em",
                   }}
                 />
               }
               prevLabel={"Previous"}
+              style={{ marginTop: "1.2em" }}
             >
               <Carousel.Item>
-                <SilverChart
-                  setValues={setCostValues}
-                  setValueText={(value) => {
-                    return `${numberWithCommas(value)} Silver`;
-                  }}
-                />
+                <Row className="justify-content-center">
+                  <SilverChart
+                    setValues={setCostValues}
+                    setValueText={(value) => {
+                      return `${numberWithCommas(value)} Silver`;
+                    }}
+                  />
+                </Row>
               </Carousel.Item>
               <Carousel.Item>
-                <TimeChart
-                  setValues={setTimeValues}
-                  setValueText={(value) => {
-                    return `${numberWithCommas(value)} Seconds Total`;
-                  }}
-                />
+                <Row className="justify-content-center">
+                  <TimeChart
+                    setValues={setTimeValues}
+                    setValueText={(value) => {
+                      return `${numberWithCommas(value)} Seconds Total`;
+                    }}
+                  />
+                </Row>
               </Carousel.Item>
             </Carousel>
           </Scrollbars>

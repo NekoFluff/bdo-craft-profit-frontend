@@ -47,10 +47,10 @@ const ChartPopup: React.FC<ChartPopupProps> = (props) => {
       //   data.location[1] + topOffset
       // )}px)`,
       transform: isVertical
-        ? `translate(${data.location[0] - width / 2}px,${
+        ? `translate(${Math.max(data.location[0] - width / 2, 0)}px,${
             topOffset - height + data.location[1]
           }px)`
-        : `translate(${data.location[0]}px,${
+        : `translate(${Math.max(data.location[0] - width, 0)}px,${
             topOffset - height / 2 + data.location[1] + 22
           }px)`,
       opacity: isHidden ? 0 : 1,

@@ -378,7 +378,6 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
               <Link
                 activeClass="active"
                 className="scrollLink text-primary"
-                // to={rowData["Item Name"]}
                 to={`${rowData["Item Name"]}`}
                 spy={true}
                 smooth={true}
@@ -388,8 +387,8 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
               </Link>
             ),
           },
-          { title: "Amount per Craft", field: "Amount" },
-          { title: "Total Needed", field: "Total Needed" },
+          { title: "# per craft", field: "Amount" },
+          { title: "Total #", field: "Total Needed" },
         ]}
         data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
         title={`${productName} (x${totalItemCount})`}
