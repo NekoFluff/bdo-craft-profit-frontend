@@ -4,6 +4,7 @@ import { Item, ItemManager, ProfitCalculator } from "bdo-shopping-cart-package";
 import _ from "lodash";
 // Main packages
 import React, { useCallback, useEffect, useMemo } from "react";
+import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Events, scrollSpy } from "react-scroll";
 
@@ -189,40 +190,42 @@ const RecipesDashboard: React.FC<DashboardProps> = ({ product }) => {
         {/* <div className="home-page p-3" style={{ textAlign: "center" }}>
           <SearchBar />
         </div> */}
-        <RecipeDashboardInput
-          onUpdateCraftCount={(newCraftCount) => {
-            // console.log("NEW CRAFT COUNT", newCraftCount);
-            itemManager.defaultCraftCount = newCraftCount;
-            itemManager.recalculate({ craftCount: newCraftCount });
-            updateTables();
-          }}
-          onUpdateValuePack={(valuePackEnabled) => {
-            ProfitCalculator.valuePackEnabled = valuePackEnabled;
-            itemManager.recalculate();
-            updateTables();
-          }}
-          onMarketPriceChange={(newMarketPrice) => {
-            itemManager.items[
-              itemManager.officialProductName
-            ].overrideMarketPrice = newMarketPrice;
-            dispatch(
-              marketPriceOverrided({
-                itemName: itemManager.officialProductName,
-                marketPrice: newMarketPrice,
-              })
-            );
-            itemManager.recalculate();
-            updateTables();
-          }}
-          resetToOptimal={() => {
-            itemManager.resetToOptimal();
-            updateTables();
-          }}
-        />
+        <Container>
+          <RecipeDashboardInput
+            onUpdateCraftCount={(newCraftCount) => {
+              // console.log("NEW CRAFT COUNT", newCraftCount);
+              itemManager.defaultCraftCount = newCraftCount;
+              itemManager.recalculate({ craftCount: newCraftCount });
+              updateTables();
+            }}
+            onUpdateValuePack={(valuePackEnabled) => {
+              ProfitCalculator.valuePackEnabled = valuePackEnabled;
+              itemManager.recalculate();
+              updateTables();
+            }}
+            onMarketPriceChange={(newMarketPrice) => {
+              itemManager.items[
+                itemManager.officialProductName
+              ].overrideMarketPrice = newMarketPrice;
+              dispatch(
+                marketPriceOverrided({
+                  itemName: itemManager.officialProductName,
+                  marketPrice: newMarketPrice,
+                })
+              );
+              itemManager.recalculate();
+              updateTables();
+            }}
+            resetToOptimal={() => {
+              itemManager.resetToOptimal();
+              updateTables();
+            }}
+          />
 
-        <RecipeDashboardOutput />
+          <RecipeDashboardOutput />
 
-        {renderTables()}
+          {renderTables()}
+        </Container>
       </div>
     </>
   );

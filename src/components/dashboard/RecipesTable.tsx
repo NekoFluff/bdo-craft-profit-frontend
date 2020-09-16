@@ -391,7 +391,7 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
           { title: "Total #", field: "Total Needed" },
         ]}
         data={selectedRecipe == null ? [] : rowData} // TODO: Which recipe to choose?
-        title={`${productName} (x${totalItemCount})`}
+        title={`(x${totalItemCount}) ${productName}`}
         options={{
           search: false,
           paging: false,
@@ -422,7 +422,9 @@ const RecipesTable: React.FC<RecipesTableProps> = (props) => {
                   />
                   <MTableToolbar
                     {...props}
-                    style={{ "text-align": "left", width: "200px" }}
+                    style={{
+                      "text-align": "left",
+                    }}
                   ></MTableToolbar>
                 </div>
 
