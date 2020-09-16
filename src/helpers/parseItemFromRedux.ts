@@ -16,7 +16,7 @@ function buildTree(
   let tree = { ...item };
   tree["isOpen"] = true;
   tree["path"] = path;
-  console.log("Building Tree.... ", item, path);
+  // console.log("Building Tree.... ", item, path);
   const shoppingCartData = item.shoppingCartData[path];
   if (!shoppingCartData || shoppingCartData.action === "Buy") {
     discontinue = true;
