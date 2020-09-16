@@ -7,7 +7,7 @@ import { NavLink, useHistory } from "react-router-dom";
 
 import { GOOGLE_OAUTH_CLIENT_ID } from "../../helpers/CONSTANTS";
 import { RootState } from "../../store/reducer";
-import { getCurrentUser, loginUser } from "../../store/user";
+import { getCurrentUser, loginUser, resetError } from "../../store/user";
 
 import "../../scss/LoginForm.scss";
 import ForgotPasswordLink from "../common/ForgotPasswordLink";
@@ -26,6 +26,10 @@ const LoginForm = () => {
   useEffect(() => {
     if (user.name !== "") history.push("/");
   }, [user, history]);
+
+  useEffect(() => {
+    dispatch(resetError({}));
+  }, []);
 
   const responseGoogle = useCallback(
     (response) => {

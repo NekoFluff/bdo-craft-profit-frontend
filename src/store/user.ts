@@ -79,6 +79,9 @@ const slice = createSlice({
     failedUpdateBuffs: (currentUser, action) => {
       return update(currentUser, { error: { $set: action.payload } });
     },
+    resetError: (currentUser, _action) => {
+      return update(currentUser, { error: { $set: null } });
+    },
   },
 });
 
@@ -88,6 +91,7 @@ export const {
   userFailedLogIn,
   updatedBuffs,
   failedUpdateBuffs,
+  resetError,
 } = slice.actions;
 
 export default slice.reducer;
