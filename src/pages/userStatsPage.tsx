@@ -1,18 +1,19 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect, RouteComponentProps, withRouter } from "react-router";
 
 import ParallaxBackground from "../components/background/ParallaxBackground";
 import BuffForm from "../components/buffForms/BuffForm";
 import BackgroundImage from "../images/webb.png";
-import { getCurrentUser } from "../store/user";
+import { getAuthToken, getCurrentUser, refreshBuffs } from "../store/user";
 import CommonPage from "./commonPage";
 
 type UserStatsPageProps = {} & RouteComponentProps<{ item: string }>;
 
 const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
   const user = useSelector(getCurrentUser());
+  const dispatch = useDispatch();
 
   const [actionList] = useState([
     "Alchemy",
@@ -27,8 +28,17 @@ const UserStatsPage: React.FC<UserStatsPageProps> = (props) => {
     "Simple Alchemy",
     "Simple Cooking",
   ]);
+
   const renderJumbo = useCallback((action: string) => {
     return <BuffForm name={action} />;
+  }, []);
+
+  useEffect(() => {
+    const headers = {
+      "X-Auth-Token": user.accessToken,
+    };
+
+    dispatch(refreshBuffs(headers));
   }, []);
 
   return (

@@ -140,6 +140,15 @@ export const updateBuffs = (buffs: Buffs, headers: any) =>
     headers,
   });
 
+export const refreshBuffs = (headers: any) =>
+  apiCallBegan({
+    url: BUFFS_ENDPOINT,
+    method: "get",
+    onSuccess: updatedBuffs.type,
+    onError: null,
+    headers,
+  });
+
 // Selectors
 export const getCurrentUser = () =>
   createSelector(
